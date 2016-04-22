@@ -59,6 +59,12 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
+#fosUserBundle Configuration
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
