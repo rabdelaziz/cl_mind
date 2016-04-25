@@ -1,0 +1,22 @@
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+                <source>login.user.id</source>
+                <target>Identifiant</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>login.user.password</source>
+                <target>Mot de passe</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>login.user.button.conexion</source>
+                <target>Connexion</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Bad credentials</source>
+                <target>Identifiant ou mot de passe incorrect.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
