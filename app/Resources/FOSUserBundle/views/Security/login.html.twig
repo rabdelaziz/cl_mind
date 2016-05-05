@@ -1,0 +1,32 @@
+{% extends '::layout.html.twig' %}
+{% block fos_user_content %}
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <div class="col-xs-8 col-xs-offset-2 pagecnt">
+        <form  action="{{ path("fos_user_security_check") }}" method="post" class="form-horizontal center col-md-offset-3 col-md-6 col-sm-offset-3 col-sm-6" role="form" id="login-form" >
+            <div class="form-group">
+                <label for="username"></label>
+                <div class="control-label">
+                    <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'login.user.id'|trans }}" required="required"  />
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                <label for="password"></label>
+                <div class="control-label">
+                    <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'login.user.password'|trans }}" required="required" />
+                </div>
+                {#<input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>#}
+                <label for="password"></label>
+                <div class="control-label">
+                    {% if error %}
+                        <div style="color:red;" class="text-left">{{ error|trans }}</div>
+                    {% endif %}
+                    <input type="submit" class="btn-lg btn btn-default" id="_submit" name="_submit" value="{{ 'login.user.button.conexion'|trans }}" />
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock fos_user_content %}
+  {% block js %}
+      {{parent()}}
+  {% endblock js %}
