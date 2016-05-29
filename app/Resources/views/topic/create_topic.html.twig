@@ -1,0 +1,17 @@
+{% extends 'layout.html.twig' %}
+
+{% trans_default_domain 'security' %}
+
+{% block title 'Nouveau Theme'|trans %}
+
+{% block content %}
+    <form action="{{ path('create_topic') }}" method="post">
+        <label for="name">{{ 'topic.name'|trans }}</label>
+        <input type="text" id="name" name="name" value="" />
+
+        <label for="description">{{ 'topic.description'|trans }}</label>
+        <textarea id="description" name="description"></textarea>
+
+        <button type="submit">{{ 'login.submit'|trans }}</button>
+    </form>
+{% endblock %}
