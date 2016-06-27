@@ -1,0 +1,26 @@
+
+question_index:
+    path:     /question
+    defaults: { _controller: AppBundle:Question:index }
+
+question_edit:
+    path:     /question/edit/{id}
+    defaults: { _controller: AppBundle:Question:edit }
+    requirements:
+              id: \d+
+
+question_view:
+    path:     /question/view/{id}
+    defaults: { _controller: AppBundle:Question:view }
+    requirements:
+              id: \d+
+
+question_delete:
+  path:     /question/delete/{id}
+  defaults: { _controller: AppBundle:Question:delete }
+  requirements:
+            id: \d+
+
+question_add:
+    path:     /question/add
+    defaults: { _controller: AppBundle:Question:add }
