@@ -17,12 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 class SessionController extends Controller
 {
     /**
-     * @Route("/topic", name="create_topic")
+     * @Route("session/new_topic", name="create_topic")
      */
     public  function createTopicAction(Request $request)
     {
+    // die('t');
         $form = $this->createForm(TopicType::class);
         $form->handleRequest($request);
+        //var_dump($form->isSubmitted() , $form->isValid());die;
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var \AppBundle\Entity\Topic $topic */
             $topic = $form->getData();
@@ -35,6 +37,20 @@ class SessionController extends Controller
         return $this->render('topic/create_topic.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("session/topic_list", name="topic_list")
+     */
+    public  function topicListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $sessionList = $em->getRepository('AppBundle:Topic')->findAll();
+
+        return $this->render('topic/topic_liste.html.twig', array('sessionList' => $sessionList,
+            'activateItem' => 1,
+        ));
+
     }
 }
 

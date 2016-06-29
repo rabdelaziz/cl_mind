@@ -30,7 +30,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("session_instruction", name="adminHomePage")
+     * @Route("session", name="adminHomePage")
      */
     public function adminHomePageAction()
     {
@@ -44,5 +44,4 @@ class UserController extends Controller
     {
         return $this->render('User/sessionInstruction.html.twig');
     }
-
 }

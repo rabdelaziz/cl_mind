@@ -18,8 +18,7 @@ class TopicType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, ['label' => 'Nom'])
-            ->add('descritpion', TextareaType::class, ['label' => 'Déscription'])
-        ;
+            ->add('description', TextareaType::class, ['label' => 'Déscription']);
     }
     
     /**
