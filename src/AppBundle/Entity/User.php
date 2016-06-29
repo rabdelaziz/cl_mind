@@ -30,12 +30,12 @@ class User extends BaseUser
     }
 
     /**
-     * @ORM\Column(name="firstname", type="string", length=50, nullable=false)
+     * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
      */
     private $firstName;
 
     /**
-     * @ORM\Column(name="lastname", type="string", length=50, nullable=false)
+     * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     private $lastName;
 

@@ -1,4 +1,6 @@
 app/bootstrap.php.cache
 app/cache/*
 app/logs/*
-vendor
+/vendor/*
+/var/*
+.idea
