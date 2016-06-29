@@ -5,13 +5,36 @@
 {% block title 'Nouveau Theme'|trans %}
 
 {% block content %}
-    <form action="{{ path('create_topic') }}" method="post">
-        <label for="name">{{ 'topic.name'|trans }}</label>
-        <input type="text" id="name" name="name" value="" />
-
-        <label for="description">{{ 'topic.description'|trans }}</label>
-        <textarea id="description" name="description"></textarea>
-
-        <button type="submit">{{ 'login.submit'|trans }}</button>
-    </form>
+    {#<form action="{{ path('create_topic') }}" method="post" role="form">#}
+        {#<h3 class="vert">Ajouter un theme</h3>#}
+        {#<label for="name">Nom</label>#}
+        {#<input type="text" id="name" name="name" value="" />#}
+        {#<label for="description">Description</label>#}
+        {#<textarea id="description" name="description"></textarea>#}
+        {#<button type="submit">Valider</button>#}
+    {#</form>#}
+    {{ form_start(form) }}
+    <h3 class="vert">Nouveau theme</h3>
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="sr-only" for="exampleInputEmail1">
+            </label>
+            {{form_widget(form.name, {'attr':{'class':'form-control','placeholder':'Nom'}})}}
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="sr-only" for="exampleInputEmail2"></label>
+            {{form_widget(form.description, {'attr':{'class':'form-control', 'placeholder': 'Description'}})}}
+        </div>
+    </div>
+    <br/>
+    <div class="row text-center">
+        <label class="sr-only" for="exampleInputEmail2"></label>
+        <input class="btn btn-default" id ="createSession" type="submit"  value="valider"/>
+    </div>
+    {{ form_end(form) }}
+    <br/>
 {% endblock %}
+
