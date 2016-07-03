@@ -2,3 +2,7 @@ app/bootstrap.php.cache
 app/cache/*
 app/logs/*
 vendor
+var/cache/*
+.DS_Store
+.idea/
+composer.lock
