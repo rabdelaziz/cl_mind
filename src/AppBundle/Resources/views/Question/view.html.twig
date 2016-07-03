@@ -1,0 +1,45 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}AppBundle:Question:view{% endblock %}
+
+{% block body %}
+    <h3>Détails:</h3>
+    <table>
+        <tr>
+            <td>Enoncé :</td>
+            <td>{{ question.enonce }}</td>
+        </tr>
+        <tr>
+            <td>Niveau :</td>
+            <td>{{ question.niveau.nom }}</td>
+        </tr>
+        <tr>
+            <td>Thème :</td>
+            <td>{{ question.topic.name }}</td>
+        </tr>
+        <tr>
+            <td>Durée :</td>
+            <td>{{ question.duree }}</td>
+        </tr>
+    </table>
+    <br>
+    <p><b>Liste des réponses:</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Réponse</th>
+                <th>Correct</th>
+            </tr>
+        </thead>
+        {% if not question.reponses.empty %}
+            <tbody>
+                {% for reponse in question.reponses %}
+                    <tr>
+                        <td>{{ reponse.enonce }}</td>
+                        <td>{% if reponse.correct %}oui{% else %}non{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            <tbody>
+        {% endif %}
+    </table>
+{% endblock %}
