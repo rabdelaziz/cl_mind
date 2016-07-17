@@ -4,8 +4,10 @@
     {{parent()}}
 {% endblock%}
 {% block content %}
-<div class="container">
      {{parent()}}
+<div id="dialog-form" title="Create new user">
+    <img>
+</div>
     <div class="col-xs-9 borderTop">
         <div>
             <h2>Liste des themes</h2>
@@ -37,11 +39,10 @@
                 </tbody>
             </table>
             <div>
-                <button id="createTopic" class="btn  btn-primary">Ajouter un nouveau theme</button>
+                <button id="createTopic" class="btn  btn-primary" data-toggle="modal" >Ajouter un nouveau theme</button>
             </div>
           </div>
         </div>
-    </div>
 {% endblock %}
 {% block js%}
     {{parent()}}
