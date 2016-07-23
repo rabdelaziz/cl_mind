@@ -1,4 +1,5 @@
-app/bootstrap.php.cache
-app/cache/*
-app/logs/*
+var/bootstrap.php.cache
+var/cache/*
+var/logs/*
+var/session/*
 vendor
