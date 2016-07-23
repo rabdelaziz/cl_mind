@@ -1,0 +1,129 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Ajout des questions{% endblock %}
+
+{% block body %}
+    <h3>Ajouter une nouvelle question</h3>
+    <div class="well">
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {# render the task's only field: description #}
+            <div class="form-group">
+                {{ form_label(form.enonce, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.enonce) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.enonce, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                {{ form_label(form.duree, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.duree) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+
+                {{ form_label(form.niveau, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.niveau) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.niveau, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.topic, "Thème", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.topic) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.topic, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <h3>Reponses</h3>
+            <ul class="reponses" data-prototype="{{ form_widget(form.reponses.vars.prototype)|e('html_attr') }}">
+                {# iterate over each existing tag and render its only field: name #}
+                {% for reponse in form.reponses %}
+                    <li>{{ form_row(reponse.enonce) }}</li>
+                {% endfor %}
+            </ul>
+
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+    var $collectionHolder;
+
+    // setup an "add a tag" link
+    var $addTagLink = $('<a href="#" class="add_tag_link">Add a reponse</a>');
+    var $newLinkLi = $('<li></li>').append($addTagLink);
+
+    jQuery(document).ready(function() {
+
+        // Get the ul that holds the collection of reponse
+        var $collectionHolder = $('ul.reponses');
+
+        // add the "add a tag" anchor and li to the reponses ul
+        $collectionHolder.append($newLinkLi);
+
+        // count the current form inputs we have (e.g. 2), use that as the new
+        // index when inserting a new item (e.g. 2)
+        $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+        $addTagLink.on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+
+            // add a new tag form (see code block below)
+            addTagForm($collectionHolder, $newLinkLi);
+        });
+
+
+    });
+
+    function addTagForm($collectionHolder, $newLinkLi) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+
+        // get the new index
+        var index = $collectionHolder.data('index');
+
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        var newForm = prototype.replace(/__name__/g, index);
+
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+
+        // Display the form in the page in an li, before the "Add a tag" link li
+        var $newFormLi = $('<li></li>').append(newForm);
+
+        // also add a remove button, just for this example
+        $newFormLi.append('<a href="#" class="remove-reponse">x</a>');
+
+        $newLinkLi.before($newFormLi);
+
+        // handle the removal, just for this example
+        $('.remove-reponse').click(function(e) {
+            e.preventDefault();
+
+            $(this).parent().remove();
+
+            return false;
+        });
+    }
+</script>
+{% endblock %}
