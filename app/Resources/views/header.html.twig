@@ -1,0 +1,20 @@
+<header role="banner" id="top" class="navbar navbar-static-top bs-docs-nav">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-4">
+                <img src="" class="img-responsive"/>
+            </div>
+            <div class="col-xs-4">
+                <h1 class="text-center">{{ title|default('CleverTest') }}</h1>
+            </div>
+            <div class="col-xs-4 text-right">
+                {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                {{app.user.firstname}} {{app.user.lastname}} |
+                <a href="{{ path('fos_user_security_logout') }}">
+                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
