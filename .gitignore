@@ -2,6 +2,6 @@ app/bootstrap.php.cache
 app/cache/*
 app/logs/*
 .DS_Store
-/vendor/*
-/var/*
+vendor/*
+var/*
 .idea
