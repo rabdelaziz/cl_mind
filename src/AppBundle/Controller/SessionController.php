@@ -11,13 +11,14 @@ namespace AppBundle\Controller;
 use AppBundle\Form\TopicType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
 class SessionController extends Controller
 {
     /**
-     * @Route("session/new_topic", name="create_topic")
+     * @Route("session/new_topic", name="create_topic", options={"expose"=true})
      */
     public  function createTopicAction(Request $request)
     {
@@ -31,12 +32,18 @@ class SessionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($topic);
             $em->flush();
-
-            return $this->redirectToRoute('topic_list');
+            $response = new JsonResponse();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setData(['status' => 'ok', 'msg' => utf8_encode("Vos modification ont été bien enregistrés"), 'topic' => $topic],  200);
+            return $response;
+          //  return new JsonResponse(['status' => 'ok', 'msg' => "Vos modification ont été bien enregistrés", 'topic' => $topic],  200);
+//            return $this->redirectToRoute('topic_list');
         }
-        return $this->render('topic/create_topic.html.twig', [
+        return $this->render('forms/topic/create_topic.html.twig', [
             'form' => $form->createView(),
         ]);
+
+       // return new JsonResponse(['status' => 'ok', 'template' => $template]);
     }
 
     /**

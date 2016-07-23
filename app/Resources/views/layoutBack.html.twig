@@ -9,6 +9,7 @@
     <title>CLEVERTEST</title>
     <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet"/>
     <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"/>
 
 </head>
 <body>
@@ -19,12 +20,41 @@
 {% endblock fos_user_content %}
 <div class="container">
     {% block content %}
-    <div class="modall">
-        <div class="alert-msg">
-            <p class="text-center"></p>
-            <butto id ="cancel" type="button" class="btn btn-default">Valider</butto>
+        <!-- Modal -->
+        <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            {%  block modal %}
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel"> </h4>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">
+                            Fermer
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                           Valider
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
         </div>
-    </div>
+
 
         <div class="col-xs-3 vertBg borderTop">
             {% if is_granted("IS_AUTHENTICATED_FULLY")  %}
@@ -59,7 +89,11 @@
 </div>
 {% block js %}
     <script src="{{asset('js/libs/jquery-2.2.4.min.js')}}"></script>
+    <script src="{{asset('js/libs/jquery-ui.min.js')}}"></script>
+
     <script src="{{asset('js/libs/bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 {% endblock js %}
 </body>
 </html>
