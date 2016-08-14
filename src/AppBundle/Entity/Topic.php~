@@ -31,9 +31,9 @@ class Topic
     /**
      * @var string
      *
-     * @ORM\Column(name="descritpion", type="text")
+     * @ORM\Column(name="description", type="text")
      */
-    private $descritpion;
+    private $description;
 
 
     /**
@@ -73,25 +73,24 @@ class Topic
     /**
      * Set descritpion
      *
-     * @param string $descritpion
+     * @param string $description
      *
      * @return Topic
      */
-    public function setDescritpion($descritpion)
+    public function setDescription($description)
     {
-        $this->descritpion = $descritpion;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get descritpion
+     * Get $description
      *
      * @return string
      */
-    public function getDescritpion()
+    public function getDescription()
     {
-        return $this->descritpion;
+        return $this->description;
     }
 }
-
