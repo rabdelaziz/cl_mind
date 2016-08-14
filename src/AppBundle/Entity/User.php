@@ -16,18 +16,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+
 
     public function __construct()
     {
         parent::__construct();
         // your own logic
     }
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
 
     /**
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
@@ -38,6 +40,9 @@ class User extends BaseUser
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     private $lastName;
+
+
+
 
     /**
      * Set firstName

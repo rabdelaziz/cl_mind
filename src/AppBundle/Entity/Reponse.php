@@ -36,7 +36,7 @@ class Reponse
     private $correct;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="reponses")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="reponses", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $question;
@@ -125,4 +125,3 @@ class Reponse
         return $this->question;
     }
 }
-

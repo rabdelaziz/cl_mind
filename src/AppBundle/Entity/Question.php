@@ -184,5 +184,120 @@ class Question
     {
         return $this->reponses;
     }
-}
+    /**
+     * @var string
+     */
+    private $text;
 
+    /**
+     * @var integer
+     */
+    private $level;
+
+    /**
+     * @var integer
+     */
+    private $duration;
+
+    /**
+     * @var \AppBundle\Entity\Evaluation
+     */
+    private $test;
+
+
+    /**
+     * Set text
+     *
+     * @param string $text
+     *
+     * @return Question
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     *
+     * @return Question
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Set duration
+     *
+     * @param integer $duration
+     *
+     * @return Question
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    /**
+     * Get duration
+     *
+     * @return integer
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * Set test
+     *
+     * @param \AppBundle\Entity\Evaluation $test
+     *
+     * @return Question
+     */
+    public function setTest(\AppBundle\Entity\Evaluation $test = null)
+    {
+        $this->test = $test;
+
+        return $this;
+    }
+
+    /**
+     * Get test
+     *
+     * @return \AppBundle\Entity\Evaluation
+     */
+    public function getTest()
+    {
+        return $this->test;
+    }
+}
