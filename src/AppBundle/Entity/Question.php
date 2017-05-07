@@ -25,44 +25,52 @@ class Question
     /**
      * @var string
      *
-     * @ORM\Column(name="enonce", type="text", length=500, unique=false)
+     * @ORM\Column(name="wording", type="text", length=500, unique=false)
      */
-    private $enonce;
+    private $wording;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Niveau")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Level")
+     * @ORM\JoinColumn(name="level_id", referencedColumnName="id", nullable=false)
      */
-    private $niveau;
+    private $level;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="duree", type="integer", nullable=true)
+     * @ORM\Column(name="duration", type="integer", nullable=true)
      */
-    private $duree;
+    private $duration;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Topic")
+     * @ORM\JoinColumn(name="topic_id", referencedColumnName="id", nullable=false)
      */
     private $topic;
 
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Reponse", mappedBy="question", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Response", mappedBy="question", cascade={"persist"})
      */
-    private $reponses;
-
-
-
+    private $responses;    
+    
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Evaluation", mappedBy="questions")
+     * @ORM\JoinTable(name="evaluation_question")
+     */
+    private $evaluations;
+    
     public function __construct()
     {
-        $this->reponses = new ArrayCollection();
+        $this->responses = new ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -70,187 +78,27 @@ class Question
     }
 
     /**
-     * Set enonce
+     * Set wording
      *
-     * @param string $enonce
+     * @param string $wording
      *
      * @return Question
      */
-    public function setEnonce($enonce)
+    public function setWording($wording)
     {
-        $this->enonce = $enonce;
+        $this->wording = $wording;
 
         return $this;
     }
 
     /**
-     * Get enonce
+     * Get wording
      *
      * @return string
      */
-    public function getEnonce()
+    public function getWording()
     {
-        return $this->enonce;
-    }
-
-    /**
-     * Set Niveau
-     *
-     * @param Niveau $niveau
-     *
-     * @return Question
-     */
-    public function setNiveau($niveau)
-    {
-        $this->niveau = $niveau;
-
-        return $this;
-    }
-
-    /**
-     * Get Niveau
-     *
-     * @return Niveau
-     */
-    public function getNiveau()
-    {
-        return $this->niveau;
-    }
-
-    /**
-     * Set duree
-     *
-     * @param integer $duree
-     *
-     * @return Question
-     */
-    public function setDuree($duree)
-    {
-        $this->duree = $duree;
-
-        return $this;
-    }
-
-    /**
-     * Get duree
-     *
-     * @return int
-     */
-    public function getDuree()
-    {
-        return $this->duree;
-    }
-
-    /**
-     * Set Topic
-     *
-     * @param Topic $topic
-     *
-     * @return Question
-     */
-    public function setTopic($topic)
-    {
-        $this->topic = $topic;
-
-        return $this;
-    }
-
-    /**
-     * Get Topic
-     *
-     * @return Topic
-     */
-    public function getTopic()
-    {
-        return $this->topic;
-    }
-
-    public function addReponse(Reponse $reponse)
-    {
-        $this->reponses[] = $reponse;
-
-        // On lie la question à la reponse
-        $reponse->setQuestion($this);
-
-        return $this;
-    }
-
-    public function removeReponse(Reponse $reponse)
-    {
-        $this->reponses->removeElement($reponse);
-    }
-
-    public function getReponses()
-    {
-        return $this->reponses;
-    }
-    /**
-     * @var string
-     */
-    private $text;
-
-    /**
-     * @var integer
-     */
-    private $level;
-
-    /**
-     * @var integer
-     */
-    private $duration;
-
-    /**
-     * @var \AppBundle\Entity\Evaluation
-     */
-    private $test;
-
-
-    /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return Question
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * Get text
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * Set level
-     *
-     * @param integer $level
-     *
-     * @return Question
-     */
-    public function setLevel($level)
-    {
-        $this->level = $level;
-
-        return $this;
-    }
-
-    /**
-     * Get level
-     *
-     * @return integer
-     */
-    public function getLevel()
-    {
-        return $this->level;
+        return $this->wording;
     }
 
     /**
@@ -278,26 +126,84 @@ class Question
     }
 
     /**
-     * Set test
+     * Set level
      *
-     * @param \AppBundle\Entity\Evaluation $test
+     * @param \AppBundle\Entity\Level $level
      *
      * @return Question
      */
-    public function setTest(\AppBundle\Entity\Evaluation $test = null)
+    public function setLevel(\AppBundle\Entity\Level $level)
     {
-        $this->test = $test;
+        $this->level = $level;
 
         return $this;
     }
 
     /**
-     * Get test
+     * Get level
      *
-     * @return \AppBundle\Entity\Evaluation
+     * @return \AppBundle\Entity\Level
      */
-    public function getTest()
+    public function getLevel()
     {
-        return $this->test;
+        return $this->level;
+    }
+
+    /**
+     * Set topic
+     *
+     * @param \AppBundle\Entity\Topic $topic
+     *
+     * @return Question
+     */
+    public function setTopic(\AppBundle\Entity\Topic $topic)
+    {
+        $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
+     * Get topic
+     *
+     * @return \AppBundle\Entity\Topic
+     */
+    public function getTopic()
+    {
+        return $this->topic;
+    }
+
+    /**
+     * Add response
+     *
+     * @param \AppBundle\Entity\Response $response
+     *
+     * @return Question
+     */
+    public function addResponse(\AppBundle\Entity\Response $response)
+    {
+        $this->responses[] = $response;
+
+        return $this;
+    }
+
+    /**
+     * Remove Response
+     *
+     * @param \AppBundle\Entity\Response $response
+     */
+    public function removeResponse(\AppBundle\Entity\Response $response)
+    {
+        $this->responses->removeElement($response);
+    }
+
+    /**
+     * Get responses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getResponses()
+    {
+        return $this->responses;
     }
 }
