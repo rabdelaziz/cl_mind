@@ -1,0 +1,76 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Détail du test{% endblock %}
+
+{% block body %}
+    <h3>Détails:</h3>
+    <table>
+        <tr>
+            <td>Thèmes abordés :</td>
+            <td>{{ evaluation.title }}</td>
+        </tr>
+        <tr>
+            <td>Niveau :</td>
+            <td>{{ evaluation.difficulty.name }}</td>
+        </tr>
+        <tr>
+            <td>Date de création :</td>
+            <td>{{ evaluation.createdDate|date("d/m/Y")}}</td>
+        </tr>
+        <tr>
+            <td>Etat :</td>
+            <td>{{ evaluation.status.name}}</td>
+        </tr>
+        <tr>
+            <td>Auteur :</td>
+            <td>{{ evaluation.author.firstName }} {{ evaluation.author.lastName }}</td>
+        </tr>
+
+    </table>
+    <hr />
+        
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    	<div class="form-group">
+
+            {{ form_label(form.status, 'Changer le status', {'label_attr': {'class': 'col-sm-1 control-label'}}) }}
+            {{ form_errors(form.status) }}
+
+        	<div class="col-sm-3">
+                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-sm-3">
+               {{ form_row(form.validate, {'attr': {'class': 'btn btn-primary'}}) }}
+            </div>
+        </div>
+        
+    {{ form_end(form) }}
+
+    <br>
+    <p><b>Liste des questions:</b></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Thème</th>
+                <th>Niveau</th>
+                <th>Durée</th>
+            </tr>
+        </thead>
+        {% if not evaluation.questions.empty %}
+            <tbody>
+                {% for question in evaluation.questions %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('question_view', { 'id': question.id }) }}">
+                                {{ question.wording }}
+                            </a>
+                        </td>
+                        <td>{{ question.topic.name }}</td>
+                        <td>{{ question.level.name }}</td>
+                        <td>{{ question.duration }}</td>
+                    </tr>
+                {% endfor %}
+            <tbody>
+        {% endif %}
+    </table>
+{% endblock %}
