@@ -4,118 +4,96 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Evaluation
  *
  * @ORM\Table(name="evaluation")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EvaluationRepository")
  */
 class Evaluation
 {
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="start_date", type="datetime", nullable=false)
-     */
-    private $startDate;
+	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
+	
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="title", type="string", length=50, nullable=true, unique=false)
+	 */
+	private $title;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="end_date", type="datetime", nullable=false)
-     */
-    private $endDate;
+	/**
+	 * @var \DateTime
+	 *
+	 * @ORM\Column(name="created_date", type="datetime")
+	 */
+	private $createdDate;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+	/**
+	 * @var \AppBundle\Entity\Difficulty
+	 *
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Difficulty")
+	 * @ORM\JoinColumn(name="difficulty_id", referencedColumnName="id", nullable=false)
+	 */
+	private $difficulty;
+	
+	/**
+	 * @var \AppBundle\Entity\Status
+	 * 
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Status")
+	 * @ORM\JoinColumn(name="status_id", referencedColumnName="id", nullable=false)
+	 */
+	private $status;
 
-    /**
-     * @var \AppBundle\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * })
-     */
-    private $author;
-    
-    /**
-     * @var ArrayCollection $questions
-     *
-     * @ORM\ManyToMany(targetEntity="Question", inversedBy="questions")
-     * @ORM\JoinTable(name="evaluation_question") 
-     */
-    private $questions;
+	/**
+	 * @var ArrayCollection $questions
+	 *
+	 * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Question",  inversedBy="evaluations", cascade={"persist"})
+	 * @ORM\JoinTable(name="evaluation_question")
+	 */
+	private $questions;
 
-        /**
-     * @var ArrayCollection $candidates
-     *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="candidates")
-     * @ORM\JoinTable(name="evaluation_candidate") 
-     */
-    private $candidates;
+	/**
+	 * @var \AppBundle\Entity\User
+	 *
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+	 * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+	 */
+	private $author;
 
-    public function __construct()
-    {
-       $this->candidates = new ArrayCollection();
-    }
-
- 
+	/**
+	 * @var ArrayCollection $candidates
+	 *
+	 * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="evaluations", cascade={"persist"})
+	 * @ORM\JoinTable(name="evaluation_candidate")
+	 */
+	private $candidates;
 
 
-    /**
-     * Set startDate
-     *
-     * @param \DateTime $startDate
-     *
-     * @return Evaluation
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
+	/**
+	 *
+	 * @var ArrayCollection $topics
+	 */
+	private $topics;
 
-        return $this;
-    }
 
-    /**
-     * Get startDate
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * Set endDate
-     *
-     * @param \DateTime $endDate
-     *
-     * @return Evaluation
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * Get endDate
-     *
-     * @return \DateTime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
+	/**
+	 *
+	 */
+	public function __construct()
+	{
+		$this->createdDate = new \DateTime();
+		$this->candidates = new ArrayCollection();
+		$this->questions = new ArrayCollection();
+		$this->topics = new ArrayCollection();
+	}
 
     /**
      * Get id
@@ -128,27 +106,99 @@ class Evaluation
     }
 
     /**
-     * Set author
+     * Set title
      *
-     * @param \AppBundle\Entity\User $author
+     * @param string $title
      *
      * @return Evaluation
      */
-    public function setAuthor(\AppBundle\Entity\User $author = null)
+    public function setTitle($title)
     {
-        $this->author = $author;
+        $this->title = $title;
 
         return $this;
     }
 
     /**
-     * Get author
+     * Get title
      *
-     * @return \AppBundle\Entity\User
+     * @return string
      */
-    public function getAuthor()
+    public function getTitle()
     {
-        return $this->author;
+        return $this->title;
+    }
+
+    /**
+     * Set createdDate
+     *
+     * @param \DateTime $createdDate
+     *
+     * @return Evaluation
+     */
+    public function setCreatedDate($createdDate)
+    {
+        $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    /**
+     * Get createdDate
+     *
+     * @return \DateTime
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * Set difficulty
+     *
+     * @param \AppBundle\Entity\Difficulty $difficulty
+     *
+     * @return Evaluation
+     */
+    public function setDifficulty(\AppBundle\Entity\Difficulty $difficulty)
+    {
+        $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    /**
+     * Get difficulty
+     *
+     * @return \AppBundle\Entity\Difficulty
+     */
+    public function getDifficulty()
+    {
+        return $this->difficulty;
+    }
+
+    /**
+     * Set status
+     *
+     * @param \AppBundle\Entity\Status $status
+     *
+     * @return Evaluation
+     */
+    public function setStatus(\AppBundle\Entity\Status $status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return \AppBundle\Entity\Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
@@ -183,6 +233,30 @@ class Evaluation
     public function getQuestions()
     {
         return $this->questions;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \AppBundle\Entity\User $author
+     *
+     * @return Evaluation
+     */
+    public function setAuthor(\AppBundle\Entity\User $author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 
     /**
