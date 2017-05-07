@@ -9,18 +9,20 @@ use AppBundle\Entity\Evaluation;
 
 class EvaluationFixture extends AbstractFixture implements OrderedFixtureInterface
 {
-    /**
-     * load level
-     * @param  ObjectManager $manager
-     * @return Niveau                
-     */
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \Doctrine\Common\DataFixtures\FixtureInterface::load()
+	 */
     public function load(ObjectManager $manager)
     {
+        /*
         //evaluation 1
         $evaluation = new Evaluation();
         $evaluation->setAuthor($this->getReference('adminUser'));
-        $evaluation->setStartDate(new \DateTime());
-        $evaluation->setEndDate(new \DateTime()); echo "yesy1";
+        //$evaluation->setStartDate(new \DateTime());
+        //$evaluation->setEndDate(new \DateTime()); echo "yesy1";
         $evaluation->addCandidate($this->getReference('testUser'));
         for ($i=0; $i < 5 ; $i++) { 
             $evaluation->addQuestion($this->getReference($i));

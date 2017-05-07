@@ -5,9 +5,9 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Reponse;
+use AppBundle\Entity\Response;
 
-class ReponseFixture extends AbstractFixture implements OrderedFixtureInterface
+class ResponseFixture extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * load level
@@ -17,149 +17,174 @@ class ReponseFixture extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         //Question 1 
-        $reponse1 = new Reponse();
-        $reponse1->setEnonce("in_array");
+        $reponse1 = new Response();
+        $reponse1->setWording("in_array");
         $reponse1->setCorrect(true);
         $reponse1->setQuestion($this->getReference(0));
         $manager->persist($reponse1);
 
-        $reponse2 = new Reponse();
-        $reponse2->setEnonce("is_array");
+        $reponse2 = new Response();
+        $reponse2->setWording("is_array");
         $reponse2->setCorrect(false);
         $reponse2->setQuestion($this->getReference(0));
         $manager->persist($reponse2);
         
-        $reponse3 = new Reponse();
-        $reponse3->setEnonce("array_key_exists");
+        $reponse3 = new Response();
+        $reponse3->setWording("array_key_exists");
         $reponse3->setCorrect(false);
         $reponse3->setQuestion($this->getReference(0));
         $manager->persist($reponse3);
 
         //Question 2
-        $reponse4 = new Reponse();
-        $reponse4->setEnonce("Sort");
+        $reponse4 = new Response();
+        $reponse4->setWording("Sort");
         $reponse4->setCorrect(false);
         $reponse4->setQuestion($this->getReference(1));
         $manager->persist($reponse4);
 
-        $reponse5 = new Reponse();
-        $reponse5->setEnonce("Ksort");
-        $reponse5->setCorrect(false);
-        $reponse5->setQuestion($this->getReference(1));
-        $manager->persist($reponse5);
+        $response5 = new Response();
+        $response5->setWording("Ksort");
+        $response5->setCorrect(false);
+        $response5->setQuestion($this->getReference(1));
+        $manager->persist($response5);
         
-        $reponse6 = new Reponse();
-        $reponse6->setEnonce("Rsort");
-        $reponse6->setCorrect(false);
-        $reponse6->setQuestion($this->getReference(1));
-        $manager->persist($reponse6);
+        $response6 = new Response();
+        $response6->setWording("Rsort");
+        $response6->setCorrect(false);
+        $response6->setQuestion($this->getReference(1));
+        $manager->persist($response6);
 
-        $reponse7 = new Reponse();
-        $reponse7->setEnonce("Krsort");
-        $reponse7->setCorrect(true);
-        $reponse7->setQuestion($this->getReference(1));
-        $manager->persist($reponse7);
+        $response7 = new Response();
+        $response7->setWording("Krsort");
+        $response7->setCorrect(true);
+        $response7->setQuestion($this->getReference(1));
+        $manager->persist($response7);
 
         //Question 3
-        $reponse8 = new Reponse();
-        $reponse8->setEnonce("******123");
-        $reponse8->setCorrect(false);
-        $reponse8->setQuestion($this->getReference(2));
-        $manager->persist($reponse8);
+        $response8 = new Response();
+        $response8->setWording("******123");
+        $response8->setCorrect(false);
+        $response8->setQuestion($this->getReference(2));
+        $manager->persist($response8);
 
-        $reponse9 = new Reponse();
-        $reponse9->setEnonce("*****_1234");
-        $reponse9->setCorrect(false);
-        $reponse9->setQuestion($this->getReference(2));
-        $manager->persist($reponse9);
+        $response9 = new Response();
+        $response9->setWording("*****_1234");
+        $response9->setCorrect(false);
+        $response9->setQuestion($this->getReference(2));
+        $manager->persist($response9);
 
-        $reponse10 = new Reponse();
-        $reponse10->setEnonce("******1234");
-        $reponse10->setCorrect(true);
-        $reponse10->setQuestion($this->getReference(2));
-        $manager->persist($reponse10);
+        $response10 = new Response();
+        $response10->setWording("******1234");
+        $response10->setCorrect(true);
+        $response10->setQuestion($this->getReference(2));
+        $manager->persist($response10);
 
-        $reponse11 = new Reponse();
-        $reponse11->setEnonce("_*123*");
-        $reponse11->setCorrect(false);
-        $reponse11->setQuestion($this->getReference(2));
-        $manager->persist($reponse11);
+        $response11 = new Response();
+        $response11->setWording("_*123*");
+        $response11->setCorrect(false);
+        $response11->setQuestion($this->getReference(2));
+        $manager->persist($response11);
 
-        $reponse12 = new Reponse();
-        $reponse12->setEnonce(".**1****1236");
-        $reponse12->setCorrect(true);
-        $reponse12->setQuestion($this->getReference(2));
-        $manager->persist($reponse12);
-
-        //Question 4
-        $reponse12 = new Reponse();
-        $reponse12->setEnonce(".**1****1236");
-        $reponse12->setCorrect(true);
-        $reponse12->setQuestion($this->getReference(2));
-        $manager->persist($reponse12);
-
-        $reponse12 = new Reponse();
-        $reponse12->setEnonce(".**1****1236");
-        $reponse12->setCorrect(true);
-        $reponse12->setQuestion($this->getReference(2));
-        $manager->persist($reponse12);
-
-        $reponse12 = new Reponse();
-        $reponse12->setEnonce(".**1****1236");
-        $reponse12->setCorrect(true);
-        $reponse12->setQuestion($this->getReference(2));
-        $manager->persist($reponse12);
-
-        $reponse12 = new Reponse();
-        $reponse12->setEnonce(".**1****1236");
-        $reponse12->setCorrect(true);
-        $reponse12->setQuestion($this->getReference(2));
-        $manager->persist($reponse12);
+        $response12 = new Response();
+        $response12->setWording(".**1****1236");
+        $response12->setCorrect(true);
+        $response12->setQuestion($this->getReference(2));
+        $manager->persist($response12);
 
         //Question 4
-        $reponse13 = new Reponse();
-        $reponse13->setEnonce("get, cookie, post");
-        $reponse13->setCorrect(false);
-        $reponse13->setQuestion($this->getReference(3));
-        $manager->persist($reponse13); 
+        $response12 = new Response();
+        $response12->setWording(".**1****1236");
+        $response12->setCorrect(true);
+        $response12->setQuestion($this->getReference(2));
+        $manager->persist($response12);
 
-        $reponse14 = new Reponse();
-        $reponse14->setEnonce("post, get, cookie");
-        $reponse14->setCorrect(false);
-        $reponse14->setQuestion($this->getReference(3));
-        $manager->persist($reponse14);
+        $response12 = new Response();
+        $response12->setWording(".**1****1236");
+        $response12->setCorrect(true);
+        $response12->setQuestion($this->getReference(2));
+        $manager->persist($response12);
 
-        $reponse15 = new Reponse();
-        $reponse15->setEnonce("get, post, cookie");
-        $reponse15->setCorrect(true);
-        $reponse15->setQuestion($this->getReference(3));
-        $manager->persist($reponse15);
+        $response12 = new Response();
+        $response12->setWording(".**1****1236");
+        $response12->setCorrect(true);
+        $response12->setQuestion($this->getReference(2));
+        $manager->persist($response12);
 
-        $reponse16 = new Reponse();
-        $reponse16->setEnonce("post,cookie, get");
-        $reponse16->setCorrect(false);
-        $reponse16->setQuestion($this->getReference(3));
-        $manager->persist($reponse16);
+        $response12 = new Response();
+        $response12->setWording(".**1****1236");
+        $response12->setCorrect(true);
+        $response12->setQuestion($this->getReference(2));
+        $manager->persist($response12);
+
+        //Question 4
+        $response13 = new Response();
+        $response13->setWording("get, cookie, post");
+        $response13->setCorrect(false);
+        $response13->setQuestion($this->getReference(3));
+        $manager->persist($response13); 
+
+        $response14 = new Response();
+        $response14->setWording("post, get, cookie");
+        $response14->setCorrect(false);
+        $response14->setQuestion($this->getReference(3));
+        $manager->persist($response14);
+
+        $response15 = new Response();
+        $response15->setWording("get, post, cookie");
+        $response15->setCorrect(true);
+        $response15->setQuestion($this->getReference(3));
+        $manager->persist($response15);
+
+        $response16 = new Response();
+        $response16->setWording("post,cookie, get");
+        $response16->setCorrect(false);
+        $response16->setQuestion($this->getReference(3));
+        $manager->persist($response16);
 
         //Question 5
-        $reponse17 = new Reponse();
-        $reponse17->setEnonce("ob_flush()");
-        $reponse17->setCorrect(false);
-        $reponse17->setQuestion($this->getReference(4));
-        $manager->persist($reponse17);
+        $response17 = new Response();
+        $response17->setWording("ob_flush()");
+        $response17->setCorrect(false);
+        $response17->setQuestion($this->getReference(4));
+        $manager->persist($response17);
 
-        $reponse18 = new Reponse();
-        $reponse18->setEnonce("ob_get_flush()");
-        $reponse18->setCorrect(false);
-        $reponse18->setQuestion($this->getReference(4));
-        $manager->persist($reponse18);
+        $response18 = new Response();
+        $response18->setWording("ob_get_flush()");
+        $response18->setCorrect(false);
+        $response18->setQuestion($this->getReference(4));
+        $manager->persist($response18);
         
-        $reponse19 = new Reponse();
-        $reponse19->setEnonce("ob_end_flush()");
-        $reponse19->setCorrect(true);
-        $reponse19->setQuestion($this->getReference(4));
-        $manager->persist($reponse19);
+        $response19 = new Response();
+        $response19->setWording("ob_end_flush()");
+        $response19->setCorrect(true);
+        $response19->setQuestion($this->getReference(4));
+        $manager->persist($response19);
 
+        $manager->flush();
+        
+        // On va générer les réponses pour chacune des 30 questions PHP puis JAVA
+        $topicsLabelList = ['PHP', 'JAVA'];
+        $reponseLabelList = ['A', 'B', 'C', 'D'];
+        foreach ($topicsLabelList as $label) {
+        	// Pour chaque question
+        	for ($i = 1; $i <= 30 ; $i++) {
+        		foreach ($reponseLabelList as $repLabel) {
+        			$reponse = new Response();
+        			$reponse->setWording("Question $label $i : Reponse $repLabel");
+        			if ($repLabel === 'A') {
+        				$reponse->setCorrect(true);
+        			} else {
+        				$reponse->setCorrect(false);
+        			}
+        			$key = $label . '_' . $i;
+        			$reponse->setQuestion($this->getReference($key));
+        					
+        			$manager->persist($reponse);
+        		}
+        		
+        	}
+        }
+        
         $manager->flush();
 
     }
