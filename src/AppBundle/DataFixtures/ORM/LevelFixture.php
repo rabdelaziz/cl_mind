@@ -5,15 +5,16 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Niveau;
+use AppBundle\Entity\Level;
 
-class NiveauFixture extends AbstractFixture implements OrderedFixtureInterface
+class LevelFixture extends AbstractFixture implements OrderedFixtureInterface
 {
-    /**
-     * load level
-     * @param  ObjectManager $manager
-     * @return Niveau                
-     */
+
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \Doctrine\Common\DataFixtures\FixtureInterface::load()
+	 */
     public function load(ObjectManager $manager)
     {
         $levelList = array(
@@ -23,8 +24,8 @@ class NiveauFixture extends AbstractFixture implements OrderedFixtureInterface
         );
 
         foreach($levelList as $value) {
-            $niveau = new Niveau();
-            $niveau->setNom($value);
+            $niveau = new Level();
+            $niveau->setName($value);
             $manager->persist($niveau);
             $manager->flush();
             $this->addReference($value, $niveau);

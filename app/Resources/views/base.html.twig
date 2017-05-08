@@ -9,6 +9,17 @@
     </head>
     <body>
         <div class="container">
+
+    		{% if app.session.flashbag.peekAll|length > 0 %}
+                {% for type, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                		<div class="{{ type ? type : '' }}">
+                    	    {{ message|trans({}, domain|default('messages')) }}
+                		</div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
             {% block body %}{% endblock %}
         </div>
         {% block javascripts %}{% endblock %}
