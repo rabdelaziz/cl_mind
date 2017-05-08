@@ -24,12 +24,12 @@
             <th scope="row"></th>
             <td>
                 <a href="{{ path('question_view', { 'id': question.id }) }}">
-                    {{ question.enonce }}
+                    {{ question.content }}
                 </a>
             </td>
-            <td>{{ question.niveau.nom }}</td>
+            <td>{{ question.level.name }}</td>
             <td>{{ question.topic.name }}</td>
-            <td>{{ question.duree }}</td>
+            <td>{{ question.duration }}</td>
             <td>
                 <a href="{{ path('question_edit', { 'id': question.id }) }}">
                     <img src="{{asset('images/clevermind/edit.png')}}" class="img-responsive"/>

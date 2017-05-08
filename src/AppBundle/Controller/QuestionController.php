@@ -11,7 +11,6 @@ class QuestionController extends Controller
 {
     public function indexAction()
     {
-
         $repository = $this->getDoctrine()
             ->getManager()
             ->getRepository('AppBundle:Question');

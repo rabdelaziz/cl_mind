@@ -8,33 +8,33 @@
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
         {# render the task's only field: description #}
         <div class="form-group">
-            {{ form_label(form.enonce, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-            {{ form_errors(form.enonce) }}
+            {{ form_label(form.content, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+            {{ form_errors(form.content) }}
 
             <div class="col-sm-4">
                 {# Génération de l'input. #}
-                {{ form_widget(form.enonce, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
 
         <div class="form-group">
 
-            {{ form_label(form.duree, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-            {{ form_errors(form.duree) }}
+            {{ form_label(form.duration, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+            {{ form_errors(form.duration) }}
 
             <div class="col-sm-4">
                 {# Génération de l'input. #}
-                {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
         <div class="form-group">
 
-            {{ form_label(form.niveau, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-            {{ form_errors(form.niveau) }}
+            {{ form_label(form.level, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+            {{ form_errors(form.level) }}
 
             <div class="col-sm-4">
                 {# Génération de l'input. #}
-                {{ form_widget(form.niveau, {'attr': {'class': 'form-control'}}) }}
+                {{ form_widget(form.level, {'attr': {'class': 'form-control'}}) }}
             </div>
         </div>
         <div class="form-group">
@@ -47,11 +47,11 @@
             </div>
         </div>
 
-        <h3>Les reponses :</h3>
-        <ul class="reponses" data-prototype="{{ form_widget(form.reponses.vars.prototype)|e('html_attr') }}">
+        <h3>Les responses :</h3>
+        <ul class="responses" data-prototype="{{ form_widget(form.responses.vars.prototype)|e('html_attr') }}">
             {# iterate over each existing tag and render its only field: name #}
-            {% for reponse in form.reponses %}
-                <li>{{ form_row(reponse.enonce) }}</li>
+            {% for response in form.responses %}
+                <li>{{ form_row(response.content) }}</li>
             {% endfor %}
         </ul>
         {{ form_end(form) }}
