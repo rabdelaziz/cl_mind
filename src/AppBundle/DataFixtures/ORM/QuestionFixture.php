@@ -36,7 +36,7 @@ class QuestionFixture extends AbstractFixture implements OrderedFixtureInterface
 
         foreach ($questions as $key => $questionAttr) {
             $question = new Question();
-            $question->setWording($questionAttr['enonce']);
+            $question->setContent($questionAttr['enonce']);
             $question->setDuration($questionAttr['duree']);
             if($key % 2 == 0) {
                 $question->setLevel($this->getReference('facile'));
@@ -68,7 +68,7 @@ class QuestionFixture extends AbstractFixture implements OrderedFixtureInterface
     	foreach ($topicsLabelList as $label) {
     		for ($i = 1; $i <= 30 ; $i++) {
     			$question = new Question();
-    			$question->setWording("Question $label $i")
+    			$question->setContent("Question $label $i")
     			->setDuration(2);
     			if ($i <= 10) {
     				$question->setLevel($this->getReference('facile'));

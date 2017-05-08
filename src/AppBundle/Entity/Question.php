@@ -25,9 +25,9 @@ class Question
     /**
      * @var string
      *
-     * @ORM\Column(name="wording", type="text", length=500, unique=false)
+     * @ORM\Column(name="content", type="text", length=500, unique=false)
      */
-    private $wording;
+    private $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Level")
@@ -78,27 +78,27 @@ class Question
     }
 
     /**
-     * Set wording
+     * Set content
      *
-     * @param string $wording
+     * @param string $content
      *
      * @return Question
      */
-    public function setWording($wording)
+    public function setContent($content)
     {
-        $this->wording = $wording;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get wording
+     * Get content
      *
      * @return string
      */
-    public function getWording()
+    public function getContent()
     {
-        return $this->wording;
+        return $this->content;
     }
 
     /**
