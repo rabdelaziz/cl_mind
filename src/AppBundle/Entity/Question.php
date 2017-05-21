@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Question
  *
  * @ORM\Table(name="question")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestionRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\QuestionRepository")
  */
 class Question
 {
@@ -48,7 +48,7 @@ class Question
 
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Reponse", mappedBy="question", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Response", mappedBy="question", cascade={"persist"})
      */
     private $reponses;
 
@@ -165,9 +165,9 @@ class Question
         return $this->topic;
     }
 
-    public function addReponse(Reponse $reponse)
+    public function addReponse(Response $reponse)
     {
-        $this->reponses[] = $reponse;
+        $this->repsonses[] = $reponse;
 
         // On lie la question à la reponse
         $reponse->setQuestion($this);
@@ -175,9 +175,9 @@ class Question
         return $this;
     }
 
-    public function removeReponse(Reponse $reponse)
+    public function removeReponse(Response $reponse)
     {
-        $this->reponses->removeElement($reponse);
+        $this->responses->removeElement($reponse);
     }
 
     public function getReponses()
@@ -300,4 +300,6 @@ class Question
     {
         return $this->test;
     }
+
+    
 }

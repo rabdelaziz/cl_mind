@@ -80,6 +80,13 @@ class Score
      */
     private $response;
 
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isLast", type="boolean")
+     */
+    private $isLast;
+
     /**
      * Get id
      *

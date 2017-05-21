@@ -4,11 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use Doctrine\Common\Collections\Criteria;
+
 /**
  * Evaluation
  *
  * @ORM\Table(name="evaluation")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\EvaluationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\EvaluationRepository")
  */
 class Evaluation
 {
@@ -44,12 +47,12 @@ class Evaluation
      * })
      */
     private $author;
-    
+
     /**
      * @var ArrayCollection $questions
      *
      * @ORM\ManyToMany(targetEntity="Question", inversedBy="questions")
-     * @ORM\JoinTable(name="evaluation_question") 
+     * @ORM\JoinTable(name="evaluation_question")
      */
     private $questions;
 
@@ -57,7 +60,7 @@ class Evaluation
      * @var ArrayCollection $candidates
      *
      * @ORM\ManyToMany(targetEntity="User", inversedBy="candidates")
-     * @ORM\JoinTable(name="evaluation_candidate") 
+     * @ORM\JoinTable(name="evaluation_candidate")
      */
     private $candidates;
 
@@ -66,7 +69,7 @@ class Evaluation
        $this->candidates = new ArrayCollection();
     }
 
- 
+
 
 
     /**
@@ -217,5 +220,12 @@ class Evaluation
     public function getCandidates()
     {
         return $this->candidates;
+    }
+
+    public function getQuestionsFiltered($ids) 
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->in("id", $ids));
+
+        return $this->getQuestions()->matching($criteria); 
     }
 }

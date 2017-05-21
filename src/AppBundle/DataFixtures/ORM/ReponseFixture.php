@@ -5,7 +5,7 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Reponse;
+use AppBundle\Entity\Response;
 
 class ReponseFixture extends AbstractFixture implements OrderedFixtureInterface
 {
