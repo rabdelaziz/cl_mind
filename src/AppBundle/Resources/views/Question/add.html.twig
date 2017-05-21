@@ -8,12 +8,12 @@
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
             {# render the task's only field: description #}
             <div class="form-group">
-                {{ form_label(form.enonce, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                {{ form_errors(form.enonce) }}
+                {{ form_label(form.content, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.content) }}
 
                 <div class="col-sm-4">
                     {# Génération de l'input. #}
-                    {{ form_widget(form.enonce, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
 
@@ -29,12 +29,12 @@
             </div>
             <div class="form-group">
 
-                {{ form_label(form.niveau, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                {{ form_errors(form.niveau) }}
+                {{ form_label(form.level, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.level) }}
 
                 <div class="col-sm-4">
                     {# Génération de l'input. #}
-                    {{ form_widget(form.niveau, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.level, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
             <div class="form-group">
@@ -48,10 +48,10 @@
             </div>
 
             <h3>Reponses</h3>
-            <ul class="reponses" data-prototype="{{ form_widget(form.reponses.vars.prototype)|e('html_attr') }}">
+            <ul class="responses" data-prototype="{{ form_widget(form.responses.vars.prototype)|e('html_attr') }}">
                 {# iterate over each existing tag and render its only field: name #}
-                {% for reponse in form.reponses %}
-                    <li>{{ form_row(reponse.enonce) }}</li>
+                {% for response in form.responses %}
+                    <li>{{ form_row(response.content) }}</li>
                 {% endfor %}
             </ul>
 
@@ -68,15 +68,15 @@
     var $collectionHolder;
 
     // setup an "add a tag" link
-    var $addTagLink = $('<a href="#" class="add_tag_link">Add a reponse</a>');
+    var $addTagLink = $('<a href="#" class="add_tag_link">Add a response</a>');
     var $newLinkLi = $('<li></li>').append($addTagLink);
 
     jQuery(document).ready(function() {
 
-        // Get the ul that holds the collection of reponse
-        var $collectionHolder = $('ul.reponses');
+        // Get the ul that holds the collection of response
+        var $collectionHolder = $('ul.responses');
 
-        // add the "add a tag" anchor and li to the reponses ul
+        // add the "add a tag" anchor and li to the responses ul
         $collectionHolder.append($newLinkLi);
 
         // count the current form inputs we have (e.g. 2), use that as the new
@@ -112,12 +112,12 @@
         var $newFormLi = $('<li></li>').append(newForm);
 
         // also add a remove button, just for this example
-        $newFormLi.append('<a href="#" class="remove-reponse">x</a>');
+        $newFormLi.append('<a href="#" class="remove-response">x</a>');
 
         $newLinkLi.before($newFormLi);
 
         // handle the removal, just for this example
-        $('.remove-reponse').click(function(e) {
+        $('.remove-response').click(function(e) {
             e.preventDefault();
 
             $(this).parent().remove();

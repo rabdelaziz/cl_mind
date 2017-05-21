@@ -6,12 +6,12 @@
     <h3>Détails:</h3>
     <table>
         <tr>
-            <td>Enoncé :</td>
-            <td>{{ question.enonce }}</td>
+            <td>Enoncé : </td>
+            <td>{{ question.content }}</td>
         </tr>
         <tr>
             <td>Niveau :</td>
-            <td>{{ question.niveau.nom }}</td>
+            <td>{{ question.level.name }}</td>
         </tr>
         <tr>
             <td>Thème :</td>
@@ -19,7 +19,7 @@
         </tr>
         <tr>
             <td>Durée :</td>
-            <td>{{ question.duree }}</td>
+            <td>{{ question.duration }} mn</td>
         </tr>
     </table>
     <br>
@@ -28,15 +28,15 @@
         <thead>
             <tr>
                 <th>Réponse</th>
-                <th>Correct</th>
+                <th>Correcte</th>
             </tr>
         </thead>
-        {% if not question.reponses.empty %}
+        {% if not question.responses.empty %}
             <tbody>
-                {% for reponse in question.reponses %}
+                {% for response in question.responses %}
                     <tr>
-                        <td>{{ reponse.enonce }}</td>
-                        <td>{% if reponse.correct %}oui{% else %}non{% endif %}</td>
+                        <td>{{ response.content }}</td>
+                        <td>{% if response.correct %}oui{% else %}non{% endif %}</td>
                     </tr>
                 {% endfor %}
             <tbody>

@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Niveau
+ * Status
  *
- * @ORM\Table(name="niveau")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\NiveauRepository")
+ * @ORM\Table(name="status")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\StatusRepository")
  */
-class Niveau
+class Status
 {
     /**
      * @var int
@@ -24,10 +24,9 @@ class Niveau
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=15, unique=true)
+     * @ORM\Column(name="name", type="string", length=16, unique=true)
      */
-    private $nom;
-
+    private $name;
 
     /**
      * Get id
@@ -40,26 +39,26 @@ class Niveau
     }
 
     /**
-     * Set nom
+     * Set name
      *
-     * @param string $nom
+     * @param string $name
      *
-     * @return Niveau
+     * @return Status
      */
-    public function setNom($nom)
+    public function setName($name)
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get nom
+     * Get name
      *
      * @return string
      */
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 }

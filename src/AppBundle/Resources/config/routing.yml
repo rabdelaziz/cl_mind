@@ -24,3 +24,29 @@ question_delete:
 question_add:
     path:     /question/add
     defaults: { _controller: AppBundle:Question:add }
+
+evaluation_index:
+    path:     /evaluation
+    defaults: { _controller: AppBundle:Evaluation:index }
+
+evaluation_add:
+    path:     /evaluation/add
+    defaults: { _controller: AppBundle:Evaluation:add }
+
+evaluation_view:
+    path:     /evaluation/view/{id}
+    defaults: { _controller: AppBundle:Evaluation:view }
+    requirements:
+             id: \d+
+             
+evaluation_edit:
+    path:     /evaluation/edit/{id}
+    defaults: { _controller: AppBundle:Evaluation:edit }
+    requirements:
+             id: \d+
+ 
+evaluation_delete:
+    path:     /evaluation/delete/{id}
+    defaults: { _controller: AppBundle:Evaluation:detete }
+    requirements:
+          id: \d+

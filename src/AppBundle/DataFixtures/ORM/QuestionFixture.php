@@ -36,19 +36,22 @@ class QuestionFixture extends AbstractFixture implements OrderedFixtureInterface
 
         foreach ($questions as $key => $questionAttr) {
             $question = new Question();
-            $question->setEnonce($questionAttr['enonce']);
-            $question->setDuree($questionAttr['duree']);
+            $question->setContent($questionAttr['enonce']);
+            $question->setDuration($questionAttr['duree']);
             if($key % 2 == 0) {
-                $question->setNiveau($this->getReference('facile'));
+                $question->setLevel($this->getReference('facile'));
             } else {
-                $question->setNiveau($this->getReference('moyen'));
+                $question->setLevel($this->getReference('moyen'));
             }
             $question->setTopic($this->getReference('PHP'));
             $manager->persist($question);
             $manager->flush();
             $this->addReference($key, $question);
 
-        }
+        }        
+        
+        // Générer plus de données pour la BDD
+		$this->addData($manager);
         
     }
 
@@ -56,5 +59,33 @@ class QuestionFixture extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 4;
+    }
+    
+    public function addData(ObjectManager $manager)
+    {
+    	// On va générer 30 questions pour chacun des thèmes PHP puis JAVA
+    	$topicsLabelList = ['PHP', 'JAVA'];
+    	foreach ($topicsLabelList as $label) {
+    		for ($i = 1; $i <= 30 ; $i++) {
+    			$question = new Question();
+    			$question->setContent("Question $label $i")
+    			->setDuration(2);
+    			if ($i <= 10) {
+    				$question->setLevel($this->getReference('facile'));
+    			} elseif ($i <= 20) {
+    				$question->setLevel($this->getReference('moyen'));
+    			} else {
+    				$question->setLevel($this->getReference('difficile'));
+    			}
+    	
+    			$question->setTopic($this->getReference($label));
+    	
+    			$manager->persist($question);
+    			$manager->flush();
+    			$key = $label . '_' . $i;
+    			$this->addReference($key, $question);
+    		}
+    	
+    	}
     }
 }

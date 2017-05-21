@@ -12,34 +12,34 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Response
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="content", type="text", length=500, unique=false)
-     */
-    private $content;
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="content", type="text", length=500, unique=false)
+	 */
+	private $content;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="correct", type="boolean", options={"default":0})
-     */
-    private $correct ;
+	/**
+	 * @var bool
+	 *
+	 * @ORM\Column(name="correct", type="boolean", options={"default":0})
+	 */
+	private $correct ;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="responses", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $question;
+	/**
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="responses", cascade={"persist"})
+	 * @ORM\JoinColumn(nullable=false)
+	 */
+	private $question;
 
 
     /**
@@ -124,3 +124,4 @@ class Response
         return $this->question;
     }
 }
+

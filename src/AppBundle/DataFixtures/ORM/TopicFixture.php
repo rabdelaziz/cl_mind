@@ -30,12 +30,33 @@ class TopicFixture extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($topic2);
         $manager->flush();
         $this->addReference('JAVA',  $topic2);
-       
-
+        
+        // Complétons les données
+        $this->addData($manager);
     }
 
     public function getOrder()
     {
         return 3;
+    }
+    
+    public function addData(ObjectManager $manager)
+    {
+    	$topicNameList = array(
+    			'Mysql',
+    			'Html',
+    			'JavaScript',
+    			'Perl',
+    			'CSS',
+    	);
+    	foreach ($topicNameList as $name) {
+    		$topic = new Topic();
+    		$topic->setName($name)
+    		->setDescription("Description $name");
+    		 
+    		$manager->persist($topic);
+    	}
+    	
+    	$manager->flush();
     }
 }
