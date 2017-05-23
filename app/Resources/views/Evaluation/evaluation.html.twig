@@ -17,8 +17,8 @@
    <div id="worked">13:00</div>
         <div class="col-md-11 col-md-offset-1">
         <ul>
-            <li><span>Nombre de questions validées:</span></li>
-            <li><span>Nombre de questions restantes:</span></li>
+            <li><span>Nombre de questions validées:</span><b><span id="jqQuesValid">{{validQuestionNumber}}</b></span></li>
+            <li><span>Nombre de questions restantes:</span><b><span id="jqQuesNotvalid">{{sessionQuestion|length - validQuestionNumber}}</b></span></li>
         </ul>
         <small></small>
     </div>
@@ -37,10 +37,10 @@
                     <tbody id="questionsContainer">                   
                         <tr>
                             <td class="selevert-lg">
-                              <span id="question" class="q-cantainer " data-id="{{firstQuestion.id}}">{{firstQuestion.enonce}}.&nbsp;</span>
+                              <span id="question" class="q-cantainer " data-id="{{firstQuestion.id}}">{{firstQuestion.content}}.&nbsp;</span>
                             </td>
                         </tr>
-                        {% for choice in firstQuestion.reponses %}
+                        {% for choice in firstQuestion.responses %}
                             <tr  class="jqChoices">
                                 <td>
                                     <input type="checkbox"  name="choice-{{loop.index}}" class="dynamicInput jqChoice" value="{{choice.id}}" data-questionId="{{firstQuestion.id}}"/>
@@ -56,7 +56,7 @@
         </div>
     <div class="text-center">
         <p>
-           <button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>
+             {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
            <button id ="jqValidate" type="button" class="btn btn-default">Suivant</button>
         </p>
     </div>
