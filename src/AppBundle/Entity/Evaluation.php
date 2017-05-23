@@ -109,20 +109,6 @@ class Evaluation
     }
 
     /**
-     * Set title
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * })
-     */
-    private $author;
-
-    /**
-     * @var ArrayCollection $questions
-     *
-     * @ORM\ManyToMany(targetEntity="Question", inversedBy="questions")
-     * @ORM\JoinTable(name="evaluation_question")
      * @param string $title
      *
      * @return Evaluation
@@ -137,8 +123,6 @@ class Evaluation
     /**
      * Get title
      *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="candidates")
-     * @ORM\JoinTable(name="evaluation_candidate")
      * @return string
      */
     public function getTitle()
