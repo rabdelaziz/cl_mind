@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Question;
-use AppBundle\Entity\Reponse;
+use AppBundle\Entity\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\QuestionType;
 use Symfony\Component\HttpFoundation\Request;

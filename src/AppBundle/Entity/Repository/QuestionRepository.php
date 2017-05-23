@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Entity\Repository;
 
 use Doctrine\ORM\Mapping\OrderBy;
 

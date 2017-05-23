@@ -51,8 +51,8 @@ $('document').ready(function(){
                 if(response.status == 'ok') {
                     $("#dialog-form").empty();
                         addSuccessMsgToDialogBox(response.msg);
-
                         setTimeout(function(){ dialog.dialog("close")}, 2000);
+                       location.reload();
                 } else {
                     $('#errorMsg').append(response.msg)
                     $('#formError').show();

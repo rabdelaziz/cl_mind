@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Question
  *
  * @ORM\Table(name="question")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\QuestionRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\QuestionRepository")
  */
 class Question
 {
@@ -173,6 +173,31 @@ class Question
         return $this->topic;
     }
 
+
+    /**
+     * Set text
+     *
+     * @param string $text
+     *
+     * @return Question
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
+     * Get text
+     *
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
     /**
      * Add response
      *
@@ -206,4 +231,5 @@ class Question
     {
         return $this->responses;
     }
+    
 }

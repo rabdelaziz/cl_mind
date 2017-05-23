@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Response
  *
  * @ORM\Table(name="response")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ResponseRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ResponseRepository")
  */
 class Response
 {
@@ -124,3 +124,4 @@ class Response
         return $this->question;
     }
 }
+
