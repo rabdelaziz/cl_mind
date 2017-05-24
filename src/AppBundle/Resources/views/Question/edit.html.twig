@@ -3,7 +3,7 @@
 {% block title %}Modification de la question{% endblock %}
 
 {% block body %}
-
+	<h1>Edition de la question</h1>
     <div class="well">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
         {# render the task's only field: description #}
@@ -47,14 +47,69 @@
             </div>
         </div>
 
-        <h3>Les responses :</h3>
-        <ul class="responses" data-prototype="{{ form_widget(form.responses.vars.prototype)|e('html_attr') }}">
-            {# iterate over each existing tag and render its only field: name #}
-            {% for response in form.responses %}
-                <li>{{ form_row(response.content) }}</li>
-            {% endfor %}
-        </ul>
+		<fieldset>
+			<legend>{{ form_label(form.responses) }}</legend>
+
+            <table id="response-fields-list" data-prototype="{{ form_widget(form.responses.vars.prototype)|e }}" width="70%">
+				<tr>
+        			<th>Enoncé</th>
+        			<th>Correct</th>
+        			<th>Action</th>
+    			</tr>
+                {% for response in form.responses %}
+                    <tr>
+                        <td width="50%">{{ form_widget(response.content) }}</td>
+                        <td width="20%">{{ form_widget(response.correct) }}</td>
+                        <td width="20%"><a href="#" class="remove-response">x</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+			<div class="form-group">
+				<a href="#" id="add-another-response">Ajouter une réponse</a>
+			</div>
+		</fieldset>
+		
+		<hr />
+		<div class="form-group">			
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}           
+        </div>
         {{ form_end(form) }}
     </div>
 
+{% endblock %}
+{% block javascripts %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+	var responseCount = '{{ form.responses|length }}';
+	
+ 	jQuery(document).ready(function() {
+    	jQuery('#add-another-response').click(function(e) {
+       		e.preventDefault();
+
+         	var responseList = jQuery('#response-fields-list');
+         	var newWidget = responseList.attr('data-prototype');
+         	
+         	newWidget = newWidget.replace(/__name__/g, responseCount);
+         	responseCount++;
+         	
+         	var newResponseContent = $(newWidget).find("textarea");
+         	var newResponseCheckbox = $(newWidget).find("input");
+
+         	var textareaTd = jQuery('<td width="50%"></td>').append(newResponseContent);
+         	var checkboxTd = jQuery('<td width="20%"></td>').append(newResponseCheckbox);
+         	var actionTd = jQuery('<td width="20%"></td>').append('<a href="#" class="remove-response">x</a>');
+         	jQuery('<tr></tr>').append(textareaTd).append(checkboxTd).append(actionTd).appendTo(responseList);
+        
+        	jQuery('.remove-response').click(function(event) {
+        		event.preventDefault();
+
+        		$(this).closest('tr').remove();
+        		return false;
+        	});
+     	});
+ 	})
+</script>
 {% endblock %}

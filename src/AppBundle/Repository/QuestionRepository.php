@@ -13,6 +13,15 @@ use Doctrine\ORM\Mapping\OrderBy;
 class QuestionRepository extends \Doctrine\ORM\EntityRepository
 {
 	
+	public function findAllOrderByTopic()
+	{
+		return $this->createQueryBuilder('q')
+			->leftJoin('q.topic', 't')
+			->orderBy('t.name', 'DESC')
+			->getQuery()
+			->getResult();
+
+	}
 	public function getQuestionsByTopicIdAndLevel($topicId, $questionLevel, $limit = null, $offset = null)
 	{
 		$qb = $this->createQueryBuilder('q')

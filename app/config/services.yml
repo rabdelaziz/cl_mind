@@ -17,3 +17,8 @@ services:
         class: AppBundle\Service\UserService
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
+            
+    appbundle.question:
+        class: AppBundle\Service\QuestionService
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

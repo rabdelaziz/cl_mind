@@ -3,7 +3,7 @@
 {% block title %}Ajout des questions{% endblock %}
 
 {% block body %}
-    <h3>Ajouter une nouvelle question</h3>
+    <h3>Page de création d'une question</h3>
     <div class="well">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
             {# render the task's only field: description #}
@@ -19,12 +19,12 @@
 
             <div class="form-group">
 
-                {{ form_label(form.duree, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                {{ form_errors(form.duree) }}
+                {{ form_label(form.duration, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.duration) }}
 
                 <div class="col-sm-4">
                     {# Génération de l'input. #}
-                    {{ form_widget(form.duree, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
             <div class="form-group">
@@ -46,16 +46,33 @@
                     {{ form_widget(form.topic, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
+  			<fieldset>
+    			<legend>{{ form_label(form.responses) }}</legend>
 
-            <h3>Reponses</h3>
-            <ul class="responses" data-prototype="{{ form_widget(form.responses.vars.prototype)|e('html_attr') }}">
-                {# iterate over each existing tag and render its only field: name #}
-                {% for response in form.responses %}
-                    <li>{{ form_row(response.content) }}</li>
-                {% endfor %}
-            </ul>
+                <table id="response-fields-list" data-prototype="{{ form_widget(form.responses.vars.prototype)|e }}" width="70%">
+    				<tr>
+            			<th>Enoncé</th>
+            			<th>Correct</th>
+            			<th>Action</th>
+        			</tr>
+                    {% for response in form.responses %}
+                        <tr>
+                            <td width="50%">{{ form_widget(response.content) }}</td>
+                            <td width="20%">{{ form_widget(response.correct) }}</td>
+                            <td width="20%"><a href="#" class="remove-response">x</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
 
-            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+    			<div class="form-group">
+    				<a href="#" id="add-another-response">Ajouter une réponse</a>
+    			</div>
+			</fieldset>
+			
+			<hr />
+			<div class="form-group">			
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}           
+            </div>
         {{ form_end(form) }}
     </div>
 {% endblock %}
@@ -65,65 +82,33 @@
 
 <script type="text/javascript">
 
-    var $collectionHolder;
+	var responseCount = '{{ form.responses|length }}';
+	
+ 	jQuery(document).ready(function() {
+    	jQuery('#add-another-response').click(function(e) {
+       		e.preventDefault();
 
-    // setup an "add a tag" link
-    var $addTagLink = $('<a href="#" class="add_tag_link">Add a response</a>');
-    var $newLinkLi = $('<li></li>').append($addTagLink);
+         	var responseList = jQuery('#response-fields-list');
+         	var newWidget = responseList.attr('data-prototype');
+         	
+         	newWidget = newWidget.replace(/__name__/g, responseCount);
+         	responseCount++;
+         	
+         	var newResponseContent = $(newWidget).find("textarea");
+         	var newResponseCheckbox = $(newWidget).find("input");
 
-    jQuery(document).ready(function() {
+         	var textareaTd = jQuery('<td width="50%"></td>').append(newResponseContent);
+         	var checkboxTd = jQuery('<td width="20%"></td>').append(newResponseCheckbox);
+         	var actionTd = jQuery('<td width="20%"></td>').append('<a href="#" class="remove-response">x</a>');
+         	jQuery('<tr></tr>').append(textareaTd).append(checkboxTd).append(actionTd).appendTo(responseList);
+        
+        	jQuery('.remove-response').click(function(event) {
+        		event.preventDefault();
 
-        // Get the ul that holds the collection of response
-        var $collectionHolder = $('ul.responses');
-
-        // add the "add a tag" anchor and li to the responses ul
-        $collectionHolder.append($newLinkLi);
-
-        // count the current form inputs we have (e.g. 2), use that as the new
-        // index when inserting a new item (e.g. 2)
-        $collectionHolder.data('index', $collectionHolder.find(':input').length);
-
-        $addTagLink.on('click', function(e) {
-            // prevent the link from creating a "#" on the URL
-            e.preventDefault();
-
-            // add a new tag form (see code block below)
-            addTagForm($collectionHolder, $newLinkLi);
-        });
-
-
-    });
-
-    function addTagForm($collectionHolder, $newLinkLi) {
-        // Get the data-prototype explained earlier
-        var prototype = $collectionHolder.data('prototype');
-
-        // get the new index
-        var index = $collectionHolder.data('index');
-
-        // Replace '$$name$$' in the prototype's HTML to
-        // instead be a number based on how many items we have
-        var newForm = prototype.replace(/__name__/g, index);
-
-        // increase the index with one for the next item
-        $collectionHolder.data('index', index + 1);
-
-        // Display the form in the page in an li, before the "Add a tag" link li
-        var $newFormLi = $('<li></li>').append(newForm);
-
-        // also add a remove button, just for this example
-        $newFormLi.append('<a href="#" class="remove-response">x</a>');
-
-        $newLinkLi.before($newFormLi);
-
-        // handle the removal, just for this example
-        $('.remove-response').click(function(e) {
-            e.preventDefault();
-
-            $(this).parent().remove();
-
-            return false;
-        });
-    }
+        		$(this).closest('tr').remove();
+        		return false;
+        	});
+     	});
+ 	})
 </script>
 {% endblock %}

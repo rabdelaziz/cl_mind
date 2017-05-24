@@ -50,7 +50,9 @@ class Question
 
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Response", mappedBy="question", cascade={"persist"})
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Response", mappedBy="question", cascade={"all"}, orphanRemoval=true)
      */
     private $responses;    
     
@@ -65,6 +67,7 @@ class Question
     public function __construct()
     {
         $this->responses = new ArrayCollection();
+        $this->topic = new ArrayCollection();
     }
 
     /**
@@ -182,7 +185,8 @@ class Question
      */
     public function addResponse(\AppBundle\Entity\Response $response)
     {
-        $this->responses[] = $response;
+    	$response->setQuestion($this);
+    	$this->responses[] = $response;        
 
         return $this;
     }
