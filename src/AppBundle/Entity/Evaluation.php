@@ -4,12 +4,15 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+
 
 /**
  * Evaluation
  *
  * @ORM\Table(name="evaluation")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\EvaluationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\EvaluationRepository")
+
  */
 class Evaluation
 {
@@ -106,8 +109,6 @@ class Evaluation
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      *
      * @return Evaluation
@@ -291,5 +292,12 @@ class Evaluation
     public function getCandidates()
     {
         return $this->candidates;
+    }
+
+    public function getQuestionsFiltered($ids) 
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->in("id", $ids));
+
+        return $this->getQuestions()->matching($criteria); 
     }
 }

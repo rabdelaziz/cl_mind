@@ -1,0 +1,80 @@
+{% extends '::layout.html.twig' %}
+{% block header %}
+{% set title = 'Evaluation PHP' %}
+{{parent()}}
+{% endblock%}
+{% block content %}
+<div class="modall"  style="display:none">
+    <div class="alert-msg">
+        <p class="text-center">Attention, vous n'avez pas répondu à toutes les questions ! Si vous souhaitez passer à l'exercice suivant maintenant,<br/> vous n'aurez plus la posssiblité de revenir sur les pages incomplètes.</p>
+        <p>Souhaitez-vous terminer l'exercice ?</p>
+        <button id ="cancel" type="button" class="btn btn-default">Reprendre les questions</button>
+        <button id ="endAssociationExercice" type="button" class="btn btn-default">Terminer l'exercice</button>
+    </div>
+</div>
+<br/>
+<div class="row">
+   <div id="worked">13:00</div>
+        <div class="col-md-11 col-md-offset-1">
+        <ul>
+            <li><span>Nombre de questions validées:</span><b><span id="jqQuesValid">{{validQuestionNumber}}</b></span></li>
+            <li><span>Nombre de questions restantes:</span><b><span id="jqQuesNotvalid">{{sessionQuestion|length - validQuestionNumber}}</b></span></li>
+        </ul>
+        <small></small>
+    </div>
+</div>
+<div class="row center-content">
+    <div class="col-md-12">      
+        <div class="row">
+            <div class="col-md-12 col-xs-offset-1"> 
+                <div class="alert alert-dismissable alert-danger" id="formError" style="display:none">
+                    <button type="button" class="close" id ="close" data-dismiss="">×</button>
+                    <span id="errorMsg"></span>
+                </div>         
+            <form role="form" class="bs-example form-horizontal pull-left" id="testForm" >
+                <table class="table form-question">
+                    <input type="hidden" name="session" id="sId" value="{{sId}}" >
+                    <tbody id="questionsContainer">                   
+                        <tr>
+                            <td class="selevert-lg">
+                              <span id="question" class="q-cantainer " data-id="{{firstQuestion.id}}">{{firstQuestion.content}}.&nbsp;</span>
+                            </td>
+                        </tr>
+                        {% for choice in firstQuestion.responses %}
+                            <tr  class="jqChoices">
+                                <td>
+                                    <input type="checkbox"  name="choice-{{loop.index}}" class="dynamicInput jqChoice" value="{{choice.id}}" data-questionId="{{firstQuestion.id}}"/>
+                                    {{choice.content}}
+                                </td>
+                            </tr>
+                        {% endfor %} 
+                        <tr class="empty-row"></tr>
+                    </tbody>                            
+                </table>
+            </form>
+          </div>
+        </div>
+    <div class="text-center">
+        <p>
+             {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
+           <button id ="jqValidate" type="button" class="btn btn-default">Suivant</button>
+        </p>
+    </div>
+  </div>
+  </div>  
+  
+{% endblock %}
+{% block js%}
+{{parent()}}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>     
+        <script type="text/javascript">
+        var sessionQuestion = {{sessionQuestion|json_encode|raw}};
+        var questionNumber = "{{questionNumber}}";
+
+        //    console.log(questionsp)
+          var url = "{{path('checkQuestionResponse')}}";
+        </script>
+        <script type="text/javascript" src="{{asset('js/evaluation/evaluation.js')}}"/></script>
+        <script src="{{asset('bundles/selessession/js/jquerycookie.js')}}"></script>
+{% endblock %}
