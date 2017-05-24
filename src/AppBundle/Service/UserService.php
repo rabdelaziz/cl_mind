@@ -27,9 +27,9 @@ class UserService
 	 * @param \AppBundle\Entity\User $candidate
 	 * @return boolean|null|\AppBundle\Entity\User
 	 */
-	public function findCandidate(\AppBundle\Entity\User $candidate)
+	public function findUser(\AppBundle\Entity\User $candidate)
 	{
-		$user = $this->em->getRepository('AppBundle:User')->findCandidate($candidate);	
+		$user = $this->em->getRepository('AppBundle:User')->findUser($candidate);	
 		if (null !== $user) {
 			if ($candidate->getEmail() != $user->getEmail()
 					|| strcasecmp($candidate->getFirstName(), $user->getFirstName()) != 0
@@ -52,15 +52,23 @@ class UserService
 	{
 		$user->setUsername($user->getEmail());
 		$user->setPlainPassword($user->getFirstName());
-		$user->setFirstName($user->getFirstName());
+		//$user->setFirstName($user->getFirstName());
 		$user->setEnabled(true);
 		$user->setRoles(array('ROLE_USER'));
 		
 		return $user;
 	}
 	
-	public function test(){
-		return "test";
+	/**
+	 * 
+	 * @param User $user
+	 * @return \AppBundle\Entity\User
+	 */
+	public function generatePassword(User $user)
+	{
+		$user->setPlainPassword($user->getFirstName());
+		
+		return $user;
 	}
 
 }
