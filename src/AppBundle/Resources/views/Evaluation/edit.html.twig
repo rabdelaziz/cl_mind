@@ -1,9 +1,9 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}AppBundle:Evaluation:index{% endblock %}
+{% block title %}Création d'une candidature{% endblock %}
 
 {% block body %}
-    <h1>Welcome to the Test:index page</h1>
+    <h1>Création d'une candidature</h1>
     <div class="well">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
@@ -28,7 +28,14 @@
                         {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-			<input type="submit" name="add" value="Ajouter" class="btn btn-primary" />
+                <div class="form-group">
+                    {{ form_label(form.username, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.username) }}
+                    <div class="col-sm-3">
+                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+			<input type="submit" name="add" value="Créer" class="btn btn-primary" />
             
         {{ form_end(form) }}
     </div>

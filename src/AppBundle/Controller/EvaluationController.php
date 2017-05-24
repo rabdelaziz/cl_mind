@@ -9,7 +9,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\EvaluationType;
 use AppBundle\Entity\Difficulty;
 use AppBundle\Form\EvaluationStatusType;
-use AppBundle\Form\UserType;
+use AppBundle\Form\ContactType;
 
 class EvaluationController extends Controller
 {
@@ -62,7 +62,7 @@ class EvaluationController extends Controller
     		$newCandidate = $evaluation->getCandidates()[0];
     		// Vérifier si le candidat existe
     		$candidate = $em->getRepository('AppBundle:User')
-    			->findCandidate($newCandidate);
+    			->findUser($newCandidate);
 
     		// Rétirer le candidat car il manque certaines informations obligatoires (comme le mdp)
     		$evaluation->removeCandidate($newCandidate);
@@ -164,14 +164,14 @@ class EvaluationController extends Controller
     	$user = new User();
     	$user->addEvaluation($evaluation);    	
     	
-    	$form = $this->createForm(UserType::class, $user);
+    	$form = $this->createForm(ContactType::class, $user);
     	$form->handleRequest($request);
     	if ($form->isSubmitted() && $form->isValid()) {
     		$session = $request->getSession();
     		$user = $form->getData();
     		
     		$userService = $this->get('appbundle.user');
-    		$userFound = $userService->findCandidate($user);
+    		$userFound = $userService->findUser($user);
     		
     		if (false === $userFound) {
     			$session->getFlashBag()->add('warning', "Un autre candidat utilise l'une de ces informations!");
