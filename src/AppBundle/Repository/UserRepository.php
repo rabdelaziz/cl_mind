@@ -19,13 +19,14 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 	 * @param \AppBundle\Entity\User $candidate
 	 * @return mixed|NULL|\AppBundle\Entity\User
 	 */
-	public function findCandidate(\AppBundle\Entity\User $candidate)
+	public function findUser(\AppBundle\Entity\User $candidate)
 	{
 		$qb = $this->createQueryBuilder('u')
-			->where('u.firstName = :firstName AND u.lastName = :lastName OR u.email = :email')
+			->where('u.firstName = :firstName AND u.lastName = :lastName OR u.email = :email OR u.username = :username')
 			->setParameter('firstName', $candidate->getFirstName())
 			->setParameter('lastName', $candidate->getLastName())
-			->setParameter('email', $candidate->getEmail());
+			->setParameter('email', $candidate->getEmail())
+			->setParameter('username', $candidate->getUsername());
 
 		return	$qb->getQuery()->getOneOrNullResult();
 	}

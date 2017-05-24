@@ -50,3 +50,29 @@ evaluation_delete:
     defaults: { _controller: AppBundle:Evaluation:detete }
     requirements:
           id: \d+
+          
+user_list:
+    path:     /user
+    defaults: { _controller: AppBundle:User:list }
+    
+user_add:
+    path:     /user/add
+    defaults: { _controller: AppBundle:User:add }
+
+user_view:
+    path:     /user/view/{id}
+    defaults: { _controller: AppBundle:User:view }
+    requirements:
+             id: \d+
+   
+user_edit:
+    path:     /user/edit/{id}
+    defaults: { _controller: AppBundle:User:edit }
+    requirements:
+             id: \d+
+             
+user_delete:
+    path:     /user/delete/{id}
+    defaults: { _controller: AppBundle:User:delete }
+    requirements:
+             id: \d+

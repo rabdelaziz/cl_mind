@@ -36,6 +36,9 @@
                 <td>{{ evaluation.themes }}</td>
                 <td>{{ evaluation.author.firstName }} {{ evaluation.author.lastName }}</td>
                 <td>
+                    <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}">
+                        <img src="{{asset('images/clevermind/edit.png')}}" class="img-responsive"/>
+                    </a>
                     <a href="{{ path('evaluation_delete', { 'id': evaluation.id }) }}">
                         <img src="{{asset('images/clevermind/drop.png')}}" class="img-responsive"/>
                     </a>

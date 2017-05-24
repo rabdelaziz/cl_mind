@@ -1,9 +1,9 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}Création d'une candidature{% endblock %}
+{% block title %}Ajout d'un utilisateur{% endblock %}
 
 {% block body %}
-    <h1>Création d'une candidature</h1>
+    <h1>Ajout d'un utilisateur</h1>
     <div class="well">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
@@ -28,14 +28,28 @@
                         {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-                <div class="form-group">
+            	<div class="form-group">
                     {{ form_label(form.username, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
                     {{ form_errors(form.username) }}
                     <div class="col-sm-3">
                         {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                	</div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.roles, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.roles) }}
+                    <div class="col-sm-3">
+                    {{ form_widget(form.roles) }}
+                    </div>                
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.enabled, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.enabled) }}
+                    <div class="col-sm-3">
+                        {{ form_widget(form.enabled) }}
                     </div>
                 </div>
-			<input type="submit" name="add" value="Créer" class="btn btn-primary" />
+			<input type="submit" name="add" value="Ajouter" class="btn btn-primary" />
             
         {{ form_end(form) }}
     </div>
