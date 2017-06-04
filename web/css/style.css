@@ -9,7 +9,9 @@
     font-style: normal;
 
 }
-
+.bold-text {
+    font-weight: bold;
+}
 table.form-question  td:nth-child(even){
     padding-left: 23px;
 }
@@ -93,9 +95,11 @@ li.done div{
 .vert {
     color:#7b9a3c;
 }
-.vertBg{
-    background:#C9E6B4;
+.wellBg{
+    background:#f5f5f5;
     min-height: 500px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
     padding:10px 0;
 }
 .selevert-bold{
@@ -154,12 +158,12 @@ body {
     padding:2px 5px;
 }
 a {
-    color: #a9c491;
+    color: #5a5c5f;
     text-decoration: none;
 }
 a:hover,
 a:focus {
-    color: #7b9a3c;
+    color: #fd4200;
     text-decoration: underline;
 }
 a:focus {
@@ -176,7 +180,7 @@ strong {
 .nav > li > a:hover,
 .nav > li > a:focus {
     text-decoration: none;
-    background-color: #a9c491;
+    background-color: #FFAB5E;
     color:#fff;
 }
 .nav-tabs > li > a {
@@ -188,12 +192,12 @@ strong {
 .nav-tabs > li.active > a:focus {
     color: #555;
     cursor: default;
-    background-color: #fff;
+    background-color: #337ab7;
     border:none;
     border-bottom: 1px solid #000;
 }
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    background-color: #7b9a3c;
+    background-color: #337ab7;
     color: #FFFFFF;
 }
 .nav-pills > li > a {
@@ -288,7 +292,7 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active {
-    background-color: #fff;
+    background-color: #337ab7;
     border-color: #ccc;
 }
 .btn-default .badge {
