@@ -66,11 +66,11 @@ class EvaluationController extends Controller
     public function topicListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $sessionList = $em->getRepository('AppBundle:Topic')->findAll();
+        $topicList = $em->getRepository('AppBundle:Topic')->findAll();
 
 
-        return $this->render('topic/topic_liste.html.twig', array('sessionList' => $sessionList,
-            'activateItem' => 1,
+        return $this->render('topic/topic_liste.html.twig', array('topicList' => $topicList,
+            'topicListActivate' => 1,
         ));
 
     }
@@ -82,10 +82,11 @@ class EvaluationController extends Controller
     public function startTestAction()
     {
         $em = $this->getDoctrine()->getManager();
+        $session = $this->get('session');
         $currentUser = $this->getUser();
         $questionNumber  = 0;
-        $currentSession = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($currentUser->getId());
-        $questionsList = $currentSession->getQuestions();
+        $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($currentUser->getId());
+        $questionsList = $currentEvaluation->getQuestions();
         $normalizer = new ObjectNormalizer();
         $serializer = new Serializer(array($normalizer), array(new JsonEncoder()));
         $normalizer->setCircularReferenceHandler(function ($object) {
@@ -95,67 +96,59 @@ class EvaluationController extends Controller
         $normalizer->setIgnoredAttributes(array('responses'));
 
         $serializedQuestionsList = $serializer->serialize($questionsList, 'json');
-        $score = $em->getRepository('AppBundle:Score')->findOneBy(  array('evaluation' => $currentSession->getId(),
+        $score = $em->getRepository('AppBundle:Score')->findOneBy(  array('evaluation' => $currentEvaluation->getId(),
                                                                         'user' => $currentUser->getId()),
                                                                     array('id' => 'DESC')
                                                                 ); 
-
+        
+        $session->set('countQuestion', count($questionsList));
         if(!empty($score)) {
             $questionNumber = $score->getQuestionNumber();
             $questionNumber++;
+        } else {
+            $session->set('validateQuestionNumber', 0);
         }
 
-        return $this->render('Evaluation/evaluation.html.twig', ['sId' => $currentSession->getId(),
+        return $this->render('Evaluation/evaluation.html.twig', ['sId' => $currentEvaluation->getId(),
             'firstQuestion' => $questionsList[$questionNumber],
             'questionNumber' => $questionNumber,
+            'validQuestionNumber' => $session->get('validateQuestionNumber'),
             'sessionQuestion' => json_decode($serializedQuestionsList)]);
     }
 
     /**
      * @Route("user/evaluation/started", name="checkQuestionResponse")
-     * [checkResponseAction traitement des reponses]
-     * @return [type] [description]
      */
     public function checkResponseAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        //$request          = $this->get('request');
-        $user = $this->getUser();
+        $session = $this->get('session');
         $responseIdsArray = array();
         $responseList = array();
-        // var_dump($request->request->get('parameters'));die;
+
         if ($request->isXmlHttpRequest()) {
-            $normalizer = new ObjectNormalizer();
-            $encoder = new JsonEncoder();
-
-            $serializer = new Serializer(array($normalizer), array($encoder));
-
-           // $serializer = new Serializer(array($normalizer), array(new JsonEncoder()));
             $parameters = $request->get('parameters');
             //sessionId,responseItemIds,questionId
             extract($parameters);
             $this->saveScore($sessionId, $responseItemIds, $questionId, $qNumber);
-            //$nextQuestionIds = $this->incrementQuestionId($questionIds);
-            //$responseIds = $this->getResponseFromScore($sessionId, $nextQuestionIds, 'association');
+            $session->set('validateQuestionNumber', $session->get('validateQuestionNumber') + 1 );
+            if ($session->get('validateQuestionNumber') !=  $session->get('countQuestion')) {
+                $nextQuestion = $request->get('sessionQuestion');
+                $nextQuestionChoice = $em->getRepository('AppBundle:Response')->getReponseByIdQuestion($nextQuestion['id']);
+
+                foreach($nextQuestionChoice as $choice ) {
+                    $responseList[$choice["id"]] = $choice["content"];
+                }
+            }
         }
-        $nextQuestion = $request->get('sessionQuestion');
-      
-
-
-        $nextQuestionChoice = $em->getRepository('AppBundle:Response')->getReponseByIdQuestion($nextQuestion['id']);
-
-        foreach($nextQuestionChoice as $choice ) {
-          $responseList[$choice["id"]] = $choice["content"];
-        }
-       //$nextQuestion = $serializer->deserialize($nextQuestion, Question::class, 'json');
-
         $return = array(
-            'nextQuestion' => json_encode($nextQuestion),
+            'nextQuestion' => isset($nextQuestion) ? json_encode($nextQuestion) : [],
             'responseIds' => $responseIdsArray,
             'responseList'=>!empty($responseList) ? json_encode($responseList) : [] ,
             'questionIds' => $questionId,
-            /* 'countResponse'=>$countResponse,
-             'responseCount'=>$responseCount,*/
+            'validQuestionNumber' => $session->get('validateQuestionNumber'),
+            'questionNumber'=> $session->get('countQuestion') - $session->get('validateQuestionNumber'),
+
         );
 
         $return['responseCode'] = 200;
@@ -163,19 +156,28 @@ class EvaluationController extends Controller
         return new Response(json_encode($return), $return['responseCode'], array('Content-Type' => 'application/json'));
     }
 
+    
     /**
-     * @param $sessionId
+     * @Route("user/evaluation/result", name="evaluation_result", options={"expose"=true})
+     */
+    public function displayResultPageAction()
+    {
+        return $this->render('Evaluation/evaluation-result.html.twig');
+    }
+
+    /**
+     * @param $evaluationId
      * @param $response
      * @param $questionIds
      */
-    public function saveScore($sessionId, $responseIds, $questionId, $qNumber)
+    public function saveScore($evaluationId, $responseIds, $questionId, $qNumber)
     {
 
         $today = new \DateTime("now", new \DateTimeZone('Europe/paris'));
         $em = $this->getDoctrine()->getManager();
-        $session = $em->getRepository('AppBundle:Evaluation')->find($sessionId);
+        $evaluation = $em->getRepository('AppBundle:Evaluation')->find($evaluationId);
         $correctAnswer = array();
-        $score = $em->getRepository('AppBundle:Score')->findOneBy(array('evaluation' => $sessionId, 'question' => $questionId, 'user' => $this->getUser()->getId()));
+        $score = $em->getRepository('AppBundle:Score')->findOneBy(array('evaluation' => $evaluationId, 'question' => $questionId, 'user' => $this->getUser()->getId()));
 
         if (empty($score)) {
             $score = new Score();
@@ -188,25 +190,23 @@ class EvaluationController extends Controller
         }
         $userScore = 0;
         if (!empty($responseIds)) {
-            foreach ($responseIds as $id) {
-                if (in_array($id, $correctAnswer)) {
-                    $userScore++;
-                }
+
+            if (empty(array_diff($correctAnswer, $responseIds))) {
+                 $userScore = 1;
             }
-            $score->setResponseDate($today);
-            $score->setStartDate($today);
-            $score->setQuestionNumber($qNumber);
-            $score->setUser($this->getUser());
-            $score->setQuestion($question);
-            $score->setEvaluation($session);
-
-
-            $score->setResponse(json_encode($responseIds));
-            $score->setScore($userScore);
-            $em->persist($score);
-            $em->flush();
         }
+        $score->setResponseDate($today);
+        $score->setStartDate($today);
+        $score->setQuestionNumber($qNumber);
+        $score->setUser($this->getUser());
+        $score->setQuestion($question);
+        $score->setEvaluation($evaluation);
 
+
+        $score->setResponse(json_encode($responseIds));
+        $score->setScore($userScore);
+        $em->persist($score);
+        $em->flush();    
     }
 
     /*
@@ -230,6 +230,7 @@ class EvaluationController extends Controller
 
     	return $this->render('AppBundle:Evaluation:index.html.twig', array(
     			'evaluationList' => $evaluationList,
+                'evaluationListActivate' => 1,
     	));
     }
 
