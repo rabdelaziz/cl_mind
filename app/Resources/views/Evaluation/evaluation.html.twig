@@ -13,32 +13,50 @@
     </div>
 </div>
 <br/>
+
+
+
 <div class="row">
-   <div id="worked">13:00</div>
-        <div class="col-md-11 col-md-offset-1">
-        <ul>
+
+    <div class="col-md-12 col-md-offset-2" style="margin-left: 65px">
+        <div class="progress">
+            <div id="progressBarVal" class="progress-bar progress-bar-success" role="progressbar" style="height: 20px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{sessionQuestion|length}}">
+                <div class="text-center" id="progressLabel">Question:1/{{sessionQuestion|length}}</div>
+            </div>
+        </div>
+
+        {#<ul>
             <li><span>Nombre de questions validées:</span><b><span id="jqQuesValid">{{validQuestionNumber}}</b></span></li>
             <li><span>Nombre de questions restantes:</span><b><span id="jqQuesNotvalid">{{sessionQuestion|length - validQuestionNumber}}</b></span></li>
-        </ul>
+        </ul>#}
         <small></small>
+
+       
+    </div> 
+        <div class="jqTimer col-md-10 col-md-offset-2"  style="width: 180px; height:180px; float: right;margin-left: 40px" data-timer="{{firstQuestion.duration}}">
+            
+        </div>
     </div>
+    
 </div>
-<div class="row center-content">
-    <div class="col-md-12">      
+<div class="row center-content col-md-offset-2">
+    <div class="col-md-8">      
         <div class="row">
-            <div class="col-md-12 col-xs-offset-1"> 
+            <div class="col-md-12 col-xs-offset-1 form-container"> 
                 <div class="alert alert-dismissable alert-danger" id="formError" style="display:none">
                     <button type="button" class="close" id ="close" data-dismiss="">×</button>
                     <span id="errorMsg"></span>
                 </div>         
-            <form role="form" class="bs-example form-horizontal pull-left" id="testForm" >
-                <table class="table form-question">
+            <form role="form" class="bs-example form-horizontal" id="testForm" >
+                <table class="table form-question col-md-12">
                     <input type="hidden" name="session" id="sId" value="{{sId}}" >
                     <tbody id="questionsContainer">                   
                         <tr>
                             <td class="selevert-lg">
                               <span id="question" class="q-cantainer " data-id="{{firstQuestion.id}}">{{firstQuestion.content}}.&nbsp;</span>
                             </td>
+                        </tr>
+                        <tr class="empty-row">
                         </tr>
                         {% for choice in firstQuestion.responses %}
                             <tr  class="jqChoices">
@@ -47,34 +65,72 @@
                                     {{choice.content}}
                                 </td>
                             </tr>
+
                         {% endfor %} 
-                        <tr class="empty-row"></tr>
+                     
                     </tbody>                            
                 </table>
             </form>
           </div>
         </div>
-    <div class="text-center">
-        <p>
-             {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
-           <button id ="jqValidate" type="button" class="btn btn-default">Suivant</button>
-        </p>
+        <div class="text-center col-md-offset-2">
+            <p>
+                 {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
+               <button id ="jqValidate" type="button" class="btn btn-default">Suivant</button>
+            </p>
+        </div>
     </div>
-  </div>
-  </div>  
+</div>  
   
 {% endblock %}
 {% block js%}
 {{parent()}}
+    <script type="text/javascript">
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>     
-        <script type="text/javascript">
         var sessionQuestion = {{sessionQuestion|json_encode|raw}};
         var questionNumber = "{{questionNumber}}";
+        var url = "{{path('checkQuestionResponse')}}";
+        $(".jqTimer").TimeCircles({
+                                        "animation": "smooth",
+                                        "bg_width": 0.5,
+                                        "fg_width": 0.013333333333333334,
+                                        "circle_bg_color": "#ffffff",
+                                        "time": {
+                                            "Days": {
+                                                "text": "Days",
+                                                "color": "#FFCC66",
+                                                "show": false
+                                            },
+                                            "Hours": {
+                                                "text": "Hours",
+                                                "color": "#99CCFF",
+                                                "show": false
+                                            },
+                                            "Minutes": {
+                                                "text": "Minutes",
+                                                "color": "#BBFFBB",
+                                                "show": true
+                                            },
+                                            "Seconds": {
+                                                "text": "Seconds",
+                                                "color": "#FF9999",
+                                                "show": true
+                                            }
+                                        }
+                                    }).addListener(function(until, value, total){
+                                  //  console.log(value);console.log(total);console.log(until);
+                                    if(total == 0) {
+                                        $('#jqValidate').trigger( "click" );
+                                        $('.jqTimer').data('timer',0);
+                                        $(".jqTimer").TimeCircles().stop();
+                                        //$(".jqTimer").TimeCircles().stop();
+                                    }
 
-        //    console.log(questionsp)
-          var url = "{{path('checkQuestionResponse')}}";
-        </script>
-        <script type="text/javascript" src="{{asset('js/evaluation/evaluation.js')}}"/></script>
-        <script src="{{asset('bundles/selessession/js/jquerycookie.js')}}"></script>
+                                    
+                                });
+
+       // $('.progress .progress-bar').progressbar({display_text: 'fill'});
+    </script>
+    <script type="text/javascript" src="{{asset('js/evaluation/evaluation.js')}}"/></script>
+    <script src="{{asset('bundles/selessession/js/jquerycookie.js')}}"></script>
 {% endblock %}

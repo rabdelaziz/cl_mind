@@ -9,6 +9,40 @@
     font-style: normal;
 
 }
+.form-container {
+   /* background-color: #f4f0ed;*/
+    padding: 20px 0px 0px 20px;
+    border-radius: 10px;
+    /* border-spacing: initial; */
+    /* border-style: ridge; */
+    margin-bottom: 30px;
+}
+td.selevert-lg {
+    background-color: #eee6f1;
+    padding: 16px!important;
+    border-radius: 8px;
+}
+tr.jqChoices  {
+    background-color: #eee6f1;
+    border-radius: 8px;
+}
+tr.jqChoices td {
+    padding-left: 12px!important;
+}
+.textDiv_Seconds h4, .textDiv_Minutes h4 {
+    font-weight: bold;
+    font-size: 10px!important;
+}
+
+.timer {
+    position: static;
+    float: right;
+    top: 26px;
+    left: 100%;
+}
+tr.empty-row {
+    height: 40px;
+}
 .bold-text {
     font-weight: bold;
 }
@@ -207,12 +241,16 @@ strong {
 .nav-stacked > li + li {
     margin-top: 0px;
 }
-.progress-bar-success {
-    background-color: #7b9a3c;
-}
-.progress {
-    height: 14px;
+
+.first-progress {
+    height: 0px;
     margin-bottom:0;
+}
+.progress-bar { 
+    color: black;
+    font-style: bold;
+    font-style: italic;
+    font-size: 14px;
 }
 .alert {
     padding: 5px;
@@ -426,9 +464,7 @@ div.row.center-content {
     padding-top: 40px;
 }
 
-tr.empty-row {
-    height: 70px;
-}
+
 
 
 ul.selemenu-small li.to-do, ul.selemenu-small li.done {

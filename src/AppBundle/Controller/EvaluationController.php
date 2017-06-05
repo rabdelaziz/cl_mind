@@ -130,6 +130,9 @@ class EvaluationController extends Controller
             $parameters = $request->get('parameters');
             //sessionId,responseItemIds,questionId
             extract($parameters);
+            $responseItemIds = isset($parameters['responseItemIds']) ? $parameters['responseItemIds'] : [];
+            
+            
             $this->saveScore($sessionId, $responseItemIds, $questionId, $qNumber);
             $session->set('validateQuestionNumber', $session->get('validateQuestionNumber') + 1 );
             if ($session->get('validateQuestionNumber') !=  $session->get('countQuestion')) {
@@ -148,6 +151,7 @@ class EvaluationController extends Controller
             'questionIds' => $questionId,
             'validQuestionNumber' => $session->get('validateQuestionNumber'),
             'questionNumber'=> $session->get('countQuestion') - $session->get('validateQuestionNumber'),
+            'totalQuestionNumber'=>$session->get('countQuestion')
 
         );
 
