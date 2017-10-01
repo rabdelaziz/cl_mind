@@ -5,9 +5,23 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet">
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="container">
+
+    		{% if app.session.flashbag.peekAll|length > 0 %}
+                {% for type, messages in app.session.flashbag.all %}
+                    {% for message in messages %}
+                		<div class="{{ type ? type : '' }}">
+                    	    {{ message|trans({}, domain|default('messages')) }}
+                		</div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+            {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

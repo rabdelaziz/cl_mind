@@ -1,0 +1,24 @@
+    {{ form_start(form, {'attr':{'id': 'createTopicForm'}}) }}
+    <div class="row">
+        <div class="col-xs-10">
+            <label class="sr-only" for="exampleInputEmail1">
+            </label>
+            {{form_widget(form.name, {'attr':{'class':'form-control','placeholder':'Nom'}})}}
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-10">
+            <label class="sr-only" for="exampleInputEmail2"></label>
+            {{form_widget(form.description, {'attr':{'class':'form-control', 'placeholder': 'Description'}})}}
+        </div>
+    </div>
+    <br/>
+    <div class="row text-center">
+        <label class="sr-only" for="exampleInputEmail2"></label>
+        <input class="btn btn-default" id ="createSession" type="submit"  value="valider"/>
+    </div>
+    {{ form_end(form) }}
+    <br/>
+
+

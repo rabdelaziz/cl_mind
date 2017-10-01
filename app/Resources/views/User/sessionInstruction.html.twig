@@ -1,0 +1,32 @@
+{% extends '::layout.html.twig' %}
+{% block header %}
+    {% set title = 'Instructions' %}
+    {{parent()}}
+{% endblock%}
+{% block content %}
+
+    <div class="row">
+    <div class="col-xs-8 col-xs-offset-2">
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <h3>Bienvenue chez Clevermind</h3>
+        <br/>
+        <p class="justify-style">L’évaluation Clevermind consistera à remplir un questionnaires de x minutés.</p>
+        <p class="justify-style">A l’issue de l’évaluation,vous résultats seront affichées.</p>
+        <br/>
+        <p class="text-center"><b>Nous vous souhaitons une bonne évaluation !</b></p>
+        <br/>
+    </div>
+</div>
+
+
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <p class="text-center">
+                <a href="{{path('start_evaluation')}}" class="btn btn-default">
+                    Démarrer l'évaluation
+                </a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

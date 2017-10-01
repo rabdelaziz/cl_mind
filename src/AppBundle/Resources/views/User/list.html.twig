@@ -1,0 +1,53 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+<h1>Liste des Utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+    			<th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Identifiant</th>            
+                <th>Rôle</th>
+                <th>Etat</th>
+                <th></th>
+            </tr>
+        </thead>
+  
+        {% if userList|length > 0 %}     
+        	<tbody>
+        
+            {% for user in userList %}
+            <tr>
+                <th scope="row"></th>
+    			<td>
+    				<a href="{{ path('user_view', { 'id': user.id }) }}">
+    					{{ user.firstName }}
+    				</a>
+    			</td>        
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td> {{ user.username }}</td>
+                <td> {{ user.username }}</td>
+                <td>{% if user.enabled %} Actif {% else %} Inactif {% endif %} </td>
+                <td>
+                    <a href="{{ path('user_edit', { 'id': user.id }) }}">
+                    	<img src="{{asset('images/clevermind/edit.png')}}" class="img-responsive"/>
+                	</a>
+                    <a href="{{ path('user_delete', { 'id': user.id }) }}">
+                        <img src="{{asset('images/clevermind/drop.png')}}" class="img-responsive"/>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        
+        </tbody>
+        {% endif %}
+    </table>
+
+{% endblock %}

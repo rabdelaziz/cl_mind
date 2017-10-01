@@ -1,0 +1,114 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Ajout des questions{% endblock %}
+
+{% block body %}
+    <h3>Page de création d'une question</h3>
+    <div class="well">
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {# render the task's only field: description #}
+            <div class="form-group">
+                {{ form_label(form.content, "Enoncé", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.content) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                {{ form_label(form.duration, "Durée", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.duration) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+
+                {{ form_label(form.level, "Niveau", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.level) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.level, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.topic, "Thème", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.topic) }}
+
+                <div class="col-sm-4">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.topic, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+  			<fieldset>
+    			<legend>{{ form_label(form.responses) }}</legend>
+
+                <table id="response-fields-list" data-prototype="{{ form_widget(form.responses.vars.prototype)|e }}" width="70%">
+    				<tr>
+            			<th>Enoncé</th>
+            			<th>Correct</th>
+            			<th>Action</th>
+        			</tr>
+                    {% for response in form.responses %}
+                        <tr>
+                            <td width="50%">{{ form_widget(response.content) }}</td>
+                            <td width="20%">{{ form_widget(response.correct) }}</td>
+                            <td width="20%"><a href="#" class="remove-response">x</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+    			<div class="form-group">
+    				<a href="#" id="add-another-response">Ajouter une réponse</a>
+    			</div>
+			</fieldset>
+			
+			<hr />
+			<div class="form-group">			
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}           
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+	var responseCount = '{{ form.responses|length }}';
+	
+ 	jQuery(document).ready(function() {
+    	jQuery('#add-another-response').click(function(e) {
+       		e.preventDefault();
+
+         	var responseList = jQuery('#response-fields-list');
+         	var newWidget = responseList.attr('data-prototype');
+         	
+         	newWidget = newWidget.replace(/__name__/g, responseCount);
+         	responseCount++;
+         	
+         	var newResponseContent = $(newWidget).find("textarea");
+         	var newResponseCheckbox = $(newWidget).find("input");
+
+         	var textareaTd = jQuery('<td width="50%"></td>').append(newResponseContent);
+         	var checkboxTd = jQuery('<td width="20%"></td>').append(newResponseCheckbox);
+         	var actionTd = jQuery('<td width="20%"></td>').append('<a href="#" class="remove-response">x</a>');
+         	jQuery('<tr></tr>').append(textareaTd).append(checkboxTd).append(actionTd).appendTo(responseList);
+        
+        	jQuery('.remove-response').click(function(event) {
+        		event.preventDefault();
+
+        		$(this).closest('tr').remove();
+        		return false;
+        	});
+     	});
+ 	})
+</script>
+{% endblock %}

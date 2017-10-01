@@ -1,5 +1,9 @@
-var/bootstrap.php.cache
-var/cache/*
-var/logs/*
 var/session/*
-vendor
+app/bootstrap.php.cache
+app/cache/*
+app/logs/*
+.DS_Store
+vendor/*
+var/*
+.idea
+

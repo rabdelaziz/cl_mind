@@ -1,0 +1,51 @@
+{% extends '::layoutBack.html.twig' %}
+{% set title= ' ' %}
+{% block header %}
+    {{parent()}}
+{% endblock%}
+{% block content %}
+     {{parent()}}
+<div id="dialog-form" title="Create new user">
+    <img>
+</div>
+    <div class="col-xs-9 borderTop">
+        <div>
+            <h2>Liste des themes</h2>
+        </div>
+          <br/>
+        <div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>&nbsp;</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+               <tbody>
+                {% for session in sessionList %}
+                    <tr>
+                        <td>{{session.name}}</td>
+                        <td>&nbsp;</td>
+                        <td>{{session.description}}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td colspan="8">
+                        <hr/>
+                      </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <button id="createTopic" class="btn  btn-primary" data-toggle="modal" >Ajouter un nouveau theme</button>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+{% block js%}
+    {{parent()}}
+    <script src="{{asset('js/topic_list.js')}}"></script>
+{% endblock %}
+

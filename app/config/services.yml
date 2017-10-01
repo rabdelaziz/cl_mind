@@ -7,3 +7,18 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    appbundle.evaluation:
+        class: AppBundle\Service\EvaluationService
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+        
+    appbundle.user:
+        class: AppBundle\Service\UserService
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            
+    appbundle.question:
+        class: AppBundle\Service\QuestionService
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
