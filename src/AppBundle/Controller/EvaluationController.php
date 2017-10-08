@@ -41,7 +41,7 @@ class EvaluationController extends Controller
     {
         $form = $this->createForm(TopicType::class);
         $form->handleRequest($request);
-        //var_dump($form->isSubmitted() , $form->isValid());die;
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var \AppBundle\Entity\Topic $topic */
             $topic = $form->getData();
@@ -81,38 +81,65 @@ class EvaluationController extends Controller
      */
     public function startTestAction()
     {
+        $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
+        $startDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
+        $now = $startDate->format('Y-m-d H:i:s');
         $session = $this->get('session');
         $currentUser = $this->getUser();
-        $questionNumber  = 0;
+        $currentQuestionStartDate = [];
+        $questionNumber  = $questionTimer = 0;
         $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($currentUser->getId());
         $questionsList = $currentEvaluation->getQuestions();
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer(array($normalizer), array(new JsonEncoder()));
-        $normalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
+        $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
 
-        $normalizer->setIgnoredAttributes(array('responses'));
-
-        $serializedQuestionsList = $serializer->serialize($questionsList, 'json');
         $score = $em->getRepository('AppBundle:Score')->findOneBy(  array('evaluation' => $currentEvaluation->getId(),
                                                                         'user' => $currentUser->getId()),
                                                                     array('id' => 'DESC')
-                                                                ); 
-        
+                                                               ); 
+      
         $session->set('countQuestion', count($questionsList));
-        if(!empty($score)) {
+        if (!empty($score)) {
             $questionNumber = $score->getQuestionNumber();
             $questionNumber++;
         } else {
             $session->set('validateQuestionNumber', 0);
         }
+        if (count($score) === count($questionsList)) {
+            return $this->redirectToRoute('evaluation_result', array()); 
+        }
+        $firstQuestion =  $questionsList[$questionNumber];
 
-        return $this->render('Evaluation/evaluation.html.twig', ['sId' => $currentEvaluation->getId(),
-            'firstQuestion' => $questionsList[$questionNumber],
+        if ($session->get('currentQuestionStartDate') === null) {
+            $currentQuestionStartDate[$firstQuestion->getId()] = $startDate;
+            $session->set('currentQuestionStartDate', $currentQuestionStartDate);
+            $questionTimer = $firstQuestion->getDuration();
+        } else {
+            $startedDateInSession = $session->get('currentQuestionStartDate')[$firstQuestion->getId()];
+            $startedDateAsString = $startedDateInSession->format('Y-m-d H:i:s');
+            $timerDiff = strtotime($now) - strtotime($startedDateAsString);
+        }
+        
+        if(isset ($timerDiff)){
+            if($timerDiff >  $firstQuestion->getDuration()) {
+                $manageEvaluation->saveScore($session->getId(), [], $firstQuestion->getId(), $questionNumber);
+                $questionNumber++;
+                if ($questionNumber === count($questionsList)) {
+                    return $this->redirectToRoute('evaluation_result', array()); 
+                }
+                $firstQuestion = $questionsList[$questionNumber];
+                $questionTimer =  $firstQuestion->getDuration();
+            } else {
+                $questionTimer = $firstQuestion->getDuration() - $timerDiff;
+            }
+        }
+
+        return $this->render('Evaluation/evaluation.html.twig', [
+            'sId' => $currentEvaluation->getId(),
+            'firstQuestion' => $firstQuestion,
             'questionNumber' => $questionNumber,
             'validQuestionNumber' => $session->get('validateQuestionNumber'),
+            'questionTimer' => $questionTimer,
             'sessionQuestion' => json_decode($serializedQuestionsList)]);
     }
 
@@ -122,9 +149,12 @@ class EvaluationController extends Controller
     public function checkResponseAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $session = $this->get('session');
         $responseIdsArray = array();
         $responseList = array();
+        $startedDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
+        //$now = $startedDate->format('Y-m-d H:i:s');
 
         if ($request->isXmlHttpRequest()) {
             $parameters = $request->get('parameters');
@@ -133,7 +163,7 @@ class EvaluationController extends Controller
             $responseItemIds = isset($parameters['responseItemIds']) ? $parameters['responseItemIds'] : [];
             
             
-            $this->saveScore($sessionId, $responseItemIds, $questionId, $qNumber);
+            $manageEvaluation->saveScore($sessionId, $responseItemIds, $questionId, $qNumber, $this->getUser());
             $session->set('validateQuestionNumber', $session->get('validateQuestionNumber') + 1 );
             if ($session->get('validateQuestionNumber') !=  $session->get('countQuestion')) {
                 $nextQuestion = $request->get('sessionQuestion');
@@ -142,8 +172,12 @@ class EvaluationController extends Controller
                 foreach($nextQuestionChoice as $choice ) {
                     $responseList[$choice["id"]] = $choice["content"];
                 }
+                $currentQuestionStartDate[$nextQuestion['id']] = $startedDate;
+                $session->set('currentQuestionStartDate', $currentQuestionStartDate);
             }
+           
         }
+
         $return = array(
             'nextQuestion' => isset($nextQuestion) ? json_encode($nextQuestion) : [],
             'responseIds' => $responseIdsArray,
@@ -169,49 +203,7 @@ class EvaluationController extends Controller
         return $this->render('Evaluation/evaluation-result.html.twig');
     }
 
-    /**
-     * @param $evaluationId
-     * @param $response
-     * @param $questionIds
-     */
-    public function saveScore($evaluationId, $responseIds, $questionId, $qNumber)
-    {
-
-        $today = new \DateTime("now", new \DateTimeZone('Europe/paris'));
-        $em = $this->getDoctrine()->getManager();
-        $evaluation = $em->getRepository('AppBundle:Evaluation')->find($evaluationId);
-        $correctAnswer = array();
-        $score = $em->getRepository('AppBundle:Score')->findOneBy(array('evaluation' => $evaluationId, 'question' => $questionId, 'user' => $this->getUser()->getId()));
-
-        if (empty($score)) {
-            $score = new Score();
-        } 
-
-        $question = $em->getRepository('AppBundle:Question')->find($questionId);//var_dump($qId);die();
-        $correctAnswers = $em->getRepository('AppBundle:Response')->findBy(array('question' => $questionId, 'correct' => 1));
-        foreach ($correctAnswers as $ke => $choice) {
-            $correctAnswer[] = $choice->getId();
-        }
-        $userScore = 0;
-        if (!empty($responseIds)) {
-
-            if (empty(array_diff($correctAnswer, $responseIds))) {
-                 $userScore = 1;
-            }
-        }
-        $score->setResponseDate($today);
-        $score->setStartDate($today);
-        $score->setQuestionNumber($qNumber);
-        $score->setUser($this->getUser());
-        $score->setQuestion($question);
-        $score->setEvaluation($evaluation);
-
-
-        $score->setResponse(json_encode($responseIds));
-        $score->setScore($userScore);
-        $em->persist($score);
-        $em->flush();    
-    }
+ 
 
     /*
      * 
