@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class QuestionType extends AbstractType
 {
@@ -21,13 +22,20 @@ class QuestionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        
         $builder
             ->add('content', TextareaType::class, array(
             		'label' => 'Enoncé'
             ))
             ->add('duration', ChoiceType::class, array(
             		'label' => 'Durée (en mn)',
-            		'choices' => array(1,2,3,4,5)
+            		'choices' => array(
+            		    1 => 1,
+            		    2 => 2,
+            		    3 => 3,
+            		    4 => 4,
+            		    5 => 5,
+            		)
             ))
             ->add('level', EntityType::class, array(
                 'class' => 'AppBundle:Level',
@@ -39,6 +47,10 @@ class QuestionType extends AbstractType
                 'choice_label' => 'name',
             	'label' => 'Thème',
             ))
+            ->add('status', CheckboxType::class, [
+                'label' => 'Statut',
+                'required' => false,
+            ])
             ->add('responses', CollectionType::class, array(
                 'entry_type' => ResponseType::class,
                 'allow_add' => true,

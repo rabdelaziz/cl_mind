@@ -2,11 +2,6 @@
 
 namespace AppBundle\Service;
 
-
-use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\Difficulty;
-use AppBundle\Entity\Evaluation;
-use AppBundle\Entity\Topic;
 use Doctrine\ORM\EntityManager;
 
 /*
@@ -35,6 +30,6 @@ class QuestionService
 	 */
 	public function canBeDelete(\AppBundle\Entity\Question $question)
 	{
-		return true;
+		return false;
 	}
 }
