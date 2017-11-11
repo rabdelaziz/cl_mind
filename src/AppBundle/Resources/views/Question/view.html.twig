@@ -6,7 +6,7 @@
     <h3>Détails de la question:</h3>
     <table>
         <tr>
-            <td>Enoncé : </td>
+            <td>Enoncé :</td>
             <td>{{ question.content }}</td>
         </tr>
         <tr>
@@ -20,6 +20,10 @@
         <tr>
             <td>Durée :</td>
             <td>{{ question.duration }} mn</td>
+        </tr>
+        <tr>
+            <td>Statut :</td>
+            <td>{% if 1 == question.status %}Active{% else %}Inactive{% endif %}</td>
         </tr>
     </table>
     <br>

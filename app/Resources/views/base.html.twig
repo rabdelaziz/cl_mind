@@ -6,6 +6,8 @@
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet">
+        <link href="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')}}" rel="stylesheet"/>
+    	<link href="{{asset('https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css')}}" rel="stylesheet"/>
     </head>
     <body>
         <div class="container">
@@ -22,6 +24,11 @@
 
             {% block body %}{% endblock %}
         </div>
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+        	<script src="{{asset('//code.jquery.com/jquery-1.12.4.js')}}"></script>
+			<script src="{{asset('//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js')}}"></script>
+			<script src="{{asset('https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js')}}"></script>
+			<script src="{{asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')}}"></script>
+        {% endblock %}
     </body>
 </html>

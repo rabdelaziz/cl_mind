@@ -30,4 +30,29 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 
 		return	$qb->getQuery()->getOneOrNullResult();
 	}
+	
+	public function findByRoles(array $roles)
+	{
+	    $qb = $this->createQueryBuilder('u')
+	       ->where('u.roles LIKE :roles')
+	       ->setParameter('roles', "%$roles%");
+	    
+	       return $qb->getQuery()->getResult();
+	}
+    
+	/**
+	 * Permet de récupérer le nombre de candidats ayant passé l'évaluation
+	 * 
+	 * @param int $evaluationId
+	 * @return mixed|int
+	 */
+	public function getNbByEvaluationId ($evaluationId)
+	{
+	    $qb = $this->createQueryBuilder('u')
+	    ->select('COUNT(u)')
+	    ->innerJoin('u.evaluations', 'e', 'WITH', 'e.id = :evaluationId')
+	    ->setParameter(':evaluationId', $evaluationId, \PDO::PARAM_INT);
+	
+	    return $qb->getQuery()->getSingleScalarResult();
+	}
 }

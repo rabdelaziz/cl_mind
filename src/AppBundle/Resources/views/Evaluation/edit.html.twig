@@ -29,13 +29,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {{ form_label(form.username, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                    {{ form_errors(form.username) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
-                    </div>
+                	<div class="col-sm-3 pull-right">
+                    	<a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
+                    	<input type="submit" name="add" value="Enregister" class="btn btn-primary" />
+                	</div>
                 </div>
-			<input type="submit" name="add" value="Créer" class="btn btn-primary" />
+			
             
         {{ form_end(form) }}
     </div>
