@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ContactType extends AbstractType
+class CandidateType extends AbstractType
 {
 	/**
 	 * @param FormBuilderInterface $builder
@@ -25,9 +25,6 @@ class ContactType extends AbstractType
 		])
 		->add('email', EmailType::class, [
 				'label' => 'Email',
-		])
-		->add('username', TextType::class, [
-				'label' => 'Identifiant',
 		]);
 	}
 

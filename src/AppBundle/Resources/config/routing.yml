@@ -41,7 +41,7 @@ evaluation_view:
              
 evaluation_edit:
     path:     /evaluation/edit/{id}
-    defaults: { _controller: AppBundle:Evaluation:edit }
+    defaults: { _controller: AppBundle:Evaluation:addCandidate }
     requirements:
              id: \d+
  
