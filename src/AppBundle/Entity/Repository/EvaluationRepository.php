@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Evaluation;
 
 /**
  * EvaluationRepository
@@ -31,4 +32,33 @@ class EvaluationRepository extends EntityRepository
 
         return $result;
 	}
+
+    /**
+     * Permet de récuperer une évaluation avec toutes ses jointures
+     *
+     * @param int $id
+     * @return Evaluation|NULL
+     */
+    public function getEvaluationById($id)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->addSelect('a')
+            ->addSelect('d')
+            ->addSelect('s')
+            ->addSelect('q')
+            ->addSelect('t')
+            ->addSelect('l')
+            ->leftJoin('e.author', 'a')
+            ->leftJoin('e.difficulty', 'd')
+            ->leftJoin('e.status', 's')
+            ->leftJoin('e.questions', 'q')
+            ->leftJoin('q.topic', 't')
+            ->leftJoin('q.level', 'l')
+            ->where('e.id = :id')
+            ->setParameter(':id', $id, \PDO::PARAM_INT)
+            ->orderBy('t.name', 'ASC')
+            ->addOrderBy('l.name', 'ASC');
+
+        return $qb->getQuery()->getSingleResult();
+    }
 }

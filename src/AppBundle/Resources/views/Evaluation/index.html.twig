@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "::base.html.twig" %}
 
 {% block title %}AppBundle:evaluation:index{% endblock %}
@@ -51,3 +52,82 @@
     </table>
 
 {% endblock %}
+=======
+{% extends "::base.html.twig" %}
+
+{% block title %}Liste des évaluations{% endblock %}
+
+{% block body %}
+
+    <table id="evaluation_list" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+    			<th>titre</th>
+                <th>Niveau</th>
+                <th>Date de création</th>            
+                <th>Etat</th>
+                <th>Thèmes</th>
+                <th>Auteur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+  
+        {% if evaluationList|length > 0 %}     
+        	<tbody>
+        
+            {% for evaluation in evaluationList %}
+                {% if evaluation.status.name|lower == 'actif' %} 
+                    {% set addActionTitle = 'Ajouter un candidat' %}
+                    {% set addButtonStatus = 'active' %}
+                {% else %}
+                    {% set addActionTitle = "Evaluation non active" %}
+                    {% set addButtonStatus = 'disabled' %}
+                {% endif %} 
+            
+            <tr>
+    			<td>
+    				<a href="{{ path('evaluation_view', { 'id': evaluation.id }) }}">
+    					{{ evaluation.title }}
+    				</a>
+    			</td>
+                <td>{{ evaluation.difficulty.name }}</td>
+                <td>{{ evaluation.createdDate|date("d/m/Y")}}</td>            
+                <td>{{ evaluation.status.name }}</td>
+                <td>{{ evaluation.themes }}</td>
+                <td>{{ evaluation.author.firstName }} {{ evaluation.author.lastName }}</td>
+                <td>
+                    <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}" class="btn btn-link {{ addButtonStatus }}" title="{{ addActionTitle }}">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>&nbsp;&nbsp;
+                    
+                    <a data-confirm="Etes-vous certain de vouloir supprimer cette évaluation?" href="{{ path('evaluation_delete', { 'id': evaluation.id }) }}">
+                    	<i class="glyphicon glyphicon-trash"></i>
+                	</a>
+                </td>
+            </tr>
+            {% endfor %}
+        
+        </tbody>
+        {% endif %}
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+	<script type="text/javascript">
+		$(document).ready(function() {
+    	$('#evaluation_list').DataTable({
+    		"pageLength": 10,
+    		"columnDefs": [
+                {
+                    "targets": [ 6 ],
+                    "orderable": false,
+                    "searchable": false
+                }
+            ]
+        });
+	});
+</script>
+{% endblock %}
+>>>>>>> develop

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "::base.html.twig" %}
 
 {% block title %}Création d'une candidature{% endblock %}
@@ -39,4 +40,46 @@
             
         {{ form_end(form) }}
     </div>
+=======
+{% extends "::base.html.twig" %}
+
+{% block title %}Création d'une candidature{% endblock %}
+
+{% block body %}
+    <h1>Création d'une candidature</h1>
+    <div class="well">
+        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.firstName, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.firstName) }}
+                    <div class="col-sm-3">
+                        {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.lastName, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.lastName) }}
+                    <div class="col-sm-3">
+                        {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.email, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                    {{ form_errors(form.email) }}
+                    <div class="col-sm-3">
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                	<div class="col-sm-3 pull-right">
+                    	<a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
+                    	<input type="submit" name="add" value="Enregister" class="btn btn-primary" />
+                	</div>
+                </div>
+			
+            
+        {{ form_end(form) }}
+    </div>
+>>>>>>> develop
 {% endblock %}

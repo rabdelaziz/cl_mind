@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Score
+ * ArchivedScore
  *
- * @ORM\Table(name="score")
+ * @ORM\Table(name="archived_score")
  * @ORM\Entity
  */
-class Score
+class ArchivedScore
 {
     /**
      * @var integer
@@ -22,27 +22,27 @@ class Score
     private $id;
 
     /**
-    * @var User $user
-    *
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="user")
-    * 
-    */
+     * @var User $user
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="user")
+     *
+     */
     private $user;
 
-      /**
-    * @var Question $question
-    *
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="question")
-    * 
-    */
+    /**
+     * @var Question $question
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Question", inversedBy="question")
+     *
+     */
     private $question;
 
-        /**
-    * @var Evaluation $evaluation
-    *
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Evaluation", inversedBy="evaluation")
-    * 
-    */
+    /**
+     * @var Evaluation $evaluation
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Evaluation", inversedBy="evaluation")
+     *
+     */
     private $evaluation;
 
     /**
@@ -83,7 +83,7 @@ class Score
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -94,7 +94,7 @@ class Score
      * Set responseDate
      *
      * @param \DateTime $responseDate
-     * @return Score
+     * @return ArchivedScore
      */
     public function setResponseDate($responseDate)
     {
@@ -106,7 +106,7 @@ class Score
     /**
      * Get responseDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getResponseDate()
     {
@@ -117,7 +117,7 @@ class Score
      * Set startDate
      *
      * @param \DateTime $startDate
-     * @return Score
+     * @return ArchivedScore
      */
     public function setStartDate($startDate)
     {
@@ -129,7 +129,7 @@ class Score
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -137,10 +137,10 @@ class Score
     }
 
     /**
-     * Set score
+     * Set ArchivedScore
      *
      * @param integer $score
-     * @return Score
+     * @return ArchivedScore
      */
     public function setScore($score)
     {
@@ -150,9 +150,9 @@ class Score
     }
 
     /**
-     * Get score
+     * Get ArchivedScore
      *
-     * @return integer 
+     * @return integer
      */
     public function getScore()
     {
@@ -163,7 +163,7 @@ class Score
      * Set questionNumber
      *
      * @param string $questionNumber
-     * @return Score
+     * @return ArchivedScore
      */
     public function setQuestionNumber($questionNumber)
     {
@@ -175,7 +175,7 @@ class Score
     /**
      * Get questionNumber
      *
-     * @return string 
+     * @return string
      */
     public function getQuestionNumber()
     {
@@ -186,7 +186,7 @@ class Score
      * Set response
      *
      * @param string $response
-     * @return Score
+     * @return ArchivedScore
      */
     public function setResponse($response)
     {
@@ -198,7 +198,7 @@ class Score
     /**
      * Get response
      *
-     * @return string 
+     * @return string
      */
     public function getResponse()
     {
@@ -209,7 +209,7 @@ class Score
      * Set user
      *
      * @param AppBundle\Entity\User $user
-     * @return Score
+     * @return ArchivedScore
      */
     public function setUser(\AppBundle\Entity\User $user = null)
     {
@@ -221,7 +221,7 @@ class Score
     /**
      * Get user
      *
-     * @return AppBundle\Entity\User 
+     * @return AppBundle\Entity\User
      */
     public function getUser()
     {
@@ -232,7 +232,7 @@ class Score
      * Set question
      *
      * @param AppBundle\Entity\Question $question
-     * @return Score
+     * @return ArchivedScore
      */
     public function setQuestion(\AppBundle\Entity\Question $question = null)
     {
@@ -244,7 +244,7 @@ class Score
     /**
      * Get question
      *
-     * @return AppBundle\Entity\Question 
+     * @return AppBundle\Entity\Question
      */
     public function getQuestion()
     {
@@ -255,7 +255,7 @@ class Score
      * Set evaluation
      *
      * @param AppBundle\Entity\Evaluation $evaluation
-     * @return Score
+     * @return ArchivedScore
      */
     public function setEvaluation(\AppBundle\Entity\Evaluation $evaluation = null)
     {
@@ -267,7 +267,7 @@ class Score
     /**
      * Get evaluation
      *
-     * @return AppBundle\Entity\Evaluation 
+     * @return AppBundle\Entity\Evaluation
      */
     public function getEvaluation()
     {

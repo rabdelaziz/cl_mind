@@ -10,18 +10,19 @@ namespace AppBundle\Entity\Repository;
  */
 class ResponseRepository extends \Doctrine\ORM\EntityRepository
 {
+
     public function getReponseByIdQuestion($idQuestion)
     {
 
         $em =  $this->getEntityManager();//var_dump($em);die;
         $qb = $this->createQueryBuilder('r');
         $result = $qb->select('r.id', 'r.content')
-                    ->innerJoin('AppBundle:Question','q','WITH', 'q.id = r.question')
-                    ->where($qb->expr()->eq('r.question', $idQuestion))
-                    ->getQuery()
-                    ->getResult();
-       
-       // $result = !empty($result) ? current($result) : [];
+            ->innerJoin('AppBundle:Question','q','WITH', 'q.id = r.question')
+            ->where($qb->expr()->eq('r.question', $idQuestion))
+            ->getQuery()
+            ->getResult();
+
+        // $result = !empty($result) ? current($result) : [];
 
         return $result;
     }
