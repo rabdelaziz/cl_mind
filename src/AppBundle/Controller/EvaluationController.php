@@ -90,24 +90,31 @@ class EvaluationController extends Controller
         $currentQuestionStartDate = [];
         $questionNumber  = $questionTimer = 0;
         $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($currentUser->getId());
-        $questionsList = $currentEvaluation->getQuestions();
-        $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
 
+        $questionsList = $currentEvaluation->getQuestions()->toArray();
+        $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
+        //pour les pref recuperer la derniere seulement
         $score = $em->getRepository('AppBundle:Score')->findOneBy(  array('evaluation' => $currentEvaluation->getId(),
                                                                         'user' => $currentUser->getId()),
                                                                     array('id' => 'DESC')
-                                                               ); 
-      
+                                                               );
+        //var_dump($score ,count($questionsList));die;
+        //test si le test est terminé
+
         $session->set('countQuestion', count($questionsList));
         if (!empty($score)) {
+
             $questionNumber = $score->getQuestionNumber();
+            if ($questionNumber + 1 === count($questionsList)) {
+                return $this->redirectToRoute('evaluation_result', array());
+            }
             $questionNumber++;
+            $session->set('validateQuestionNumber', $questionNumber);
         } else {
             $session->set('validateQuestionNumber', 0);
         }
-        if (count($score) === count($questionsList)) {
-            return $this->redirectToRoute('evaluation_result', array()); 
-        }
+
+       // var_dump($questionsList->toArray(),$questionNumber);die;
         $firstQuestion =  $questionsList[$questionNumber];
 
         if ($session->get('currentQuestionStartDate') === null) {
@@ -115,12 +122,14 @@ class EvaluationController extends Controller
             $session->set('currentQuestionStartDate', $currentQuestionStartDate);
             $questionTimer = $firstQuestion->getDuration();
         } else {
+          //  var_dump($firstQuestion);die;
             $startedDateInSession = $session->get('currentQuestionStartDate')[$firstQuestion->getId()];
             $startedDateAsString = $startedDateInSession->format('Y-m-d H:i:s');
             $timerDiff = strtotime($now) - strtotime($startedDateAsString);
         }
-        
+
         if(isset ($timerDiff)){
+            //var_dump($timerDiff);die;
             if($timerDiff >  $firstQuestion->getDuration()) {
                 $manageEvaluation->saveScore($session->getId(), [], $firstQuestion->getId(), $questionNumber);
                 $questionNumber++;
@@ -139,7 +148,8 @@ class EvaluationController extends Controller
             'firstQuestion' => $firstQuestion,
             'questionNumber' => $questionNumber,
             'validQuestionNumber' => $session->get('validateQuestionNumber'),
-            'questionTimer' => $questionTimer,
+            'questionTimer' => $questionTimer * 60,
+            'totalQuestionNumber'=>$session->get('countQuestion'),
             'sessionQuestion' => json_decode($serializedQuestionsList)]);
     }
 
@@ -174,7 +184,9 @@ class EvaluationController extends Controller
                 }
                 $currentQuestionStartDate[$nextQuestion['id']] = $startedDate;
                 $session->set('currentQuestionStartDate', $currentQuestionStartDate);
-            }
+            }/*else {
+                return $this->redirectToRoute('evaluation_result', array());
+            }*/
            
         }
 
