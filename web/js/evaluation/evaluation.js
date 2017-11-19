@@ -1,16 +1,26 @@
 $('document').ready(function(){
+    $(".jqTimer").TimeCircles().start();
     function initCheckedBox(){
         $("input:radio").each(function(e) {
             $(this).prop('checked',false);
         });
+    }
+    
+    function initProgressBar(validQuestionNumber, totalQuestionNumber)
+    {
+        var progressVal = (parseInt(validQuestionNumber)/parseInt(totalQuestionNumber)) * 100
+        $('#progressBarVal').attr("aria-valuenow",progressVal);
+        $('#progressBarVal').attr("style","width:"+progressVal+"%");
+        $('#progressLabel').html('Avancement: '+ ((parseInt(validQuestionNumber) / totalQuestionNumber) * 100) + '%')
     }
 
     function updateQuestionAndResponseBloc(data) {
         console.log(parseInt(data.questionNumber))
         if(parseInt(data.questionNumber) == 0){
             var url = Routing.generate('evaluation_result')
-            //location.href = url;
+            location.href = url;
         }
+
         var nextQuestion = JSON.parse(data.nextQuestion);
         $('#question').html(nextQuestion.content);
         $('#question').attr('data-id',nextQuestion.id);
@@ -33,20 +43,20 @@ $('document').ready(function(){
            // $('#questionsContainer').find('tr:last').append(row);
 
         });
-         var progressVal = (parseInt(data.validQuestionNumber)/parseInt(data.totalQuestionNumber)) * 100
+        initProgressBar(data.validQuestionNumber,data.totalQuestionNumber)
+         /*var progressVal = (parseInt(data.validQuestionNumber)/parseInt(data.totalQuestionNumber)) * 100
             $('#progressBarVal').attr("aria-valuenow",progressVal); 
             $('#progressBarVal').attr("style","width:"+progressVal+"%"); 
-             $('#progressLabel').html('Avancement: '+ ((parseInt(data.validQuestionNumber) / data.totalQuestionNumber) * 100) + '%')
-
+            $('#progressLabel').html('Avancement: '+ ((parseInt(data.validQuestionNumber) / data.totalQuestionNumber) * 100) + '%')
+*/
             $('#jqQuesValid').html(parseInt(data.validQuestionNumber));
             $('#jqQuesNotvalid').html(data.questionNumber);
              console.log(nextQuestion.duration)
             console.log( parseInt(nextQuestion.duration))
-            $('.jqTimer').data('timer', parseInt(nextQuestion.duration));
+            $('.jqTimer').data('timer', parseInt(nextQuestion.duration) * 60);
             $(".jqTimer").TimeCircles().restart();
 
     }
-    
 
     function getParameters(direction, buttonId){
         var parameters = {};
@@ -89,7 +99,6 @@ $('document').ready(function(){
                 
             }
         });
-    }
 
     $('#jqValidate').on('click',function(e) {
         var parameters =  getParameters(1, $(this).attr('id'));
@@ -97,4 +106,6 @@ $('document').ready(function(){
       
         sendAjaxRequestForloadNewQuestions(parameters,sessionQuestion[questionNumber], url);
    });
+
+    initProgressBar(validQuestionNumber, totalQuestionNumber)
 });
