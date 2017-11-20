@@ -1,0 +1,27 @@
+{% extends '::layout.html.twig' %}
+{% block header %}
+{% set title = 'Evaluation PHP' %}
+{{parent()}}
+{% endblock%}
+{% block content %}
+
+<div class="row center-content">
+    <div class="col-md-12">      
+    <div class="text-center">
+        <p>
+            Félicitations, vous venez de terminer le test ! 
+        </p>
+        <p>
+            Voici vos résultats :
+        </p>
+        <p>
+            Score : 18 bonnes réponses sur 30 questions
+        </p>
+        <p>
+            Timing : 10 minutes et 15 secondes
+        </p>
+    </div>
+  </div>
+  </div>  
+  
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Evaluation;
@@ -13,26 +13,26 @@ use AppBundle\Entity\Evaluation;
  */
 class EvaluationRepository extends EntityRepository
 {
-    /**
-     * Retourne le dernier test d un candidate
-     * @param  integer $candisateId
-     * @return array
-     */
-    public function getCurrentEvaluation($candisateId)
-    {
-        $em =  $this->getEntityManager();//var_dump($em);die;
-        $qb = $this->createQueryBuilder('e');
+	/**
+	 * Retourne le dernier test d un candidate
+	 * @param  integer $candisateId
+	 * @return array              
+	 */
+	public function getCurrentEvaluation($candisateId)
+	{
+		$em =  $this->getEntityManager();//var_dump($em);die;
+		$qb = $this->createQueryBuilder('e');
         $result = $qb->innerJoin('e.candidates', 'u')
-        ->where($qb->expr()->eq('u.id', $candisateId))
-        ->addOrderBy('e.id', 'DESC')
-        ->getQuery()
-        ->getResult();
-    
+                     ->where($qb->expr()->eq('u.id', $candisateId))
+                     ->addOrderBy('e.id', 'DESC')
+                     ->getQuery()
+                     ->getResult();
+
         $result = !empty($result) ? current($result) : [];
-    
+
         return $result;
-    }
-    
+	}
+
     /**
      * Permet de récuperer une évaluation avec toutes ses jointures
      *
@@ -42,23 +42,23 @@ class EvaluationRepository extends EntityRepository
     public function getEvaluationById($id)
     {
         $qb = $this->createQueryBuilder('e')
-        ->addSelect('a')
-        ->addSelect('d')
-        ->addSelect('s')
-        ->addSelect('q')
-        ->addSelect('t')
-        ->addSelect('l')
-        ->leftJoin('e.author', 'a')
-        ->leftJoin('e.difficulty', 'd')
-        ->leftJoin('e.status', 's')
-        ->leftJoin('e.questions', 'q')
-        ->leftJoin('q.topic', 't')
-        ->leftJoin('q.level', 'l')
-        ->where('e.id = :id')
-        ->setParameter(':id', $id, \PDO::PARAM_INT)
-        ->orderBy('t.name', 'ASC')
-        ->addOrderBy('l.name', 'ASC');
-         
+            ->addSelect('a')
+            ->addSelect('d')
+            ->addSelect('s')
+            ->addSelect('q')
+            ->addSelect('t')
+            ->addSelect('l')
+            ->leftJoin('e.author', 'a')
+            ->leftJoin('e.difficulty', 'd')
+            ->leftJoin('e.status', 's')
+            ->leftJoin('e.questions', 'q')
+            ->leftJoin('q.topic', 't')
+            ->leftJoin('q.level', 'l')
+            ->where('e.id = :id')
+            ->setParameter(':id', $id, \PDO::PARAM_INT)
+            ->orderBy('t.name', 'ASC')
+            ->addOrderBy('l.name', 'ASC');
+
         return $qb->getQuery()->getSingleResult();
     }
 }

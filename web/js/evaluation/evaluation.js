@@ -1,21 +1,36 @@
 $('document').ready(function(){
+    $(".jqTimer").TimeCircles().start();
     function initCheckedBox(){
         $("input:radio").each(function(e) {
             $(this).prop('checked',false);
         });
     }
+    
+    function initProgressBar(validQuestionNumber, totalQuestionNumber)
+    {
+        var progressVal = (parseInt(validQuestionNumber)/parseInt(totalQuestionNumber)) * 100
+        $('#progressBarVal').attr("aria-valuenow",progressVal);
+        $('#progressBarVal').attr("style","width:"+progressVal+"%");
+        $('#progressLabel').html('Avancement: '+ ((parseInt(validQuestionNumber) / totalQuestionNumber) * 100) + '%')
+    }
 
     function updateQuestionAndResponseBloc(data) {
+        console.log(parseInt(data.questionNumber))
+        if(parseInt(data.questionNumber) == 0){
+            var url = Routing.generate('evaluation_result')
+            location.href = url;
+        }
+
         var nextQuestion = JSON.parse(data.nextQuestion);
-        $('#question').html(nextQuestion.enonce);
+        $('#question').html(nextQuestion.content);
         $('#question').attr('data-id',nextQuestion.id);
-        $('#questionsContainer').find('.jqChoices').remove()
+        $('#questionsContainer').find('tr.jqChoices').remove()
         var choicesContainer = $('#jqChoicesContainer'),
             responseList = JSON.parse(data.responseList);
 
         $.each(responseList, function(key, val){ 
-            var row = $('<tr>'),
-                column = $('<td class="jqChoices">'),  
+            var row = $('<tr class="jqChoices">'),
+                column = $('<td >'),  
                 input = jQuery('<input/>', {
                 class:'dynamicInput jqChoice',
                 type: 'checkbox',
@@ -24,10 +39,24 @@ $('document').ready(function(){
             label = jQuery('<span/>', {'text':val});
             column.append(input).append(label);
             row.append(column);
-            row.insertAfter($('#questionsContainer').children('tr:first'));
-        })
+            row.insertAfter($('#questionsContainer').children('tr:last'));
+           // $('#questionsContainer').find('tr:last').append(row);
+
+        });
+        initProgressBar(data.validQuestionNumber,data.totalQuestionNumber)
+         /*var progressVal = (parseInt(data.validQuestionNumber)/parseInt(data.totalQuestionNumber)) * 100
+            $('#progressBarVal').attr("aria-valuenow",progressVal); 
+            $('#progressBarVal').attr("style","width:"+progressVal+"%"); 
+            $('#progressLabel').html('Avancement: '+ ((parseInt(data.validQuestionNumber) / data.totalQuestionNumber) * 100) + '%')
+*/
+            $('#jqQuesValid').html(parseInt(data.validQuestionNumber));
+            $('#jqQuesNotvalid').html(data.questionNumber);
+             console.log(nextQuestion.duration)
+            console.log( parseInt(nextQuestion.duration))
+            $('.jqTimer').data('timer', parseInt(nextQuestion.duration) * 60);
+            $(".jqTimer").TimeCircles().restart();
+
     }
-    
 
     function getParameters(direction, buttonId){
         var parameters = {};
@@ -62,10 +91,14 @@ $('document').ready(function(){
             cache: false,
             success: function(data)
             {   
-                updateQuestionAndResponseBloc(data);
+                if(data.questionNumber == 1) {
+                    $('#jqValidate').html('Terminer l\'évaluation');
+                   
+                } 
+                 updateQuestionAndResponseBloc(data);    
+                
             }
         });
-    }
 
     $('#jqValidate').on('click',function(e) {
         var parameters =  getParameters(1, $(this).attr('id'));
@@ -73,4 +106,6 @@ $('document').ready(function(){
       
         sendAjaxRequestForloadNewQuestions(parameters,sessionQuestion[questionNumber], url);
    });
+
+    initProgressBar(validQuestionNumber, totalQuestionNumber)
 });

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta content="" name="description"/>
-    <meta content="" name="author"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   
     <link href="{{asset('images/clevermind/favicon.png')}}" rel="shortcut icon">
     <title>CLEVERTEST</title>
     <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet"/>
@@ -20,67 +18,55 @@
 {% endblock fos_user_content %}
 <div class="container">
     {% block content %}
-        <!-- Modal -->
-        <div class="modal fade" id="myModalHorizontal" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel" aria-hidden="true">
-            {%  block modal %}
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <button type="button" class="close"
-                                data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                            <span class="sr-only">Close</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel"> </h4>
-                    </div>
-
-                    <!-- Modal Body -->
-                    <div class="modal-body">
-                    </div>
-
-                    <!-- Modal Footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default"
-                                data-dismiss="modal">
-                            Fermer
-                        </button>
-                        <button type="button" class="btn btn-primary">
-                           Valider
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {% endblock %}
-        </div>
-
-
-        <div class="col-xs-3 vertBg borderTop">
+        <div class="col-xs-3 wellBg borderTop">
             {% if is_granted("IS_AUTHENTICATED_FULLY")  %}
                 {% if is_granted('ROLE_ADMIN')  %}
                     <div class="marginleft">
-                        <!--Sidebar content-->
-                        <ul class="nav nav-pills nav-stacked">
-                            <li class="{% if activateItem is defined and activateItem == 1  %}active{% endif %}">
-                                <a href="{{ path('topic_list') }}">
-                                    Liste des th�mes
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="">
+                        <div id="MainMenu">
+                            <div class="list-group panel">
+                                <a href="#evaluation-item" class="list-group-item list-group-item-success {% if evaluationListActivate is defined %}active{% endif %}" data-toggle="collapse" data-parent="#MainMenu" {% if evaluationListActivate is defined %}aria-exponded=true{% endif %}>
+                                Gestion des évaluations<i class="fa fa-caret-down"></i></a>
+                                <div class="collapse" id="evaluation-item">
+                                    <a href="{{ path('evaluation_index')}}" class="list-group-item {% if evaluationListActivate is defined %}bold-text{% endif %}" data-toggle="collapse {% if evaluationListActivate is defined %}in{% endif %}" data-parent="#SubMenu1">
+                                        Liste des évaluations
+                                        <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <a href="#SubMenu1" class="list-group-item" data-toggle="collapse" data-parent="#SubMenu1">
+                                        Ajouter une évaluation
+                                        <i class="fa fa-caret-down"></i>
+                                    </a>
+                                </div>
 
-                                </a>
-                            </li>
-                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <a href="#user-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
+                                Gestion des utilisateurs<i class="fa fa-caret-down"></i></a>
+                                <div class="collapse" id="user-item">
+                                    <a href="" class="list-group-item">Liste des utilisateurs</a>
+                                    <a href="" class="list-group-item">Ajouter un nouveau utilisateur</a>
+                                </div>
 
-                            {% endif %}
-                            <li class="">
-                                <a href="">
+                                <a href="#question-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
+                                Gestion des Question/réponses<i class="fa fa-caret-down"></i></a>
+                                <div class="collapse" id="question-item">
+                                    <a href="" class="list-group-item">Liste des questions</a>
+                                    <a href="" class="list-group-item">Ajouter une question</a>
+                                </div>
 
-                                </a>
-                            </li>
-                        </ul>
+                                <a href="#candidat-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
+                                Gestion des candidats<i class="fa fa-caret-down"></i></a>
+                                <div class="collapse" id="candidat-item">
+                                    <a href="" class="list-group-item">Liste des candidats</a>
+                                    <a href="" class="list-group-item">Ajouter un candidat</a>
+                                </div>
+
+                                <a href="#theme-item" class="list-group-item list-group-item-success {% if topicListActivate is defined %}active{% endif %}" data-toggle="collapse" data-parent="#MainMenu" {% if topicListActivate is defined %}aria-exponded=true{% endif %}>
+                                Gestion des themes<i class="fa fa-caret-down"></i></a>
+                                <div class="collapse {% if topicListActivate is defined %}in{% endif %} " id="theme-item">
+                                    <a href="" class="list-group-item {% if topicListActivate is defined %}bold-text{% endif %}">Liste des Thèmes</a>
+                                    <a href="" class="list-group-item">Ajouter un nouveau Thème </a>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 {% endif %}
             {% endif %}
@@ -88,12 +74,30 @@
     {% endblock %}
 </div>
 {% block js %}
-    <script src="{{asset('js/libs/jquery-2.2.4.min.js')}}"></script>
+    <script src="{{asset('js/libs/jquery-3.2.1.min.js')}}"></script>
     <script src="{{asset('js/libs/jquery-ui.min.js')}}"></script>
 
     <script src="{{asset('js/libs/bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script type="text/javascript">
+    $('document').ready(function(){
+        var allItems = $('.list-group-item-success'),
+            allISubtems = $('.list-group-item');
+      
+        $('.list-group-item').on('click', function(){
+            allISubtems.removeClass('bold-text');
+            $(this).addClass('bold-text');
+        });
+
+          $('.list-group-item-success').on('click', function(){
+            allItems.removeClass('active')
+            $(this).addClass('active');
+            $(this).next('div').find('a:first').addClass('bold-text');
+        });
+    })    
+
+    </script>
 {% endblock js %}
 </body>
 </html>
