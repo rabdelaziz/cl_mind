@@ -79,7 +79,7 @@ class EvaluationController extends Controller
     /**
      * @Route("evaluation/start", name="start_evaluation")
      */
-    public function startTestAction()
+    public function startTestAction(Request $request)
     {
         $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
@@ -103,7 +103,6 @@ class EvaluationController extends Controller
 
         $session->set('countQuestion', count($questionsList));
         if (!empty($score)) {
-
             $questionNumber = $score->getQuestionNumber();
             if ($questionNumber + 1 === count($questionsList)) {
                 return $this->redirectToRoute('evaluation_result', array());
@@ -128,7 +127,7 @@ class EvaluationController extends Controller
             $timerDiff = strtotime($now) - strtotime($startedDateAsString);
         }
 
-        if(isset ($timerDiff)){
+        if($request->isXmlHttpRequest() && isset ($timerDiff)){
             //var_dump($timerDiff);die;
             if($timerDiff >  $firstQuestion->getDuration()) {
                 $manageEvaluation->saveScore($session->getId(), [], $firstQuestion->getId(), $questionNumber);

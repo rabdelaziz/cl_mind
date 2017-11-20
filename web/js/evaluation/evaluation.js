@@ -82,24 +82,23 @@ $('document').ready(function(){
 
     var path = $('#path').val();
 
-    function sendAjaxRequestForloadNewQuestions(parameters, sessionQuestion, path, isEndTime){
+    function sendAjaxRequestForloadNewQuestions(parameters, sessionQuestion, path, isEndTime) {
         $.ajax({
-            type:"POST",
+            type: "POST",
             url: path,
-            dataType :'json',
-            data : { 'parameters': parameters,'sessionQuestion': sessionQuestion, 'isEndTime':isEndTime, },
+            dataType: 'json',
+            data: {'parameters': parameters, 'sessionQuestion': sessionQuestion, 'isEndTime': isEndTime,},
             cache: false,
-            success: function(data)
-            {   
-                if(data.questionNumber == 1) {
+            success: function (data) {
+                if (data.questionNumber == 1) {
                     $('#jqValidate').html('Terminer l\'évaluation');
-                   
-                } 
-                 updateQuestionAndResponseBloc(data);    
-                
+
+                }
+                updateQuestionAndResponseBloc(data);
+
             }
         });
-
+    }
     $('#jqValidate').on('click',function(e) {
         var parameters =  getParameters(1, $(this).attr('id'));
         questionNumber++;
@@ -107,5 +106,5 @@ $('document').ready(function(){
         sendAjaxRequestForloadNewQuestions(parameters,sessionQuestion[questionNumber], url);
    });
 
-    initProgressBar(validQuestionNumber, totalQuestionNumber)
+    initProgressBar(validQuestionNumber, totalQuestionNumber);
 });
