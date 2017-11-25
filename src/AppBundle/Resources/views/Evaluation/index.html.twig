@@ -1,58 +1,3 @@
-<<<<<<< HEAD
-{% extends "::base.html.twig" %}
-
-{% block title %}AppBundle:evaluation:index{% endblock %}
-
-{% block body %}
-<h1>Liste des tests</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-    			<th>titre</th>
-                <th>Niveau</th>
-                <th>Date de création</th>            
-                <th>Etat</th>
-                <th>Thèmes</th>
-                <th>Auteur</th>
-                <th></th>
-            </tr>
-        </thead>
-  
-        {% if evaluationList|length > 0 %}     
-        	<tbody>
-        
-            {% for evaluation in evaluationList %}
-            <tr>
-                <th scope="row"></th>
-    			<td>
-    				<a href="{{ path('evaluation_view', { 'id': evaluation.id }) }}">
-    					{{ evaluation.title }}
-    				</a>
-    			</td>
-                <td>{{ evaluation.difficulty.name }}</td>
-                <td>{{ evaluation.createdDate|date("d/m/Y")}}</td>            
-                <td>{{ evaluation.status.name }}</td>
-                <td>{{ evaluation.themes }}</td>
-                <td>{{ evaluation.author.firstName }} {{ evaluation.author.lastName }}</td>
-                <td>
-                    <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}">
-                        <img src="{{asset('images/clevermind/edit.png')}}" class="img-responsive"/>
-                    </a>
-                    <a href="{{ path('evaluation_delete', { 'id': evaluation.id }) }}">
-                        <img src="{{asset('images/clevermind/drop.png')}}" class="img-responsive"/>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        
-        </tbody>
-        {% endif %}
-    </table>
-
-{% endblock %}
-=======
 {% extends "::base.html.twig" %}
 
 {% block title %}Liste des évaluations{% endblock %}
@@ -130,4 +75,3 @@
 	});
 </script>
 {% endblock %}
->>>>>>> develop
