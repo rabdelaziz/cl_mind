@@ -1,53 +1,3 @@
-<<<<<<< HEAD
-{% extends "::base.html.twig" %}
-
-{% block title %}détails de la question{% endblock %}
-
-{% block body %}
-    <h3>Détails de la question:</h3>
-    <table>
-        <tr>
-            <td>Enoncé : </td>
-            <td>{{ question.content }}</td>
-        </tr>
-        <tr>
-            <td>Niveau :</td>
-            <td>{{ question.level.name }}</td>
-        </tr>
-        <tr>
-            <td>Thème :</td>
-            <td>{{ question.topic.name }}</td>
-        </tr>
-        <tr>
-            <td>Durée :</td>
-            <td>{{ question.duration }} mn</td>
-        </tr>
-    </table>
-    <br>
-    <p><b>Liste des réponses:</b></p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Réponse</th>
-                <th>Correcte</th>
-            </tr>
-        </thead>
-        {% if not question.responses.empty %}
-            <tbody>
-                {% for response in question.responses %}
-                    <tr>
-                        <td>{{ response.content }}</td>
-                        <td>{% if response.correct %}oui{% else %}non{% endif %}</td>
-                    </tr>
-                {% endfor %}
-            <tbody>
-        {% endif %}
-    </table>
-    <hr />
-    <a href="{{ path('question_index') }}">
-        Retour à la liste
-    </a>
-=======
 {% extends "::base.html.twig" %}
 
 {% block title %}détails de la question{% endblock %}
@@ -100,5 +50,5 @@
     <a href="{{ path('question_index') }}">
         Retour à la liste
     </a>
->>>>>>> develop
+
 {% endblock %}
