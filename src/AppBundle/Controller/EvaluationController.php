@@ -68,7 +68,6 @@ class EvaluationController extends Controller
         $em = $this->getDoctrine()->getManager();
         $sessionList = $em->getRepository('AppBundle:Topic')->findAll();
 
-
         return $this->render('topic/topic_liste.html.twig', array('sessionList' => $sessionList,
             'activateItem' => 1,
         ));
@@ -81,73 +80,72 @@ class EvaluationController extends Controller
      */
     public function startTestAction(Request $request)
     {
+        $now = new \DateTime("now");
         $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
         $startDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
-        $now = $startDate->format('Y-m-d H:i:s');
         $session = $this->get('session');
-        $currentUser = $this->getUser();
-        $currentQuestionStartDate = [];
+        $user = $this->getUser();
         $questionNumber  = $questionTimer = 0;
-        $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($currentUser->getId());
-
+        $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($user->getId());
+        $session->set('evaluationId', $currentEvaluation->getId());
+        //var_dump($currentEvaluation->getQuestions()->getValues());die;
         $questionsList = $currentEvaluation->getQuestions()->toArray();
         $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
         //pour les pref recuperer la derniere seulement
-        $score = $em->getRepository('AppBundle:Score')->findOneBy(  array('evaluation' => $currentEvaluation->getId(),
-                                                                        'user' => $currentUser->getId()),
-                                                                    array('id' => 'DESC')
-                                                               );
-        //var_dump($score ,count($questionsList));die;
-        //test si le test est terminé
+        $score = $em->getRepository('AppBundle:Score')->findBy([
+                                                                                'evaluation' => $currentEvaluation->getId(),
+                                                                                'user' => $user->getId()],
+                                                                               /* 'expired' => false*/
+                                                                                ['id' => 'DESC'],
+                                                                                     2
+
+                                                                           );
 
         $session->set('countQuestion', count($questionsList));
+        //test déja commencé
         if (!empty($score)) {
-            $questionNumber = $score->getQuestionNumber();
-            if ($questionNumber + 1 === count($questionsList)) {
-                return $this->redirectToRoute('evaluation_result', array());
+            $lastScore = current($score);
+            $questionNumber = $lastScore->getQuestionNumber();
+            $currentQuestion =  $questionsList[$questionNumber];
+            var_dump($lastScore->getExpired());
+            if ($questionNumber + 1 === count($questionsList) && $lastScore->getExpired()) {
+                return $this->redirectToRoute('evaluation_result');
             }
-            $questionNumber++;
-            $session->set('validateQuestionNumber', $questionNumber);
-        } else {
+            if(!$lastScore->getExpired()) {
+                $remainingTime = $manageEvaluation->getDiffDateTime($lastScore->getStartDate(), $now);
+                if ($remainingTime  < $currentQuestion->getDuration()) {
+                    $questionTimer =   $currentQuestion->getDuration() - $remainingTime;
+                    $session->set('validateQuestionNumber', $questionNumber);
+                } else {
+                    $manageEvaluation->updateScore( $currentEvaluation->getId(), [], $currentQuestion->getId(), $questionNumber, $this->getUser());
+
+                    if ($questionNumber + 1 === count($questionsList)) {
+                        return $this->redirectToRoute('evaluation_result');
+                    }
+                    $questionNumber++;
+
+                    $session->set('validateQuestionNumber', $questionNumber);
+                    $currentQuestion =  $questionsList[$questionNumber];
+                    $questionTimer =  $currentQuestion->getDuration();
+                }
+            }
+
+        } else {//aucune question na été vu
+            $currentQuestion =  $questionsList[$questionNumber];
+            $questionTimer =  $currentQuestion->getDuration();
+            $manageEvaluation->saveScore($currentEvaluation->getId(), $currentQuestion->getId(), $questionNumber, $user);
+
             $session->set('validateQuestionNumber', 0);
         }
 
-       // var_dump($questionsList->toArray(),$questionNumber);die;
-        $firstQuestion =  $questionsList[$questionNumber];
-
-        if ($session->get('currentQuestionStartDate') === null) {
-            $currentQuestionStartDate[$firstQuestion->getId()] = $startDate;
-            $session->set('currentQuestionStartDate', $currentQuestionStartDate);
-            $questionTimer = $firstQuestion->getDuration();
-        } else {
-          //  var_dump($firstQuestion);die;
-            $startedDateInSession = $session->get('currentQuestionStartDate')[$firstQuestion->getId()];
-            $startedDateAsString = $startedDateInSession->format('Y-m-d H:i:s');
-            $timerDiff = strtotime($now) - strtotime($startedDateAsString);
-        }
-
-        if($request->isXmlHttpRequest() && isset ($timerDiff)){
-            //var_dump($timerDiff);die;
-            if($timerDiff >  $firstQuestion->getDuration()) {
-                $manageEvaluation->saveScore($session->getId(), [], $firstQuestion->getId(), $questionNumber);
-                $questionNumber++;
-                if ($questionNumber === count($questionsList)) {
-                    return $this->redirectToRoute('evaluation_result', array()); 
-                }
-                $firstQuestion = $questionsList[$questionNumber];
-                $questionTimer =  $firstQuestion->getDuration();
-            } else {
-                $questionTimer = $firstQuestion->getDuration() - $timerDiff;
-            }
-        }
 
         return $this->render('Evaluation/evaluation.html.twig', [
             'sId' => $currentEvaluation->getId(),
-            'firstQuestion' => $firstQuestion,
+            'firstQuestion' => $currentQuestion,
             'questionNumber' => $questionNumber,
             'validQuestionNumber' => $session->get('validateQuestionNumber'),
-            'questionTimer' => $questionTimer * 60,
+            'questionTimer' => $questionTimer,
             'totalQuestionNumber'=>$session->get('countQuestion'),
             'sessionQuestion' => json_decode($serializedQuestionsList)]);
     }
@@ -162,7 +160,7 @@ class EvaluationController extends Controller
         $session = $this->get('session');
         $responseIdsArray = array();
         $responseList = array();
-        $startedDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
+        //$startedDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
         //$now = $startedDate->format('Y-m-d H:i:s');
 
         if ($request->isXmlHttpRequest()) {
@@ -170,9 +168,9 @@ class EvaluationController extends Controller
             //sessionId,responseItemIds,questionId
             extract($parameters);
             $responseItemIds = isset($parameters['responseItemIds']) ? $parameters['responseItemIds'] : [];
+            //var_dump($qNumber);die;
             
-            
-            $manageEvaluation->saveScore($sessionId, $responseItemIds, $questionId, $qNumber, $this->getUser());
+            $manageEvaluation->updateScore($sessionId, $responseItemIds, $questionId, $qNumber, $this->getUser());
             $session->set('validateQuestionNumber', $session->get('validateQuestionNumber') + 1 );
             if ($session->get('validateQuestionNumber') !=  $session->get('countQuestion')) {
                 $nextQuestion = $request->get('sessionQuestion');
@@ -181,11 +179,18 @@ class EvaluationController extends Controller
                 foreach($nextQuestionChoice as $choice ) {
                     $responseList[$choice["id"]] = $choice["content"];
                 }
-                $currentQuestionStartDate[$nextQuestion['id']] = $startedDate;
-                $session->set('currentQuestionStartDate', $currentQuestionStartDate);
+                $qNumber= $qNumber + 1;
+                $manageEvaluation->saveScore($sessionId, $nextQuestion['id'],$qNumber , $this->getUser());
+              //  $currentQuestionStartDate[$nextQuestion['id']] = $startedDate;
+             //   $session->set('currentQuestionStartDate', $currentQuestionStartDate);
             }/*else {
+                return $this->forward('AppBundle:Evaluation:displayResultPage', array(
+
+                ));
+
                 return $this->redirectToRoute('evaluation_result', array());
             }*/
+
            
         }
 
@@ -196,7 +201,7 @@ class EvaluationController extends Controller
             'questionIds' => $questionId,
             'validQuestionNumber' => $session->get('validateQuestionNumber'),
             'questionNumber'=> $session->get('countQuestion') - $session->get('validateQuestionNumber'),
-            'totalQuestionNumber'=>$session->get('countQuestion')
+            'totalQuestionNumber'=> $session->get('countQuestion')
 
         );
 
@@ -209,9 +214,24 @@ class EvaluationController extends Controller
     /**
      * @Route("user/evaluation/result", name="evaluation_result", options={"expose"=true})
      */
-    public function displayResultPageAction()
+    public function displayResultPageAction(Request $request)
     {
-        return $this->render('Evaluation/evaluation-result.html.twig');
+        $session = $this->get('session');
+        $currentEvaluation = $this->getDoctrine()->getRepository('AppBundle:Evaluation')->findOneBy(['id' => $this->get('session')->get('evaluationId')]);
+        $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
+        $score = $manageEvaluation->getFinalScoreByEvaluation($this->getUser(), $currentEvaluation);
+        //var_dump($score);die;
+        if ($session->get('countQuestion')) {
+            $totalPoint = $session->get('countQuestion');
+        } else {
+            $totalPoint = count($currentEvaluation->getQuestions()->toArray());
+        }
+
+
+        return $this->render('Evaluation/evaluation-result.html.twig', [
+                                                                                'score' => $score,
+                                                                                'totalPoint' => $totalPoint
+                                                                            ]);
     }
 
     /**
