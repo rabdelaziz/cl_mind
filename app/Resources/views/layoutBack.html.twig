@@ -4,10 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
    
     <link href="{{asset('images/clevermind/favicon.png')}}" rel="shortcut icon">
-    <title>CLEVERTEST</title>
+    <title>{% block title %}{% endblock title %}</title>
     <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet"/>
     <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
     <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"/>
+    <link href="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')}}" rel="stylesheet"/>
+    <link href="{{asset('https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css')}}" rel="stylesheet"/>
 
 </head>
 <body>
@@ -16,25 +18,41 @@
 {% endblock header %}
 {% block fos_user_content %}
 {% endblock fos_user_content %}
-<div class="container">
+<div class="container-fluid">
     {% block content %}
-        <div class="col-xs-3 wellBg borderTop">
+        <div class="col-xs-3">
             {% if is_granted("IS_AUTHENTICATED_FULLY")  %}
                 {% if is_granted('ROLE_ADMIN')  %}
                     <div class="marginleft">
                         <div id="MainMenu">
                             <div class="list-group panel">
-                                <a href="#evaluation-item" class="list-group-item list-group-item-success {% if evaluationListActivate is defined %}active{% endif %}" data-toggle="collapse" data-parent="#MainMenu" {% if evaluationListActivate is defined %}aria-exponded=true{% endif %}>
+                                {% if linkEvaluationListingOn is defined or linkEvaluationAddOn is defined or linkEvaluationEditOn is defined %}
+                                    {% set manageEvaluation = true %}
+                                    {% endif %}
+
+
+
+
+                                <a href="#evaluation-item" class="list-group-item list-group-item-success {% if manageEvaluation is defined %}collapse bold-text active{% endif %}"
+                                   data-toggle="collapse" data-parent="#MainMenu" aria-exponded=" true" {% if manageEvaluation is defined %}aria-expanded=true{% endif %}>
                                 Gestion des évaluations<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse" id="evaluation-item">
-                                    <a href="{{ path('evaluation_index')}}" class="list-group-item {% if evaluationListActivate is defined %}bold-text{% endif %}" data-toggle="collapse {% if evaluationListActivate is defined %}in{% endif %}" data-parent="#SubMenu1">
+                                <div class="collapse {% if manageEvaluation is defined %}in{% endif %}" id="evaluation-item">
+                                    <a href="{{ path('evaluation_index')}}" class="list-group-item {% if linkEvaluationListingOn is defined %}bold-text{% endif %}" data-toggle="collapse
+{% if linkEvaluationListingOn is defined %}in{% endif %}" data-parent="#SubMenu1">
                                         Liste des évaluations
                                         <i class="fa fa-caret-down"></i>
                                     </a>
-                                    <a href="#SubMenu1" class="list-group-item" data-toggle="collapse" data-parent="#SubMenu1">
+                                    <a href="{{ path('evaluation_add')}}" class="list-group-item {% if linkEvaluationAddOn is defined %}bold-text{% endif %}" data-toggle="collapse
+{% if linkEvaluationAddOn is defined %}in{% endif %}" data-parent="#SubMenu1">
                                         Ajouter une évaluation
                                         <i class="fa fa-caret-down"></i>
                                     </a>
+                                    {% if linkEvaluationEditOn is defined %}
+                                    <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}" class="list-group-item bold-text" data-toggle="collapse in" data-parent="#SubMenu1">
+                                        Modifier une évaluation
+                                        <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    {% endif  %}
                                 </div>
 
                                 <a href="#user-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
@@ -73,31 +91,41 @@
         </div>
     {% endblock %}
 </div>
-{% block js %}
+{% block javascripts %}
+    {#
     <script src="{{asset('js/libs/jquery-3.2.1.min.js')}}"></script>
     <script src="{{asset('js/libs/jquery-ui.min.js')}}"></script>
-
     <script src="{{asset('js/libs/bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-    <script type="text/javascript">
-    $('document').ready(function(){
-        var allItems = $('.list-group-item-success'),
-            allISubtems = $('.list-group-item');
-      
-        $('.list-group-item').on('click', function(){
-            allISubtems.removeClass('bold-text');
-            $(this).addClass('bold-text');
-        });
+#}
 
-          $('.list-group-item-success').on('click', function(){
-            allItems.removeClass('active')
-            $(this).addClass('active');
-            $(this).next('div').find('a:first').addClass('bold-text');
-        });
-    })    
+    <script src="{{asset('js/libs/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{asset('//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')}}"></script>
+{# <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>#}
 
-    </script>
-{% endblock js %}
+<script type="text/javascript">
+$('document').ready(function(e){
+    e.preventDefault()
+    var allItems = $('.list-group-item-success'),
+        allISubtems = $('.list-group-item');
+
+    $('.list-group-item').on('click', function(e){
+        e.preventDefault()
+        allISubtems.removeClass('bold-text');
+        $(this).addClass('bold-text');
+    });
+
+      $('.list-group-item-success').on('click', function(e){
+          e.preventDefault()
+        allItems.removeClass('active')
+        $(this).addClass('active');
+        $(this).next('div').find('a:first').addClass('bold-text');
+    });
+})
+
+</script>
+{% endblock javascripts %}
 </body>
 </html>

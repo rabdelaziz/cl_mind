@@ -77,10 +77,10 @@
             <p>
                  {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
                <button id ="jqValidate" type="button" class="btn btn-default">
-                   {% if sessionQuestion|length - validQuestionNumber == 1 %}
-                       Suivant
-                   {% else %}
+                   {% if (sessionQuestion|length) - validQuestionNumber == 1 %}
                        Terminer l'évaluation
+                   {% else %}
+                       Suivant
                    {% endif %}
 
                </button>

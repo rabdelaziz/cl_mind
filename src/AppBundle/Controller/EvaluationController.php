@@ -30,6 +30,8 @@ use AppBundle\Form\EvaluationType;
 use AppBundle\Entity\Difficulty;
 use AppBundle\Form\EvaluationStatusType;
 use AppBundle\Form\ContactType;
+use AppBundle\Form\CandidateType;
+
 
 
 class EvaluationController extends Controller
@@ -83,23 +85,19 @@ class EvaluationController extends Controller
         $now = new \DateTime("now");
         $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
-        $startDate = new \DateTime("now", new \DateTimeZone('Europe/paris'));
         $session = $this->get('session');
         $user = $this->getUser();
         $questionNumber  = $questionTimer = 0;
         $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($user->getId());
         $session->set('evaluationId', $currentEvaluation->getId());
-        //var_dump($currentEvaluation->getQuestions()->getValues());die;
         $questionsList = $currentEvaluation->getQuestions()->toArray();
         $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
-        //pour les pref recuperer la derniere seulement
         $score = $em->getRepository('AppBundle:Score')->findBy([
-                                                                                'evaluation' => $currentEvaluation->getId(),
-                                                                                'user' => $user->getId()],
-                                                                               /* 'expired' => false*/
-                                                                                ['id' => 'DESC'],
-                                                                                     2
-
+                                                                    'evaluation' => $currentEvaluation->getId(),
+                                                                    'user' => $user->getId()],
+                                                                   /* 'expired' => false*/
+                                                                    ['id' => 'DESC'],
+                                                                         2
                                                                            );
 
         $session->set('countQuestion', count($questionsList));
@@ -108,7 +106,6 @@ class EvaluationController extends Controller
             $lastScore = current($score);
             $questionNumber = $lastScore->getQuestionNumber();
             $currentQuestion =  $questionsList[$questionNumber];
-            var_dump($lastScore->getExpired());
             if ($questionNumber + 1 === count($questionsList) && $lastScore->getExpired()) {
                 return $this->redirectToRoute('evaluation_result');
             }
@@ -124,10 +121,10 @@ class EvaluationController extends Controller
                         return $this->redirectToRoute('evaluation_result');
                     }
                     $questionNumber++;
-
                     $session->set('validateQuestionNumber', $questionNumber);
                     $currentQuestion =  $questionsList[$questionNumber];
                     $questionTimer =  $currentQuestion->getDuration();
+                    $manageEvaluation->saveScore($currentEvaluation->getId(), $currentQuestion->getId(), $questionNumber, $user);
                 }
             }
 
@@ -169,7 +166,7 @@ class EvaluationController extends Controller
             extract($parameters);
             $responseItemIds = isset($parameters['responseItemIds']) ? $parameters['responseItemIds'] : [];
             //var_dump($qNumber);die;
-            
+
             $manageEvaluation->updateScore($sessionId, $responseItemIds, $questionId, $qNumber, $this->getUser());
             $session->set('validateQuestionNumber', $session->get('validateQuestionNumber') + 1 );
             if ($session->get('validateQuestionNumber') !=  $session->get('countQuestion')) {
@@ -191,7 +188,7 @@ class EvaluationController extends Controller
                 return $this->redirectToRoute('evaluation_result', array());
             }*/
 
-           
+
         }
 
         $return = array(
@@ -256,6 +253,7 @@ class EvaluationController extends Controller
 
         return $this->render('AppBundle:Evaluation:index.html.twig', array(
             'evaluationList' => $evaluationList,
+            'linkEvaluationListingOn' => true,
         ));
     }
 
@@ -294,7 +292,8 @@ class EvaluationController extends Controller
         }
 
         return $this->render('AppBundle:Evaluation:add.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'linkEvaluationAddOn' => true,
         ));
     }
 
@@ -306,6 +305,7 @@ class EvaluationController extends Controller
      */
     public function viewAction(Request $request)
     {
+
         $em = $this->getDoctrine()->getManager();
 
         $evaluation = $em->getRepository('AppBundle:Evaluation')->getEvaluationById($request->get('id'));
@@ -338,7 +338,8 @@ class EvaluationController extends Controller
         return $this->render('AppBundle:Evaluation:view.html.twig', array(
             'evaluation' => $evaluation,
             'nbCandidates' => $nbCandidates,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+
         ));
     }
 
@@ -397,7 +398,9 @@ class EvaluationController extends Controller
         }
 
         return $this->render('AppBundle:Evaluation:edit.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'linkEvaluationEditOn' => true,
+            'evaluation' => $evaluation
         ));
     }
 

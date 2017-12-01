@@ -1,11 +1,12 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Création d'une candidature{% endblock %}
 
-{% block body %}
-    <h1>Création d'une candidature</h1>
-    <div class="well">
-        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+{% block content %}
+    {{ parent() }}
+    <div class="col-xs-9">
+        <div class="well">
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
                 <div class="form-group">
                     {{ form_label(form.firstName, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
@@ -29,13 +30,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                	<div class="col-sm-3 pull-right">
-                    	<a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
-                    	<input type="submit" name="add" value="Enregister" class="btn btn-primary" />
-                	</div>
+                    <div class="col-sm-3 pull-right">
+                        <a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
+                        <input type="submit" name="add" value="Enregister" class="btn btn-primary" />
+                    </div>
                 </div>
-			
-            
-        {{ form_end(form) }}
+
+
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}
