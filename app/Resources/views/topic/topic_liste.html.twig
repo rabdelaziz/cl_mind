@@ -5,14 +5,7 @@
 {% endblock%}
 {% block content %}
      {{parent()}}
-<div id="dialog-form" title="Create new user">
-    <img>
-</div>
     <div class="col-xs-9 borderTop">
-        <div>
-            <h2>Liste des themes</h2>
-        </div>
-          <br/>
         <div>
             <table class="table table-hover">
                 <thead>
@@ -30,16 +23,13 @@
                         <td>{{topic.description}}</td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr>
-                      <td colspan="8">
-                        <hr/>
-                      </td>
-                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <div>
-                <button id="createTopic" class="btn  btn-primary" data-toggle="modal" >Ajouter un nouveau theme</button>
+                <a href="{{ path('create_topic')}}" class="btn btn-primary" role="button">
+                    Ajouter un nouveau thème Button
+                </a>
             </div>
           </div>
         </div>
