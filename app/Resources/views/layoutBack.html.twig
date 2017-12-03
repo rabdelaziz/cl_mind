@@ -188,22 +188,24 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="{% if manageTopic is defined %}bold-text active{% endif %}"  {% if manageTopic is defined %}aria-expanded="true"{% endif %}>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="{% if manageTopic is defined %}bold-text{% endif %}"  {% if manageTopic is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-cog text-info">
                             </span> Gestion des themes</a>
                                 </h4>
                             </div>
-                            <div id="collapseFive" class="panel-collapse collapse">
+                            <div id="collapseFive" class="panel-collapse collapse {% if manageTopic is defined %}in{% endif %}">
                                 <div class="panel-body">
                                     <table class="table">
                                         <tr>
                                             <td>
-                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span><a href="http://www.jquery2dotnet.com">Liste des thèmes</a>
+                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span>
+                                                <a href="{{ path('topic_list') }}" class="{% if linkTopicListingOn is defined %}bold-text{% endif %}">Liste des thèmes</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span><a href="http://www.jquery2dotnet.com">Ajouter un Thème</a>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
+                                                <a href="{{ path('create_topic') }}"  class="{% if linkTopicAddOn is defined %}bold-text{% endif %}">Ajouter un Thème</a>
                                             </td>
                                         </tr>
                                     </table>

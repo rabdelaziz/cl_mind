@@ -45,18 +45,18 @@ class EvaluationController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $session = $this->get('session');
             /** @var \AppBundle\Entity\Topic $topic */
             $topic = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($topic);
             $em->flush();
-            $response = new JsonResponse();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setData(['status' => 'ok', 'msg' => utf8_encode("Vos modification ont été bien enregistrés"), 'topic' => $topic], 200);
-            return $response;
-            //  return new JsonResponse(['status' => 'ok', 'msg' => "Vos modification ont été bien enregistrés", 'topic' => $topic],  200);
-//            return $this->redirectToRoute('topic_list');
+
+            $session->getFlashBag()->add('notice', "Vos modification ont été bien enregistrés");
+
+            return $this->redirectToRoute('topic_list');
         }
+        
         return $this->render('forms/topic/create_topic.html.twig', [
             'form' => $form->createView(),
             'linkTopicAddOn' => true,
@@ -69,12 +69,15 @@ class EvaluationController extends Controller
     public function topicListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $sessionList = $em->getRepository('AppBundle:Topic')->findAll();
+        $topicList = $em->getRepository('AppBundle:Topic')->findAll();
 
-        return $this->render('topic/topic_liste.html.twig', array('sessionList' => $sessionList,
-            'activateItem' => 1,
-            'linkTopicListingOn' => true
-        ));
+        return $this->render('topic/topic_liste.html.twig',
+            [
+                'topicList' => $topicList,
+                'linkTopicListingOn' => true
+
+            ]
+        );
 
     }
 
