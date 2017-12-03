@@ -1,103 +1,251 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   
-    <link href="{{asset('images/clevermind/favicon.png')}}" rel="shortcut icon">
-    <title>CLEVERTEST</title>
-    <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet"/>
-    <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
-    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"/>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-</head>
-<body>
-{% block header %}
-    {% include "header.html.twig" %}
-{% endblock header %}
-{% block fos_user_content %}
-{% endblock fos_user_content %}
-<div class="container">
-    {% block content %}
-        <div class="col-xs-3 wellBg borderTop">
-            {% if is_granted("IS_AUTHENTICATED_FULLY")  %}
-                {% if is_granted('ROLE_ADMIN')  %}
-                    <div class="marginleft">
-                        <div id="MainMenu">
-                            <div class="list-group panel">
-                                <a href="#evaluation-item" class="list-group-item list-group-item-success {% if evaluationListActivate is defined %}active{% endif %}" data-toggle="collapse" data-parent="#MainMenu" {% if evaluationListActivate is defined %}aria-exponded=true{% endif %}>
-                                Gestion des évaluations<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse" id="evaluation-item">
-                                    <a href="{{ path('evaluation_index')}}" class="list-group-item {% if evaluationListActivate is defined %}bold-text{% endif %}" data-toggle="collapse {% if evaluationListActivate is defined %}in{% endif %}" data-parent="#SubMenu1">
-                                        Liste des évaluations
-                                        <i class="fa fa-caret-down"></i>
+        <link href="{{asset('images/clevermind/favicon.png')}}" rel="shortcut icon">
+        <title>{% block title %}{% endblock title %}</title>
+        <link href="{{asset('css/bootstrap.css')}}" rel="stylesheet"/>
+        <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
+        <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet"/>
+        <link href="{{asset('//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')}}" rel="stylesheet"/>
+        <link href="{{asset('https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css')}}" rel="stylesheet"/>
+<style>body{margin-top:50px;}
+    .glyphicon { margin-right:10px; }
+    .panel-body { padding:0px; }
+    .panel-body table tr td { padding-left: 15px }
+    .panel-body .table {margin-bottom: 0px; }
+    .panel-default>.panel-heading {background-color: #fab39c70;}
+</style>
+    </head>
+    <body>
+    {% block header %}
+        {% include "header.html.twig" %}
+    {% endblock header %}
+    {% block fos_user_content %}
+    {% endblock fos_user_content %}
+    <div class="container-fluid">
+        {% block content %}
+            {% if linkEvaluationListingOn is defined or linkEvaluationAddOn is defined or linkEvaluationEditOn is defined %}
+                {% set manageEvaluation = true %}
+            {% endif %}
+            {% if linkUserListingOn is defined or linkUserAddOn is defined %}
+                {% set manageUser = true %}
+            {% endif %}
+            {% if linkQuestionResponseListingOn is defined or linkquestionResponseAddOn is defined or linkquestionResponseEditOn is defined or linkquestionResponseViewOn is defined %}
+                {% set manageQuestionResponse = true %}
+            {% endif %}
+            {% if linkCandidatListingOn is defined or linkCandidatAddOn is defined %}
+                {% set manageCandidat = true %}
+            {% endif %}
+
+            {% if linkTopicListingOn is defined or linkTopicAddOn is defined %}
+                {% set manageTopic = true %}
+            {% endif %}
+        <div class="col-xs-3">
+            <div class="row">
+                <div class="col-sm-9 col-md-9">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="{% if manageEvaluation is defined %}bold-text active{% endif %}" {% if manageEvaluation is defined %}aria-expanded="true"{% endif %}>
+                                        <span class="glyphicon glyphicon-list-alt text-info">
+                                         </span>Gestion des évaluations
                                     </a>
-                                    <a href="#SubMenu1" class="list-group-item" data-toggle="collapse" data-parent="#SubMenu1">
-                                        Ajouter une évaluation
-                                        <i class="fa fa-caret-down"></i>
-                                    </a>
-                                </div>
 
-                                <a href="#user-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
-                                Gestion des utilisateurs<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse" id="user-item">
-                                    <a href="" class="list-group-item">Liste des utilisateurs</a>
-                                    <a href="" class="list-group-item">Ajouter un nouveau utilisateur</a>
-                                </div>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse {% if manageEvaluation is defined %}in{% endif %}">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span>
+                                                <a href="{{ path('evaluation_index')}}" class="{% if linkEvaluationListingOn is defined %}bold-text{% endif %}">Liste des évaluations</a>
 
-                                <a href="#question-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
-                                Gestion des Question/réponses<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse" id="question-item">
-                                    <a href="" class="list-group-item">Liste des questions</a>
-                                    <a href="" class="list-group-item">Ajouter une question</a>
-                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
 
-                                <a href="#candidat-item" class="list-group-item list-group-item-success" data-toggle="collapse" data-parent="#MainMenu">
-                                Gestion des candidats<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse" id="candidat-item">
-                                    <a href="" class="list-group-item">Liste des candidats</a>
-                                    <a href="" class="list-group-item">Ajouter un candidat</a>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs" aria-hidden="true"></span>
+                                                <a href="{{ path('evaluation_add')}}" class="{% if linkEvaluationAddOn is defined %}bold-text{% endif %}">Ajouter une évaluation</a>
+                                                {#<span class="badge">42</span>#}
+                                            </td>
+                                        </tr>
+                                        {% if linkEvaluationEditOn is defined %}
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}" class="{% if linkEvaluationEditOn is defined %}bold-text{% endif %}">Modifier une évaluation</a>
+                                                {#<span class="badge">42</span>#}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </table>
                                 </div>
-
-                                <a href="#theme-item" class="list-group-item list-group-item-success {% if topicListActivate is defined %}active{% endif %}" data-toggle="collapse" data-parent="#MainMenu" {% if topicListActivate is defined %}aria-exponded=true{% endif %}>
-                                Gestion des themes<i class="fa fa-caret-down"></i></a>
-                                <div class="collapse {% if topicListActivate is defined %}in{% endif %} " id="theme-item">
-                                    <a href="" class="list-group-item {% if topicListActivate is defined %}bold-text{% endif %}">Liste des Thèmes</a>
-                                    <a href="" class="list-group-item">Ajouter un nouveau Thème </a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="{% if manageUser is defined %}bold-text active{% endif %}">
+                                        <span class="glyphicon glyphicon-user text-info">
+                            </span>Gestion des utilisateurs</a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-file text-info"></span>Liste des utilisateurs</a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="{% if manageQuestionResponse is defined %}bold-text active{% endif %}" {% if manageQuestionResponse is defined %}aria-expanded="true"{% endif %}>
+                                        <span class="glyphicon glyphicon-book text-info">
+                            </span>Gestion des questions</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td> <span class="glyphicon glyphicon-file text-info btn-xs"></span>
+                                                <a href="{{ path('question_index') }}" class="{% if linkQuestionResponseListingOn is defined %}bold-text{% endif %}">
+                                                    Liste des questions/Réponses
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajouter une question</a>
+                                            </td>
+                                        </tr>
+                                        {% if linkquestionResponseEditOn is defined %}
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                <a href="{{ path('question_edit', { 'id': question.id }) }}" class="{% if linkQuestionResponseEditOn is defined %}bold-text{% endif %}">Modifier une question</a>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if linkquestionResponseViewOn is defined %}
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-th text-info btn-xs"></span>
+                                                <a href="{{ path('question_view', { 'id': question.id }) }}" class="{% if linkQuestionResponseDetailOn is defined %}bold-text{% endif %}">Détail d'une question</a>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="{% if manageCandidat is defined %}bold-text active{% endif %}" {% if manageCandidat is defined %}aria-expanded=true"{% endif %}>
+                                        <span class="glyphicon glyphicon-education text-info">
+                            </span> Gestion des candidats</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse  {% if manageCandidat is defined %}in{% endif %}">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span>
+                                                <a href="http://www.jquery2dotnet.com">
+                                                    Liste des candidats
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
+                                                <a href="#" class="{% if linkCandidatAddOn is defined %}bold-text{% endif %}">
+                                                    Ajouter un candidat
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="{% if manageTopic is defined %}bold-text active{% endif %}"  {% if manageTopic is defined %}aria-expanded="true"{% endif %}>
+                                        <span class="glyphicon glyphicon-cog text-info">
+                            </span> Gestion des themes</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <table class="table">
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span><a href="http://www.jquery2dotnet.com">Liste des thèmes</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span><a href="http://www.jquery2dotnet.com">Ajouter un Thème</a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                {% endif %}
-            {% endif %}
-        </div>
-    {% endblock %}
-</div>
-{% block js %}
-    <script src="{{asset('js/libs/jquery-3.2.1.min.js')}}"></script>
-    <script src="{{asset('js/libs/jquery-ui.min.js')}}"></script>
+                </div>
 
-    <script src="{{asset('js/libs/bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            </div>
+        </div>
+        {% endblock content %}
+    </div>
+    {% block javascripts %}
+
+    <script src="{{asset('js/libs/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{asset('//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')}}"></script>
+
     <script type="text/javascript">
     $('document').ready(function(){
         var allItems = $('.list-group-item-success'),
             allISubtems = $('.list-group-item');
-      
-        $('.list-group-item').on('click', function(){
+
+        $('.list-group-item').on('click', function(e){
+            //e.preventDefault();
             allISubtems.removeClass('bold-text');
             $(this).addClass('bold-text');
         });
 
-          $('.list-group-item-success').on('click', function(){
-            allItems.removeClass('active')
-            $(this).addClass('active');
-            $(this).next('div').find('a:first').addClass('bold-text');
-        });
-    })    
+            $('.list-group-item-success').on('click', function(e){
+              //e.preventDefault();
+                allItems.removeClass('active')
+                $(this).addClass('active');
+                $(this).next('div').find('a:first').addClass('bold-text');
+            });
+
+
+    })
 
     </script>
-{% endblock js %}
-</body>
-</html>
+    {% endblock javascripts %}
+    </body>
+    </html>

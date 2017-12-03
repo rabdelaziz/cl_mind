@@ -20,7 +20,7 @@ class UserController extends Controller
         if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $userRole = $currentUser->getRoles();
             if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)) {
-                return $this->redirect($this->generateUrl('adminHomePage'));
+                return $this->redirect($this->generateUrl('evaluation_index'));
             } else if (in_array('ROLE_USER', $userRole)) {
                 return $this->redirect($this->generateUrl('userHomePage'));
             } else {
@@ -71,6 +71,7 @@ class UserController extends Controller
         $userList = $em->getRepository('AppBundle:User')->findByRoles('ROLE_ADMIN');
     	return $this->render('AppBundle:User:list.html.twig', array(
     			'userList' => $userList,
+            ''
     	));
     }
     

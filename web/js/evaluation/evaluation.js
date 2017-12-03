@@ -15,7 +15,9 @@ $('document').ready(function(){
     }
 
     function updateQuestionAndResponseBloc(data) {
-        console.log(parseInt(data.questionNumber))
+        //alert('1')
+      //  console.log(parseInt(data.questionNumber))
+       // var question
         if(parseInt(data.questionNumber) == 0){
             var url = Routing.generate('evaluation_result')
             location.href = url;
@@ -51,9 +53,10 @@ $('document').ready(function(){
 */
             $('#jqQuesValid').html(parseInt(data.validQuestionNumber));
             $('#jqQuesNotvalid').html(data.questionNumber);
-             console.log(nextQuestion.duration)
+            // console.log(nextQuestion.duration)
             console.log( parseInt(nextQuestion.duration))
-            $('.jqTimer').data('timer', parseInt(nextQuestion.duration) * 60);
+        console.log( parseInt(nextQuestion.duration))
+            $('.jqTimer').data('timer', parseInt(nextQuestion.duration));
             $(".jqTimer").TimeCircles().restart();
 
     }
@@ -83,6 +86,7 @@ $('document').ready(function(){
     var path = $('#path').val();
 
     function sendAjaxRequestForloadNewQuestions(parameters, sessionQuestion, path, isEndTime) {
+
         $.ajax({
             type: "POST",
             url: path,
@@ -90,6 +94,7 @@ $('document').ready(function(){
             data: {'parameters': parameters, 'sessionQuestion': sessionQuestion, 'isEndTime': isEndTime,},
             cache: false,
             success: function (data) {
+              //  console.log(data)
                 if (data.questionNumber == 1) {
                     $('#jqValidate').html('Terminer l\'évaluation');
 
@@ -100,6 +105,7 @@ $('document').ready(function(){
         });
     }
     $('#jqValidate').on('click',function(e) {
+
         var parameters =  getParameters(1, $(this).attr('id'));
         questionNumber++;
       

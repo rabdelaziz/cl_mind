@@ -76,7 +76,14 @@
         <div class="text-center col-md-offset-2">
             <p>
                  {#<button id ="jqPrev" type="button" class="btn btn-default">Précédent</button>#}
-               <button id ="jqValidate" type="button" class="btn btn-default">Suivant</button>
+               <button id ="jqValidate" type="button" class="btn btn-default">
+                   {% if (sessionQuestion|length) - validQuestionNumber == 1 %}
+                       Terminer l'évaluation
+                   {% else %}
+                       Suivant
+                   {% endif %}
+
+               </button>
             </p>
         </div>
     </div>
