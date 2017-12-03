@@ -59,6 +59,7 @@ class EvaluationController extends Controller
         }
         return $this->render('forms/topic/create_topic.html.twig', [
             'form' => $form->createView(),
+            'linkTopicAddOn' => true,
         ]);
     }
 
@@ -72,6 +73,7 @@ class EvaluationController extends Controller
 
         return $this->render('topic/topic_liste.html.twig', array('sessionList' => $sessionList,
             'activateItem' => 1,
+            'linkTopicListingOn' => true
         ));
 
     }
@@ -253,7 +255,10 @@ class EvaluationController extends Controller
 
         return $this->render('AppBundle:Evaluation:index.html.twig', array(
             'evaluationList' => $evaluationList,
-            'linkEvaluationListingOn' => true,
+            'linkEvaluationListingOn' => true
+
+
+      
         ));
     }
 
@@ -339,6 +344,7 @@ class EvaluationController extends Controller
             'evaluation' => $evaluation,
             'nbCandidates' => $nbCandidates,
             'form' => $form->createView(),
+            'linkEvaluationEditOn' => true
 
         ));
     }
@@ -399,7 +405,7 @@ class EvaluationController extends Controller
 
         return $this->render('AppBundle:Evaluation:edit.html.twig', array(
             'form' => $form->createView(),
-            'linkEvaluationEditOn' => true,
+            'linkCandidatAddOn' => true,
             'evaluation' => $evaluation
         ));
     }
