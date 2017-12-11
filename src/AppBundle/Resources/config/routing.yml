@@ -1,3 +1,82 @@
+#question_index:
+#    path:     /question
+#    defaults: { _controller: AppBundle:Question:index }
+#
+#question_edit:
+#    path:     /question/edit/{id}
+#    defaults: { _controller: AppBundle:Question:edit }
+#    requirements:
+#              id: \d+
+#
+#question_view:
+#    path:     /question/view/{id}
+#    defaults: { _controller: AppBundle:Question:view }
+#    requirements:
+#              id: \d+
+#
+#question_delete:
+#  path:     /question/delete/{id}
+#  defaults: { _controller: AppBundle:Question:delete }
+#  requirements:
+#            id: \d+
+#
+#question_add:
+#    path:     /question/add
+#    defaults: { _controller: AppBundle:Question:add }
+#
+#evaluation_index:
+#    path:     /evaluation
+#    defaults: { _controller: AppBundle:Evaluation:index }
+#
+#evaluation_add:
+#    path:     /evaluation/add
+#    defaults: { _controller: AppBundle:Evaluation:add }
+#
+#evaluation_view:
+#    path:     /evaluation/view/{id}
+#    defaults: { _controller: AppBundle:Evaluation:view }
+#    requirements:
+#             id: \d+
+#
+#evaluation_edit:
+#    path:     /evaluation/edit/{id}
+#    defaults: { _controller: AppBundle:Evaluation:edit }
+#    requirements:
+#             id: \d+
+#
+#evaluation_delete:
+#    path:     /evaluation/delete/{id}
+#    defaults: { _controller: AppBundle:Evaluation:detete }
+#    requirements:
+#          id: \d+
+#
+#user_list:
+#    path:     /user
+#    defaults: { _controller: AppBundle:User:list }
+#
+#user_add:
+#    path:     /user/add
+#    defaults: { _controller: AppBundle:User:add }
+#
+#user_view:
+#    path:     /user/view/{id}
+#    defaults: { _controller: AppBundle:User:view }
+#    requirements:
+#             id: \d+
+#
+#user_edit:
+#    path:     /user/edit/{id}
+#    defaults: { _controller: AppBundle:User:edit }
+#    requirements:
+#             id: \d+
+#
+#user_delete:
+#    path:     /user/delete/{id}
+#    defaults: { _controller: AppBundle:User:delete }
+#    requirements:
+#             id: \d+
+#
+#=======
 
 question_index:
     path:     /question
@@ -41,7 +120,7 @@ evaluation_view:
              
 evaluation_edit:
     path:     /evaluation/edit/{id}
-    defaults: { _controller: AppBundle:Evaluation:edit }
+    defaults: { _controller: AppBundle:Evaluation:addCandidate }
     requirements:
              id: \d+
  
@@ -76,3 +155,4 @@ user_delete:
     defaults: { _controller: AppBundle:User:delete }
     requirements:
              id: \d+
+

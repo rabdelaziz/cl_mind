@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Topic
  *
  * @ORM\Table(name="topic")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\TopicRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TopicRepository")
  */
 class Topic
 {
@@ -94,3 +94,4 @@ class Topic
         return $this->description;
     }
 }
+

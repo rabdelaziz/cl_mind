@@ -34,13 +34,13 @@ class EvaluationType extends AbstractType
                 'mapped' => false,
                 'expanded' => true,
                 'multiple' => true,))
-
+/*
             ->add('candidates', CollectionType::class, array(
-            	'entry_type' => UserType::class,
+            	'entry_type' => ContactType::class,
             	'entry_options'  => array(
             	'label' => false
             	),
-            ))
+            ))*/
             ->add('save', SubmitType::class, array('label' => 'Enregistrer'));
     }
     

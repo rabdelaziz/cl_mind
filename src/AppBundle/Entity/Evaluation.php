@@ -7,11 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 
 
+
 /**
  * Evaluation
  *
  * @ORM\Table(name="evaluation")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\EvaluationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EvaluationRepository")
 
  */
 class Evaluation

@@ -22,3 +22,23 @@ services:
         class: AppBundle\Service\QuestionService
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
+
+    appbundle.json.encoder:
+        class: 'Symfony\Component\Serializer\Encoder\JsonEncoder'
+
+    appbundle.object.normaliser: 
+        class: 'Symfony\Component\Serializer\Normalizer\ObjectNormalizer'
+    
+    appbundle.object.serializer: 
+        class: AppBundle\Service\CustumerSerializer
+        arguments:
+            - ['@appbundle.object.normaliser']
+            - ['@appbundle.json.encoder']
+
+    appBundle.manage.candidate.evaluation:
+        class: AppBundle\Service\ManageCandidateEvaluation
+        arguments:
+            #entityManager: "@doctrine.orm.entity_manager"
+            - '@doctrine.orm.entity_manager'
+            - '@appbundle.object.serializer'
+            - '@session'

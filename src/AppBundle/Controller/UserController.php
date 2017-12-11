@@ -20,7 +20,7 @@ class UserController extends Controller
         if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $userRole = $currentUser->getRoles();
             if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)) {
-                return $this->redirect($this->generateUrl('adminHomePage'));
+                return $this->redirect($this->generateUrl('evaluation_index'));
             } else if (in_array('ROLE_USER', $userRole)) {
                 return $this->redirect($this->generateUrl('userHomePage'));
             } else {
@@ -47,13 +47,31 @@ class UserController extends Controller
         return $this->render('User/sessionInstruction.html.twig');
     }
     
+    /**
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function listAction()
     {
-    	$em = $this->getDoctrine()->getManager();
     	
-    	$userList = $em->getRepository('AppBundle:User')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        /*
+    	$userList = $em->getRepository('AppBundle:User')
+    	->findAll();
+    	/*
+    	$userList = $em->getRepository('AppBundle:User')
+    	   ->findBy(['roles' => 'ROLE_CANDIDAT']);
+    	*/
+        
+        /*
+    	$userList = $em->getRepository('AppBundle:User')
+    	   //->findByRoles('ROLE_ADMIN');
+    	->findBy(['roles' => 'ROLE_CANDIDAT']);
+    	*/
+        $userList = $em->getRepository('AppBundle:User')->findByRoles('ROLE_ADMIN');
     	return $this->render('AppBundle:User:list.html.twig', array(
     			'userList' => $userList,
+            ''
     	));
     }
     
@@ -137,3 +155,4 @@ class UserController extends Controller
     }
 
 }
+

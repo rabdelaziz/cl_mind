@@ -1,9 +1,10 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Ajout des questions{% endblock %}
 
-{% block body %}
-    <h3>Page de création d'une question</h3>
+{% block content %}
+    {{ parent() }}
+    <div class="col-xs-9">
     <div class="well">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
             {# render the task's only field: description #}
@@ -46,6 +47,16 @@
                     {{ form_widget(form.topic, {'attr': {'class': 'form-control'}}) }}
                 </div>
             </div>
+            <div class="form-group">
+                {{ form_label(form.status, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+                {{ form_errors(form.status) }}
+    
+                <div class="col-sm-1">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                </div>
+        </div>
+        
   			<fieldset>
     			<legend>{{ form_label(form.responses) }}</legend>
 
@@ -75,6 +86,7 @@
             </div>
         {{ form_end(form) }}
     </div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}

@@ -46,15 +46,16 @@ class UserService
 	 * Permet de générer les informations manquantes d'un utilisateur
 	 * 
 	 * @param User $user
+	 * @param array $roles
 	 * @return \AppBundle\Entity\User
 	 */
-	public function generateUserData(User $user)
+	public function generateUserData(User $user, array $roles)
 	{
 		$user->setUsername($user->getEmail());
 		$user->setPlainPassword($user->getFirstName());
-		//$user->setFirstName($user->getFirstName());
+
 		$user->setEnabled(true);
-		$user->setRoles(array('ROLE_USER'));
+		$user->setRoles($roles);
 		
 		return $user;
 	}

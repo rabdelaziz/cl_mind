@@ -1,27 +1,26 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Liste des questions{% endblock %}
 
-{% block body %}
-<h1>Liste des questions</h1>
-
-    <table class="table">
+{% block content %}
+    {{ parent() }}
+    <div class="col-xs-9">
+    <table id="jQquestions" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
-        <tr>
-            <th>#</th>
-            <th>Enoncé</th>
-            <th>Niveau</th>
-            <th>Thème</th>
-            <th>Durée (en mn)</th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>Enoncé</th>
+                <th>Niveau</th>
+                <th>Thème</th>
+                <th>Durée(mn)</th>
+                <th class="no-action center">Statut</th>
+                <th class="no-action center">Actions</th>
+            </tr>
         </thead>
         {% if listQuestions|length > 0 %}
         <tbody>
 
         {% for question in listQuestions %}
         <tr>
-            <th scope="row"></th>
             <td>
                 <a href="{{ path('question_view', { 'id': question.id }) }}">
                     {{ question.content }}
@@ -30,12 +29,13 @@
             <td>{{ question.level.name }}</td>
             <td>{{ question.topic.name }}</td>
             <td>{{ question.duration }}</td>
+            <td><i class="glyphicon glyphicon-{% if 1 == question.status %}ok-circle text-success{% else %}ban-circle text-danger{% endif %}" ></i></td>
             <td>
                 <a href="{{ path('question_edit', { 'id': question.id }) }}">
-                    <img src="{{asset('images/clevermind/edit.png')}}" class="img-responsive"/>
-                </a>
-                <a href="{{ path('question_delete', { 'id': question.id }) }}">
-                    <img src="{{asset('images/clevermind/drop.png')}}" class="img-responsive"/>
+                	<i class="glyphicon glyphicon-edit"></i>
+                </a>&nbsp;&nbsp;
+                <a data-confirm="Etes-vous certain de vouloir supprimer cette question?" href="{{ path('question_delete', { 'id': question.id }) }}">
+                    <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </td>
         </tr>
@@ -44,5 +44,63 @@
         </tbody>
         {% endif %}
     </table>
+    </div>
 
+    <div id="dataConfirmModal" class="modal" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true">
+    	<div class="modal-dialog">
+    		<div class="modal-content">
+    			<div class="modal-header">
+    				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    				<h3 id="dataConfirmLabel">Merci de confirmer</h3>
+    			</div>
+    		    <div class="modal-body">
+    		    </div>
+    	        <div class="modal-footer">	
+    	            <button class="btn" data-dismiss="modal" aria-hidden="true">Non</button>
+    	            <a class="btn btn-danger" id="dataConfirmOK">Oui</a>
+    	        </div>
+           </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+	<script type="text/javascript">
+		$(document).ready(function() {
+        	$('#jQquestions').DataTable({
+        		"search": ":",
+        		"pageLength": 10,
+        		"columnDefs": [            		
+                    {
+                        "targets": 4,
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": 5,
+                        "orderable": false,
+                        "searchable": false
+                    }
+                ]
+            });
+
+			// Suppression d'une question
+        	$('a[data-confirm]').click(function(ev) {
+        		var href = $(this).attr('href');
+
+        		if (!$('#dataConfirmModal').length) {
+        			$('body').append($('#dataConfirmModal'));
+        		}
+        		$('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+        		$('#dataConfirmOK').attr('href', href);
+        		$('#dataConfirmModal').modal({show:true});
+        		
+        		return false;
+        	});        
+
+		});
+
+	</script>
 {% endblock %}
