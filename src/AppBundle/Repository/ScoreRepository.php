@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use function var_dump;
 
 /**
  * ScoreRepository
@@ -46,6 +47,30 @@ class ScoreRepository extends \Doctrine\ORM\EntityRepository
             ->select('SUM(s.score) as score', 'SUM(s.time) as time');
 
         return $q->getQuery()->getSingleResult();
+    }
+
+    public function getUserDetailFinalScore(\AppBundle\Entity\User $user, \AppBundle\Entity\Evaluation $evaluation)
+    {
+        $q = $this->createQueryBuilder('s')
+            ->innerJoin('s.user', 'u')
+            ->innerJoin('s.evaluation', 'e')
+            ->innerJoin('s.question', 'q')
+            ->innerJoin('q.level', 'l')
+            ->innerJoin('q.topic', 't')
+            ->where('s.user = :user')
+            ->andWhere('s.evaluation = :evaluation')
+            ->setParameter('user', $user)
+            ->setParameter('evaluation', $evaluation)
+            //->select('SUM(s.score) as score', 'SUM(s.time) as time');
+            ->select(
+                'q.content AS question,
+                 t.name AS theme,
+                 l.name AS niveau,
+                 s.score AS score,
+                 q.duration AS duree,
+                 s.time AS temps');
+
+        return $q->getQuery()->getResult();
     }
 
 

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class UserController extends Controller
 {
@@ -36,11 +37,17 @@ class UserController extends Controller
      */
     public function adminHomePageAction()
     {
+
+
+
+
+
         return $this->render('User/adminHomePage.html.twig');
     }
 
     /**
      *@Route("user_home_page", name="userHomePage")
+     * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function userHomePageAction()
     {
