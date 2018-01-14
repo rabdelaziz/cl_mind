@@ -9,6 +9,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\AppBundle;
 use AppBundle\Entity\Repository;
 use AppBundle\Entity\Score;
 
@@ -31,7 +32,8 @@ use AppBundle\Entity\Difficulty;
 use AppBundle\Form\EvaluationStatusType;
 use AppBundle\Form\ContactType;
 use AppBundle\Form\CandidateType;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use function var_dump;
 
 
 class EvaluationController extends Controller
@@ -56,7 +58,7 @@ class EvaluationController extends Controller
 
             return $this->redirectToRoute('topic_list');
         }
-        
+
         return $this->render('forms/topic/create_topic.html.twig', [
             'form' => $form->createView(),
             'linkTopicAddOn' => true,
@@ -84,9 +86,12 @@ class EvaluationController extends Controller
 
     /**
      * @Route("evaluation/start", name="start_evaluation")
+     * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function startTestAction(Request $request)
     {
+
+
         $now = new \DateTime("now");
         $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
@@ -154,6 +159,7 @@ class EvaluationController extends Controller
 
     /**
      * @Route("user/evaluation/started", name="checkQuestionResponse")
+     * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function checkResponseAction(Request $request)
     {
@@ -215,6 +221,7 @@ class EvaluationController extends Controller
     
     /**
      * @Route("user/evaluation/result", name="evaluation_result", options={"expose"=true})
+     * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function displayResultPageAction(Request $request)
     {
@@ -228,6 +235,11 @@ class EvaluationController extends Controller
         } else {
             $totalPoint = count($currentEvaluation->getQuestions()->toArray());
         }
+
+        //gereration du rapport de resultat todo ajout de test pour assurer un seul envoie
+        $path = $request->server->get('DOCUMENT_ROOT').$request->getBasePath() . '/reports';
+        $manageEvaluation->sendResultReport($this->getUser(), $currentEvaluation, $path);
+
 
 
         return $this->render('Evaluation/evaluation-result.html.twig', [
@@ -259,8 +271,6 @@ class EvaluationController extends Controller
         return $this->render('AppBundle:Evaluation:index.html.twig', array(
             'evaluationList' => $evaluationList,
             'linkEvaluationListingOn' => true
-
-
       
         ));
     }

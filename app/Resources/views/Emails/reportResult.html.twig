@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{{pathToWeb }}/images/clevermind/favicon.png" rel="shortcut icon">
+    <link href="{{pathToWeb }}/css/bootstrap.css" rel="stylesheet">
+
+</head>
+<body>
+<h2>Rapport détaillé de l'évaluation : {{ evaluation.title}}</h2>
+<div class="container">
+    <div>
+        <p>Nom: {{candidat.lastName}}</p>
+        <p>Prénom: {{candidat.firstName}}</p>
+        <p>Email : {{candidat.email}} </p>
+    </div>
+    <table class="table table-bordered table-active table table-sm table-dark">
+            <thead class="deep-orange lighten-5">
+            <tr>
+                <th scope="col">Question</th>
+                <th scope="col">Thème</th>
+                <th scope="col">Niveau</th>
+                <th scope="col">Score</th>
+                <th scope="col">Durée/seconds</th>
+                <th scope="col">Temps de réponse</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for score in detailResult %}
+                <tr>
+                    {% for key , item in score %}
+                        <td scope="row" class="{% if key == 'score' and item == 1  %}table-success {% endif %}">{{item}}</td>
+                    {% endfor %}
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+</div>
+
+</body>
+</html>

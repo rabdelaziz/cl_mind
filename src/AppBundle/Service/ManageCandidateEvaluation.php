@@ -3,15 +3,19 @@
 namespace AppBundle\Service;
 
 
-use AppBundle\Entity\Evaluation;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Knp\Snappy\Pdf;
 
 use AppBundle\Entity\Score;
+use AppBundle\Entity\User;
+use AppBundle\Entity\Evaluation;
+use function var_dump;
 
 class ManageCandidateEvaluation
 {
@@ -37,11 +41,13 @@ class ManageCandidateEvaluation
      * @param ObjectManager $entityManager [description]
      * @param Serializer    $serializer    [description]
      */
-	public function __construct(ObjectManager $entityManager, Serializer $serializer, SessionInterface $session)
+	public function __construct(ObjectManager $entityManager, Serializer $serializer, SessionInterface $session, $mailer, Pdf $pdf)
 	{
 		$this->entityManager = $entityManager;
 		$this->serializer = $serializer;
 		$this->session = $session;
+        $this->mailer = $mailer;
+        $this->pdf = $pdf;
 	}
     
     /**
@@ -139,7 +145,7 @@ class ManageCandidateEvaluation
      * @param $evaluation
      * @return mixed
      */
-    public function getFinalScoreByEvaluation($user, $evaluation)
+    public function getFinalScoreByEvaluation(User $user, Evaluation $evaluation)
     {
         $score = $this->entityManager->getRepository('AppBundle:Score')
             ->getUserFinalScore($user, $evaluation);
@@ -156,10 +162,47 @@ class ManageCandidateEvaluation
         return $score;
     }
 
+    public function getFinalDetailScore(User $user, Evaluation $evaluation)
+    {
+         return $this->entityManager->getRepository('AppBundle:Score')
+            ->getUserDetailFinalScore($user, $evaluation);
+
+    }
+
     public function getDiffDateTime($startDate, $endDate)
     {
         return strtotime($endDate->format('Y-m-d H:i:s')) - strtotime($startDate->format('Y-m-d H:i:s'));
     }
+
+    public function sendResultReport(User $user, Evaluation $evaluation, $path)
+    {
+
+        $detailResult = $this->getFinalDetailScore($user, $evaluation);
+        $path = $this->generateRreportPdf($user, $evaluation, $detailResult, $path);
+        $this->mailer->sendResultReport($user, $evaluation, $path);
+
+    }
+
+    public function generateRreportPdf($user, $evaluation,$detailResult, $path)
+    {
+        $filename = $evaluation->getId() .'_' .  $user->getId();
+        $filename = sprintf($evaluation->getId() . $filename. "-%s.pdf", date('Y-m-d m:s'));
+        $this->pdf->generateFromHtml(
+            $this->mailer->templating->render(
+                'Emails/reportResult.html.twig',
+                array(
+                    'detailResult'  => $detailResult,
+                    'candidat' => $user,
+                    'evaluation' => $evaluation
+                )
+            ),
+            $path . '/' . $filename
+        );
+
+        return $path . '/' . $filename;
+    }
+
+
 
 
 }
