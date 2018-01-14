@@ -1,0 +1,22 @@
+{% extends '::layoutBack.html.twig' %}
+{% block title %}
+    CleverTest
+{% endblock %}
+{% block content %}
+    <div class="navbar-header" >
+        <div style="font-size:20px; color:#FF5C2F;text-align:center">
+            <b>
+                ! 404 !
+                La page que vous cherchez n'existe pas.
+            </b>
+        </div><br/>
+        <div class="nav navbar-nav">
+            <p>
+                <a class="btn-sm btn-primary" style="margin-right:10px" href="{{ path('evaluation_index') }}">
+                    retour à la page d'accueil</a>
+            </p>
+
+        </div>
+    </div>
+
+{% endblock %}
