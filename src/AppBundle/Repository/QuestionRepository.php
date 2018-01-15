@@ -23,15 +23,16 @@ class QuestionRepository extends \Doctrine\ORM\EntityRepository
 			->getResult();
 
 	}
-	public function getQuestionsByTopicIdAndLevel($topicId, $questionLevel, $limit = null, $offset = null)
+	public function getQuestionsByTopicIdAndLevelId($topicId, $questionLevelId, $limit = null, $offset = null)
 	{
 		$qb = $this->createQueryBuilder('q')
 			->leftJoin('q.topic', 't')
 			->leftJoin('q.level', 'l')
-			->where('topic_id = :topicId')
+			->where('q.status = 1')
+			->andWhere('q.topic = :topicId')
 			->setParameter('topicId', $topicId)
-			->andWhere('l.name = :name')
-			->setParameter('name', $questionLevel);
+			->andWhere('q.level = :levelId')
+			->setParameter('levelId', $questionLevelId);
 		
 		if (isset($limit)) {
 			$qb->setMaxResults($limit);

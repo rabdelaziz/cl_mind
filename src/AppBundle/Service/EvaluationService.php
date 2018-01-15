@@ -8,6 +8,7 @@ use AppBundle\Entity\Difficulty;
 use AppBundle\Entity\Evaluation;
 use AppBundle\Entity\Topic;
 use Doctrine\ORM\EntityManager;
+use AppBundle\Exception\QuestionException;
 
 /*
  * 
@@ -65,24 +66,20 @@ class EvaluationService
 	 */
 	public function calculNbQuestion(\AppBundle\Entity\Difficulty $difficulty, $nbQuestion)
 	{
-		$nbFacile = $nbQuestion * $difficulty->getPercentageEasy() / 100;
-		$nbMoyen = $nbQuestion * $difficulty->getPercentageAverage() / 100;
-		$nbDifficile = $nbQuestion * $difficulty->getPercentageDifficult() / 100;
-
-		$nbManquant = (int)( ($nbFacile - (int)$nbFacile) + ($nbMoyen - (int)$nbMoyen) + ($nbDifficile - (int)$nbDifficile));
-		$values = array(
-				'facile' => (int)$nbFacile,
-				'moyen' => (int)$nbMoyen,
-				'difficile' => (int)$nbDifficile
-		);
+		$nbFacile = (int) round ($nbQuestion * $difficulty->getPercentageEasy() / 100);
+		$nbMoyen = (int) round ($nbQuestion * $difficulty->getPercentageAverage() / 100);
+		$nbDifficile = (int) round ($nbQuestion * $difficulty->getPercentageDifficult() / 100);
 		
-		// Partager le nombre manquant (la somme des parties decimales) entre les questions faciles et difficiles		
-		if ($nbManquant == 2){
-		    $values['facile'] += 1;
-		    $values['moyen'] += 1;
-		} elseif ($nbManquant == 1) {
-		    $values['moyen'] += 1;
-		}
+		// Calculer la différence pour éventuellement réajuster le nombre
+		$diff = $nbQuestion - ($nbFacile + $nbMoyen + $nbDifficile);
+		
+        // Le nombre en plus ou manquant sera ajouté ou déduit des questions moyennes
+        $nbMoyen += $diff;
+		$values = array(
+				'facile' => $nbFacile,
+				'moyen' => $nbMoyen,
+				'difficile' => $nbDifficile
+		);
 
 		return $values;
 	}
@@ -107,23 +104,39 @@ class EvaluationService
 			if ($topic instanceof Topic && isset($expectedNbQuestions[$topic->getId()])) {
 		
 				$nbQuestionAttendu = $expectedNbQuestions[$topic->getId()];
-				// Calculer le nb de question par niveau
+				// Calculer le nb de questions par niveau
 				$nbQuestionValues = $this->calculNbQuestion($difficulty, $nbQuestionAttendu);
-
+				dump($topic->getName(), $nbQuestionAttendu, $nbQuestionValues);
 				foreach ($levels as $level) {
 					$levelNbQuestion = isset($nbQuestionValues[$level->getName()]) ? (int)$nbQuestionValues[$level->getName()] : 0;
-					$listQuestion = $this->em->getRepository('AppBundle:Question')
-					   ->getQuestionsWithTopic($topic->getName(), $level->getName(), $levelNbQuestion);
+					
+					// Récupérer  ($levelNbQuestion) questions selon le thème, le niveau
+					if (!empty($nbQuestionValues[$level->getName()])) {
+					    $listQuestion = $this->em->getRepository('AppBundle:Question')
+					       ->getQuestionsByTopicIdAndLevelId($topic->getId(), $level->getId(), $levelNbQuestion);
+					   dump(count($listQuestion), $levelNbQuestion);
+					       
+					   if (count($listQuestion) < $nbQuestionValues[$level->getName()]) {
+					       throw new QuestionException($topic->getName() . '[' . $level->getName() . '] : Nombre de questions disponibles: ' . count($listQuestion));
+					   }
+					       
+				       $allQuestions = array_merge($allQuestions, $listQuestion);
+					
+					}
+					
 
-					$allQuestions = array_merge($allQuestions, $listQuestion);
+// 					$listQuestion = $this->em->getRepository('AppBundle:Question')
+// 					   ->getQuestionsWithTopic($topic->getName(), $level->getName(), $levelNbQuestion);
+// dump($listQuestion);
+					
 				}
 			}
 		}
-		
+		dump($allQuestions);
 		foreach ($allQuestions as $question) {
 			$evaluation->addQuestion($question);
 		}
-
+dump($evaluation);
 		return $evaluation;
 	}
 }

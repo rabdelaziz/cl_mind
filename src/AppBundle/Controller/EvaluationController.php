@@ -30,6 +30,7 @@ use AppBundle\Form\EvaluationType;
 use AppBundle\Entity\Difficulty;
 use AppBundle\Form\EvaluationStatusType;
 use AppBundle\Form\ContactType;
+use AppBundle\Exception\QuestionException;
 
 
 class EvaluationController extends Controller
@@ -257,20 +258,25 @@ class EvaluationController extends Controller
             $session = $request->getSession();
             $evaluation = $form->getData();
 
-            // Liste de tous les niveaux de difficulté pour les questions
-            $levelList = $em->getRepository('AppBundle:Level')
+            try {
+                // Liste de tous les niveaux de difficulté pour les questions
+                $levelList = $em->getRepository('AppBundle:Level')
                 ->findAll();
-
-            // Générer toutes les questions pour l'évaluation
-            $evaluationService = $this->get('appbundle.evaluation');
-            $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'), $form->get('difficulty')->getData());
-
-            $em->persist($evaluation);
-            $em->flush();
-
-            $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
-
-            return $this->redirectToRoute('evaluation_index');
+                
+                // Générer toutes les questions pour l'évaluation
+                $evaluationService = $this->get('appbundle.evaluation');
+                $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'), $form->get('difficulty')->getData());
+                
+                //$em->persist($evaluation);
+                //$em->flush();
+                
+                $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
+                
+                ////return $this->redirectToRoute('evaluation_index');
+                
+            } catch (QuestionException $e) {
+                $session->getFlashBag()->add('error', $e->getMessage());
+            }  
         }
 
         return $this->render('AppBundle:Evaluation:add.html.twig', array(

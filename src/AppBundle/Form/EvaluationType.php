@@ -19,18 +19,23 @@ class EvaluationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-	        ->add('title', TextType::class)
+	        ->add('title', TextType::class, array(
+	            'label' => 'Titre',
+	        ))
 	        ->add('status', EntityType::class, array(
-	        		'class' => 'AppBundle:Status',
-	        		'choice_label' => 'name',
+                'class' => 'AppBundle:Status',
+                'choice_label' => 'name',
+                'label' => 'Statut',
 	        ))
 	        ->add('difficulty', EntityType::class, array(
         		'class' => 'AppBundle:Difficulty',
         		'choice_label' => 'name',
+	            'label' => 'Difficulté',
 	        ))        
         	->add('topics', EntityType::class, array(
                 'class' => 'AppBundle:Topic',
                 'choice_label' => 'name',
+        	    'label' => 'Thèmes',
                 'mapped' => false,
                 'expanded' => true,
                 'multiple' => true,))
