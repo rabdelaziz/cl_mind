@@ -6,8 +6,7 @@ use AppBundle\Entity\Question;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\QuestionType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Response;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QuestionController extends Controller
 {
@@ -83,24 +82,24 @@ class QuestionController extends Controller
      */
     public function deleteAction($id)
     {
-    	$em = $this->getDoctrine()->getManager();
-    	$session = $this->get('session');
-
-    	$question = $em->getRepository('AppBundle:Question')->find($id);
-    	if (null === $question) {
-    		throw new NotFoundHttpException("La question d'id $id n'existe pas.");
-    	}
-
-    	if ($this->get('appbundle.question')->canBeDelete($question)) {
-    		$em->remove($question);
-    		$em->flush();
-    	
-    		$session->getFlashBag()->add('notice', "la question a bien été supprimée ainsi ques les réponses associées.");
-    	} else {
-    		$session->getFlashBag()->add('warning', 'Cette question ne peut être supprimée. Mais vous pourrez la désactiver.');
-    	}
-    	 
-    	return $this->redirectToRoute('question_index');
+        	$em = $this->getDoctrine()->getManager();
+        	$session = $this->get('session');
+    
+        	$question = $em->getRepository('AppBundle:Question')->find($id);
+        	if (null === $question) {
+        		throw new NotFoundHttpException("La question d'id $id n'existe pas.");
+        	}
+    
+        	if ($this->get('appbundle.question')->canBeDelete($question)) {
+        		$em->remove($question);
+        		$em->flush();
+        	
+        		$session->getFlashBag()->add('notice', "la question a bien été supprimée ainsi ques les réponses associées.");
+        	} else {
+        		$session->getFlashBag()->add('warning', 'Cette question ne peut être supprimée. Mais vous pourrez la désactiver.');
+        	}
+        	 
+        	return $this->redirectToRoute('question_index');
     }
 
     /**
