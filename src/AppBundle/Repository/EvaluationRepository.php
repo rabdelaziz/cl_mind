@@ -48,9 +48,11 @@ class EvaluationRepository extends EntityRepository
             ->addSelect('q')
             ->addSelect('t')
             ->addSelect('l')
+            ->addSelect('c')
             ->leftJoin('e.author', 'a')
             ->leftJoin('e.difficulty', 'd')
             ->leftJoin('e.status', 's')
+            ->leftJoin('e.candidates', 'c')
             ->leftJoin('e.questions', 'q')
             ->leftJoin('q.topic', 't')
             ->leftJoin('q.level', 'l')
@@ -60,5 +62,30 @@ class EvaluationRepository extends EntityRepository
             ->addOrderBy('l.name', 'ASC');
 
         return $qb->getQuery()->getSingleResult();
+    }
+    
+    /**
+     * Permet de récuperer toutes les évaluations avec toutes ses jointures
+     *
+     * @return Evaluation|NULL
+     */
+    public function getEvaluations()
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->addSelect('a')
+            ->addSelect('d')
+            ->addSelect('s')
+            ->addSelect('q')
+            ->addSelect('t')
+            ->addSelect('l')
+            ->leftJoin('e.author', 'a')
+            ->leftJoin('e.difficulty', 'd')
+            ->leftJoin('e.status', 's')
+            ->leftJoin('e.questions', 'q')
+            ->leftJoin('q.topic', 't')
+            ->leftJoin('q.level', 'l')
+            ->orderBy('e.createdDate', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }

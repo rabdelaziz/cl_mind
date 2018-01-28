@@ -28,29 +28,9 @@
                         {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
                     </div>
                 </div>
-            	<div class="form-group">
-                    {{ form_label(form.username, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                    {{ form_errors(form.username) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.roles, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                    {{ form_errors(form.roles) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.roles) }}
-                    </div>                
-                </div>
-                <div class="form-group">
-                    {{ form_label(form.enabled, null, {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
-                    {{ form_errors(form.enabled) }}
-                    <div class="col-sm-3">
-                        {{ form_widget(form.enabled) }}
-                    </div>
-                </div>
+            	
                 <input type="submit" name="add" value="Sauvegarder" class="btn btn-primary" />
-                <a href="{{ path('user_list') }}" class="btn btn-warning" role="button" >Annuler</a>
+                <a href="{{ path('candidate_index') }}" class="btn btn-warning" role="button" >Annuler</a>
             
         {{ form_end(form) }}
     </div>

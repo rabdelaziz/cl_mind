@@ -32,40 +32,41 @@
 
                 <div class="form-group">
 
-                    {{ form_label(form.difficulty, null, {'label_attr': {'class': 'col-sm-1 control-label'}}) }}
-                    {{ form_errors(form.difficulty) }}
-
-                    <div class="col-sm-3">
-                        {# Génération de l'input. #}
-                        {{ form_widget(form.difficulty, {'attr': {'class': 'form-control'}}) }}
-                    </div>
+                <div class="col-sm-3">
+                    {# Génération de l'input. #}
+                    {{ form_widget(form.difficulty, {'attr': {'class': 'form-control select2'}}) }}
                 </div>
+            </div>
+            
+            <hr/>
+            
+            <table>
+                <tr>
+                {% for topic in form.topics %}
+                    
+                    {% set questionNumber = topicsQuestionNumber[topic.vars.value] is defined ? topicsQuestionNumber[topic.vars.value] : '' %}
+                    
+                    <td>
+                        {{ form_widget(topic) }}  {{ form_label(topic) }}
+                    </td>
+                    <td>
+                    	<input type="text" name="question_numbers[{{ topic.vars.value }}]" value="{{ questionNumber }}">
+                    </td>
+                    {% if loop.index % 2 == 0 %}
+                        </tr>
+                        <tr>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            </table>
 
-                <hr/>
+            <hr/>
 
-                <table>
-                    <tr>
-                    {% for topic in form.topics %}
-                        <td>
-                            {{ form_widget(topic) }}  {{ form_label(topic) }}
-                        </td>
-                        <td>
-                            <input type="text" name="question_numbers[{{ topic.vars.value }}]" >
-                        </td>
-                        {% if loop.index % 2 == 0 %}
-                            </tr>
-                            <tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tr>
-                </table>
+            {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+            <a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
 
-                <hr/>
+        {{ form_end(form) }}
 
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
-
-            {{ form_end(form) }}
-        </div>
     </div>
 {% endblock %}
 
