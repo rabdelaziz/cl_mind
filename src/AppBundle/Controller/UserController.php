@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -93,20 +94,8 @@ class UserController extends Controller
     {
     	
         $em = $this->getDoctrine()->getManager();
-        /*
-    	$userList = $em->getRepository('AppBundle:User')
-    	->findAll();
-    	/*
-    	$userList = $em->getRepository('AppBundle:User')
-    	   ->findBy(['roles' => 'ROLE_CANDIDAT']);
-    	*/
-        
-        /*
-    	$userList = $em->getRepository('AppBundle:User')
-    	   //->findByRoles('ROLE_ADMIN');
-    	->findBy(['roles' => 'ROLE_CANDIDAT']);
-    	*/
-        $userList = $em->getRepository('AppBundle:User')->findByRoles('ROLE_ADMIN');
+
+        $userList = $em->getRepository('AppBundle:User')->findOnlyUsers();
     	return $this->render('AppBundle:User:list.html.twig', array(
     			'userList' => $userList,
             ''
@@ -131,8 +120,6 @@ class UserController extends Controller
     		$em = $this->getDoctrine()->getManager();
     		$session = $this->get('session');
     		
-    		$user = $form->getData();
-    		
     		// Vérifier que l'utilisateur n'est pas connu du référentiel
     		$userFound = $em->getRepository('AppBundle:User')->findUser($user);
     		if (null !== $userFound) {
@@ -151,6 +138,7 @@ class UserController extends Controller
     		
     		return $this->redirectToRoute('user_list');
     	}
+        
     	return $this->render('AppBundle:User:add.html.twig', array(
     		'form' => $form->createView()
     	));
@@ -164,12 +152,13 @@ class UserController extends Controller
     	if (null === $user) {
     		throw new NotFoundHttpException("L'utilisateur d'id $id n'existe pas.");
     	}
-//$user->removeRole('ROLE_USER');
+
     	$form = $this->createForm(UserType::class, $user);
-    	$form->handleRequest($request);    	//var_dump($form->get('roles')->getData()); die;
+    	$form->handleRequest($request);
     	if ($form->isSubmitted() && $form->isValid()) {
-    		$user = $form->getData();
-    		
+
+            $user->setUpdatedAt(new \DateTime('now'));
+            $em->flush();
     		return $this->redirectToRoute('user_list');
     	}
     	

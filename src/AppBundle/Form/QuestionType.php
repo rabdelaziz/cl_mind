@@ -73,4 +73,3 @@ class QuestionType extends AbstractType
         ));
     }
 }
-
