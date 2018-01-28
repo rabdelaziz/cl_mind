@@ -31,6 +31,7 @@ class EvaluationType extends AbstractType
         		'class' => 'AppBundle:Difficulty',
         		'choice_label' => 'name',
 	            'label' => 'Difficulté',
+                'placeholder' => 'Choisir la difficulté'
 	        ))        
         	->add('topics', EntityType::class, array(
                 'class' => 'AppBundle:Topic',

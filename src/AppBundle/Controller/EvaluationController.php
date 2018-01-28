@@ -9,7 +9,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Repository;
 use AppBundle\Entity\Score;
 
 use AppBundle\Form\TopicType;
@@ -18,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -28,8 +28,9 @@ use AppBundle\Entity\Evaluation;
 use AppBundle\Entity\User;
 use AppBundle\Form\EvaluationType;
 use AppBundle\Entity\Difficulty;
+use AppBundle\Form\CandidateType;
 use AppBundle\Form\EvaluationStatusType;
-use AppBundle\Form\ContactType;
+//use AppBundle\Form\ContactType;
 use AppBundle\Exception\QuestionException;
 
 
@@ -226,7 +227,7 @@ class EvaluationController extends Controller
             ->getManager()
             ->getRepository('AppBundle:Evaluation');
 
-        $evaluationList = $repository->findAll();
+        $evaluationList = $repository->getEvaluations();
 
         $evaluationService = $this->get('appbundle.evaluation');
         foreach ($evaluationList as $evaluation) {
@@ -240,6 +241,11 @@ class EvaluationController extends Controller
         ));
     }
 
+    /**
+     * 
+     * @param Request $request
+     * @return Response
+     */
     public function addAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -256,23 +262,21 @@ class EvaluationController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $session = $request->getSession();
-            $evaluation = $form->getData();
 
             try {
                 // Liste de tous les niveaux de difficulté pour les questions
                 $levelList = $em->getRepository('AppBundle:Level')
-                ->findAll();
-                
+                    ->findAll();
                 // Générer toutes les questions pour l'évaluation
                 $evaluationService = $this->get('appbundle.evaluation');
-                $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'), $form->get('difficulty')->getData());
+                $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'));
                 
-                //$em->persist($evaluation);
-                //$em->flush();
+                $em->persist($evaluation);
+                $em->flush();
                 
                 $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
                 
-                ////return $this->redirectToRoute('evaluation_index');
+                return $this->redirectToRoute('evaluation_index');
                 
             } catch (QuestionException $e) {
                 $session->getFlashBag()->add('error', $e->getMessage());
@@ -280,6 +284,7 @@ class EvaluationController extends Controller
         }
 
         return $this->render('AppBundle:Evaluation:add.html.twig', array(
+            'topicsQuestionNumber' => $request->get('question_numbers'),
             'form' => $form->createView()
         ));
     }
@@ -318,12 +323,8 @@ class EvaluationController extends Controller
 
         $evaluation->themes = implode('|', $topics);
 
-
-        $nbCandidates = $em->getRepository('AppBundle:User')->getNbByEvaluationId($request->get('id'));
-
         return $this->render('AppBundle:Evaluation:view.html.twig', array(
             'evaluation' => $evaluation,
-            'nbCandidates' => $nbCandidates,
             'form' => $form->createView()
         ));
     }
@@ -345,35 +346,28 @@ class EvaluationController extends Controller
         }
 
         $candidate = new User();
-        ////$candidate->addEvaluation($evaluation);
 
         $form = $this->createForm(CandidateType::class, $candidate);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $session = $request->getSession();
-            $candidate = $form->getData();
 
             $userService = $this->get('appbundle.user');
             $userFound = $userService->findUser($candidate);
 
             if (false === $userFound) {
                 $session->getFlashBag()->add('warning', "Il existe un candidat avec le même nom et prénom ou qui utilise le même email!");
-                return $this->render('AppBundle:Evaluation:edit.html.twig', array(
+                return $this->render('AppBundle:Evaluation:candidate.html.twig', array(
                     'form' => $form->createView()
                 ));
             } elseif ($userFound instanceof User) {
                 // Si le candidat est déjà connu => on lui envoie juste le lien de cette évaluation
                 // 1 => On vérifie s'il n'as pas passé le même test
-
-
-
-
             } else { //$userFound === null
                 // Si nouveau candidat
                 $candidate = $userService->generateUserData($candidate, array('ROLE_CANDIDAT'));
                 $evaluation->addCandidate($candidate);
 
-                $em->persist($evaluation);
                 $em->flush();
 
                 $session->getFlashBag()->add('notice', 'Le candidat a bien été affecté au test.');
@@ -382,7 +376,7 @@ class EvaluationController extends Controller
             return $this->redirectToRoute('evaluation_index');
         }
 
-        return $this->render('AppBundle:Evaluation:edit.html.twig', array(
+        return $this->render('AppBundle:Evaluation:candidate.html.twig', array(
             'form' => $form->createView()
         ));
     }

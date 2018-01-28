@@ -11,17 +11,17 @@ services:
     appbundle.evaluation:
         class: AppBundle\Service\EvaluationService
         arguments:
-            entityManager: "@doctrine.orm.entity_manager"
+            - "@doctrine.orm.entity_manager"
         
     appbundle.user:
         class: AppBundle\Service\UserService
         arguments:
-            entityManager: "@doctrine.orm.entity_manager"
+            - "@doctrine.orm.entity_manager"
             
     appbundle.question:
         class: AppBundle\Service\QuestionService
         arguments:
-            entityManager: "@doctrine.orm.entity_manager"
+           - "@doctrine.orm.entity_manager"
 
     appbundle.json.encoder:
         class: 'Symfony\Component\Serializer\Encoder\JsonEncoder'

@@ -36,7 +36,7 @@
 
                 <div class="col-sm-3">
                     {# Génération de l'input. #}
-                    {{ form_widget(form.difficulty, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(form.difficulty, {'attr': {'class': 'form-control select2'}}) }}
                 </div>
             </div>
             
@@ -45,11 +45,14 @@
             <table>
                 <tr>
                 {% for topic in form.topics %}
+                    
+                    {% set questionNumber = topicsQuestionNumber[topic.vars.value] is defined ? topicsQuestionNumber[topic.vars.value] : '' %}
+                    
                     <td>
                         {{ form_widget(topic) }}  {{ form_label(topic) }}
                     </td>
                     <td>
-                    	<input type="text" name="question_numbers[{{ topic.vars.value }}]" >
+                    	<input type="text" name="question_numbers[{{ topic.vars.value }}]" value="{{ questionNumber }}">
                     </td>
                     {% if loop.index % 2 == 0 %}
                         </tr>
@@ -62,6 +65,7 @@
             <hr/>
 
             {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+            <a href="{{ path('evaluation_index') }}" class="btn btn-warning" role="button" >Annuler</a>
 
         {{ form_end(form) }}
     </div>

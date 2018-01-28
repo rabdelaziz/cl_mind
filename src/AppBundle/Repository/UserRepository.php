@@ -40,6 +40,24 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
 	       return $qb->getQuery()->getResult();
 	}
     
+    public function findOnlyUsers()
+	{
+	    $qb = $this->createQueryBuilder('u')
+	       ->where('u.roles NOT LIKE :role')
+	       ->setParameter('role', "%ROLE_CANDIDAT%");
+	    
+	       return $qb->getQuery()->getResult();
+	}
+    
+    public function findByRole($role)
+	{
+	    $qb = $this->createQueryBuilder('u')
+	       ->where('u.roles LIKE :role')
+	       ->setParameter('role', "%$role%");
+	    
+	       return $qb->getQuery()->getResult();
+	}
+    
 	/**
 	 * Permet de récupérer le nombre de candidats ayant passé l'évaluation
 	 * 
