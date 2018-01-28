@@ -7,3 +7,9 @@ vendor/*
 var/*
 .idea
 
+# IDEs
+nbproject
+.buildpath
+.project
+.settings
+*~
