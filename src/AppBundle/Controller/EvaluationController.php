@@ -372,7 +372,7 @@ class EvaluationController extends Controller
     public function addCandidateAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $sendEmail = true;
         $evaluation = $em->getRepository('AppBundle:Evaluation')->find($request->get('id'));
         if (null === $evaluation) {
             throw new NotFoundHttpException("Le test d'id " . $request->get('id') . " n'existe pas.");
@@ -411,6 +411,11 @@ class EvaluationController extends Controller
                 $em->flush();
 
                 $session->getFlashBag()->add('notice', 'Le candidat a bien été affecté au test.');
+                //TODO rendre ce cette variable dynamique en ajoutant le choix sur le form
+                if($sendEmail) {
+                    $manageCandidate = $this->get('appBundle.manage.candidate.evaluation');
+                    $manageCandidate->sendLinkEvaluation($candidate);
+                }
             }
 
             return $this->redirectToRoute('evaluation_index');

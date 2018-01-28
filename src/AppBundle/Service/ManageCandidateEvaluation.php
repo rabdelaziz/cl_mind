@@ -19,6 +19,9 @@ use function var_dump;
 
 class ManageCandidateEvaluation
 {
+    const SECRET_KEY = 'check_dev_cl_mind17';
+    const SECRET_IV = 'check_dev_cl_mind17';
+
     /**
      * [$entityManager description]
      * @var [type]
@@ -202,7 +205,45 @@ class ManageCandidateEvaluation
         return $path . '/' . $filename;
     }
 
+    /**
+     * Encode/Decode de email pour la connextion
+     * @param $string
+     * @param string $action
+     * @return bool|string
+     */
+    public function makeSSODataConnection($string, $action = 'e')
+    {
+        $output = false;
+        $encrypt_method = "AES-256-CBC";
+        $key = hash( 'sha256', self::SECRET_KEY );
+        $iv = substr( hash( 'sha256', self::SECRET_IV ), 0, 16 );
 
+        if( $action === 'e' ) {
+            $output = base64_encode(openssl_encrypt( $string, $encrypt_method, $key, 0, $iv));
+        } else if( $action === 'd' ){
+            $output = openssl_decrypt(base64_decode( $string ), $encrypt_method, $key, 0, $iv);
+        }
 
+        return $output;
+    }
+
+    /**
+     * Envoi de lien de connexion au candidat
+     * @param User $candidate
+     */
+    public function sendLinkEvaluation(User $candidate)
+    {
+        $subject = "Votre Evaluation [Clevermind]";
+        $userName = $this->makeSSODataConnection($candidate->getEmail(), $action = 'e');
+
+        $body = $this->mailer->templating->render(
+            'Emails/testAvailable.html.twig',
+            array(
+                'candidate'  => $candidate,
+                'userName' => $userName,
+            )
+        );
+        $this->mailer->sendMessage('ram.abdelaziz@gmail.com', $subject, $body, $path = null);
+    }
 
 }

@@ -17,6 +17,7 @@ class UserService
 	 */
 	protected $em;
 
+
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->em = $entityManager;
