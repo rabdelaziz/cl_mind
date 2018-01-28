@@ -1,8 +1,10 @@
 <div xmlns="http://www.w3.org/1999/html">
-    <p>Bonjour XX,</p>
+    <p>Bonjour,  {{candidate.lastName}} {{candidate.firstName}}</p>
     <p>
         Veuillez cliquer sur le lien suivant pour passer votre test technique :
-        <strong>www.clevertest/php.fr</strong>
+        <a href="{{ url('sso_connexion', {'data': userName}) }}">
+            <strong>{{ url('sso_connexion', {'data': userName})}}</strong>
+        </a>
     </p>
     <p>
         Ces tests sont conçus par nos consultants Clevermind.</br>

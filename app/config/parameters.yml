@@ -8,5 +8,5 @@ parameters:
     mailer_transport: smtp
     mailer_host: smtp.gmail.com
     mailer_user: clevertest2@gmail.com
-    mailer_password: ********
+    mailer_password: *******
     secret: 6912d26747cf0cf283f59b378e21ae181cb42c9b

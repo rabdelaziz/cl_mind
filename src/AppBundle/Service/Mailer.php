@@ -25,22 +25,34 @@ class Mailer
         $this->templating = $templating;
     }
 
-    protected function sendMessage($to, $subject, $body, $path)
+    /**
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param null $path
+     */
+    public function sendMessage($to, $subject, $body, $path = null)
     {
         $mail = \Swift_Message::newInstance();
 
-        $mail
-            ->setFrom($this->from,$this->name)
+        $mail->setFrom($this->from,$this->name)
             ->setTo($to)
             ->setSubject($subject)
             ->setBody($body)
-             ->attach(\Swift_Attachment::fromPath($path))
             //->setReplyTo($this->reply,$name)
             ->setContentType('text/html');
+        if (!empty($path)) {
+            $mail->attach(\Swift_Attachment::fromPath($path));
+        }
 
         $this->mailer->send($mail);
     }
 
+    /**
+     * @param $user
+     * @param $evaluation
+     * @param $path
+     */
     public function sendResultReport($user, $evaluation, $path)
     {
 
@@ -52,7 +64,6 @@ class Mailer
                                                                 'manager'=> $evaluation->getAuthor()));
         $this->sendMessage($to, $subject, $body, $path);
     }
-
 }
 
 
