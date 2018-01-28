@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class UserController extends Controller
 {
@@ -21,7 +22,7 @@ class UserController extends Controller
         if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $userRole = $currentUser->getRoles();
             if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)) {
-                return $this->redirect($this->generateUrl('adminHomePage'));
+                return $this->redirect($this->generateUrl('evaluation_index'));
             } else if (in_array('ROLE_USER', $userRole)) {
                 return $this->redirect($this->generateUrl('userHomePage'));
             } else {
@@ -37,11 +38,17 @@ class UserController extends Controller
      */
     public function adminHomePageAction()
     {
+
+
+
+
+
         return $this->render('User/adminHomePage.html.twig');
     }
 
     /**
      *@Route("user_home_page", name="userHomePage")
+     * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function userHomePageAction()
     {
@@ -60,6 +67,7 @@ class UserController extends Controller
         $userList = $em->getRepository('AppBundle:User')->findOnlyUsers();
     	return $this->render('AppBundle:User:list.html.twig', array(
     			'userList' => $userList,
+            ''
     	));
     }
     

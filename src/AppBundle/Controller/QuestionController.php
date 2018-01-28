@@ -22,6 +22,7 @@ class QuestionController extends Controller
 
         return $this->render('AppBundle:Question:index.html.twig', array(
             'listQuestions' => $listQuestions,
+            'linkQuestionResponseListingOn' =>true,
         ));
     }
 
@@ -50,7 +51,9 @@ class QuestionController extends Controller
         }
         
         return $this->render('AppBundle:Question:edit.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'linkquestionResponseEditOn' => true,
+            'question' => $question
         ));
     }
 
@@ -71,6 +74,7 @@ class QuestionController extends Controller
         
         return $this->render('AppBundle:Question:view.html.twig', array(
             'question' => $question,
+            'linkquestionResponseViewOn' => true,
         ));
     }
 
@@ -130,7 +134,8 @@ class QuestionController extends Controller
         }
 
         return $this->render('AppBundle:Question:add.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'linkquestionResponseAddOn' => true,
         ));
 
     }

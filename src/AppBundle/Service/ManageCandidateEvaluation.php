@@ -3,15 +3,19 @@
 namespace AppBundle\Service;
 
 
-use AppBundle\Entity\Evaluation;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Knp\Snappy\Pdf;
 
 use AppBundle\Entity\Score;
+use AppBundle\Entity\User;
+use AppBundle\Entity\Evaluation;
+use function var_dump;
 
 class ManageCandidateEvaluation
 {
@@ -37,11 +41,13 @@ class ManageCandidateEvaluation
      * @param ObjectManager $entityManager [description]
      * @param Serializer    $serializer    [description]
      */
-	public function __construct(ObjectManager $entityManager, Serializer $serializer, SessionInterface $session)
+	public function __construct(ObjectManager $entityManager, Serializer $serializer, SessionInterface $session, $mailer, Pdf $pdf)
 	{
 		$this->entityManager = $entityManager;
 		$this->serializer = $serializer;
 		$this->session = $session;
+        $this->mailer = $mailer;
+        $this->pdf = $pdf;
 	}
     
     /**
@@ -63,7 +69,34 @@ class ManageCandidateEvaluation
         return $serializedQuestionsList;
 
 	}
-    
+
+    /**
+     * @param $evaluationId
+     * @param $questionId
+     * @param $qNumber
+     * @param $user
+     */
+	public function saveScore($evaluationId, $questionId, $qNumber, $user)
+    {
+        $today = new \DateTime("now", new \DateTimeZone('Europe/paris'));
+        $question =  $this->entityManager->getRepository('AppBundle:Question')->find($questionId);
+        $evaluation =  $this->entityManager->getRepository('AppBundle:Evaluation')->find($evaluationId);
+        $score = new Score();
+        $score->setResponseDate($today);
+        $score->setStartDate($today);
+        $score->setQuestionNumber($qNumber);
+        $score->setUser($user);
+        $score->setQuestion($question);
+        $score->setEvaluation($evaluation);
+        $score->setTime(0);
+        $score->setExpired(false);
+        $score->setResponse(json_encode([]));
+        $score->setScore(0);
+        $this->entityManager->persist($score);
+        $this->entityManager->flush();
+
+    }
+
     /**
      * Enregistrement dans la table score le resultat pour chaque réponse
      * @param  string $evaluationId [description]
@@ -71,21 +104,15 @@ class ManageCandidateEvaluation
      * @param  string $questionId  
      * @param  intger $qNumber     l'ordre de la question            
      */
-    public function saveScore($evaluationId, $responseIds, $questionId, $qNumber, $currentUser)
+    public function updateScore($evaluationId, $responseIds, $questionId, $qNumber, $currentUser)
     {
 
-        $today = new \DateTime("now", new \DateTimeZone('Europe/paris'));
-     //   $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$em = $this->getDoctrine()->getManager();
+        $now = new \DateTime("now");
         $evaluation =  $this->entityManager->getRepository('AppBundle:Evaluation')->find($evaluationId);
         $correctAnswer = array();
         $score = $this->entityManager->getRepository('AppBundle:Score')->findOneBy(array('evaluation' => $evaluationId, 'question' => $questionId, 'user' => $currentUser->getId()));
 
-        if (empty($score)) {
-            $score = new Score();
-        } 
-
-        $question =  $this->entityManager->getRepository('AppBundle:Question')->find($questionId);//var_dump($qId);die();
+        
         $correctAnswers =  $this->entityManager->getRepository('AppBundle:Response')->findBy(array('question' => $questionId, 'correct' => 1));
         foreach ($correctAnswers as $ke => $choice) {
             $correctAnswer[] = $choice->getId();
@@ -97,17 +124,85 @@ class ManageCandidateEvaluation
                  $userScore = 1;
             }
         }
-        $score->setResponseDate($today);
-        $score->setStartDate($this->session->get('currentQuestionStartDate')[$questionId]);
+        $time = $this->getDiffDateTime($score->getStartDate(), $now);
+
+        $score->setResponseDate($now);
+       // $score->setStartDate($this->session->get('currentQuestionStartDate')[$questionId]);
         $score->setQuestionNumber($qNumber);
-        $score->setUser($currentUser);
-        $score->setQuestion($question);
-        $score->setEvaluation($evaluation);
-
-
+       // $score->setUser($currentUser);
+        //$score->setQuestion($question);
+       // $score->setEvaluation($evaluation);
+        $score->setExpired(true);
+        $score->setTime($time);
         $score->setResponse(json_encode($responseIds));
         $score->setScore($userScore);
-        $this->entityManager->persist($score);
+       // $this->entityManager->persist($score);
         $this->entityManager->flush();    
     }
+
+    /**
+     * @param $user
+     * @param $evaluation
+     * @return mixed
+     */
+    public function getFinalScoreByEvaluation(User $user, Evaluation $evaluation)
+    {
+        $score = $this->entityManager->getRepository('AppBundle:Score')
+            ->getUserFinalScore($user, $evaluation);
+
+        if($score['time'] > 60 )
+        {
+            $score['second'] = $score['time'] % 60;
+            $score['minute'] = floor($score['time'] / 60);
+        } else {
+            $score['second'] = $score['time'];
+            $score['minute'] = 0;
+        }
+
+        return $score;
+    }
+
+    public function getFinalDetailScore(User $user, Evaluation $evaluation)
+    {
+         return $this->entityManager->getRepository('AppBundle:Score')
+            ->getUserDetailFinalScore($user, $evaluation);
+
+    }
+
+    public function getDiffDateTime($startDate, $endDate)
+    {
+        return strtotime($endDate->format('Y-m-d H:i:s')) - strtotime($startDate->format('Y-m-d H:i:s'));
+    }
+
+    public function sendResultReport(User $user, Evaluation $evaluation, $path)
+    {
+
+        $detailResult = $this->getFinalDetailScore($user, $evaluation);
+        $path = $this->generateRreportPdf($user, $evaluation, $detailResult, $path);
+        $this->mailer->sendResultReport($user, $evaluation, $path);
+
+    }
+
+    public function generateRreportPdf($user, $evaluation,$detailResult, $path)
+    {
+        $filename = $evaluation->getId() .'_' .  $user->getId();
+        $filename = sprintf($evaluation->getId() . $filename. "-%s.pdf", date('Y-m-d m:s'));
+        $this->pdf->generateFromHtml(
+            $this->mailer->templating->render(
+                'Emails/reportResult.html.twig',
+                array(
+                    'detailResult'  => $detailResult,
+                    'candidat' => $user,
+                    'evaluation' => $evaluation
+                )
+            ),
+            $path . '/' . $filename
+        );
+
+        return $path . '/' . $filename;
+    }
+
+
+
+
 }

@@ -42,3 +42,11 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@appbundle.object.serializer'
             - '@session'
+            - '@appBundle.meailer'
+            -  '@knp_snappy.pdf'
+
+    appBundle.meailer:
+        class: AppBundle\Service\Mailer
+        arguments:
+            - '@mailer'
+            - '@templating'

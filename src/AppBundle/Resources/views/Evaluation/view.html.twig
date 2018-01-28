@@ -1,9 +1,10 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Détail du test{% endblock %}
 
-{% block body %}
-    <h3>Détails:</h3>
+{% block content %}
+    {{ parent() }}
+    <div class="col-xs-9">
     <table>
         <tr>
             <td>Titre :</td>
@@ -88,6 +89,7 @@
             <tbody>
         {% endif %}
     </table>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

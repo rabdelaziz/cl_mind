@@ -26,4 +26,5 @@ class ResponseRepository extends \Doctrine\ORM\EntityRepository
 
         return $result;
     }
+
 }
