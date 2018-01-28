@@ -56,7 +56,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="{% if manageEvaluation is defined %}bold-text active{% endif %}" {% if manageEvaluation is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-list-alt text-info">
-                                         </span>Gestion des évaluations
+                                         </span>Evaluations
                                     </a>
 
                                 </h4>
@@ -67,7 +67,7 @@
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-file text-info btn-xs"></span>
-                                                <a href="{{ path('evaluation_index')}}" class="{% if linkEvaluationListingOn is defined %}bold-text{% endif %}">Liste des évaluations</a>
+                                                <a href="{{ path('evaluation_index')}}" class="{% if linkEvaluationListingOn is defined %}bold-text{% endif %}">Liste</a>
 
                                             </td>
                                         </tr>
@@ -75,7 +75,7 @@
                                             <td>
 
                                                 <span class="glyphicon glyphicon-plus text-info btn-xs" aria-hidden="true"></span>
-                                                <a href="{{ path('evaluation_add')}}" class="{% if linkEvaluationAddOn is defined %}bold-text{% endif %}">Ajouter une évaluation</a>
+                                                <a href="{{ path('evaluation_add')}}" class="{% if linkEvaluationAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                                 {#<span class="badge">42</span>#}
                                             </td>
                                         </tr>
@@ -97,7 +97,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="{% if manageUser is defined %}bold-text active{% endif %}">
                                         <span class="glyphicon glyphicon-user text-info">
-                            </span>Gestion des utilisateurs</a>
+                            </span>Utilisateurs</a>
                                 </h4>
                             </div>
                             <div id="collapseTwo" class="panel-collapse collapse">
@@ -105,7 +105,7 @@
                                     <table class="table">
                                         <tr>
                                             <td>
-                                                <a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-file text-info"></span>Liste des utilisateurs</a>
+                                                <a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-file text-info"></span>Liste</a>
                                             </td>
                                         </tr>
                                     </table>
@@ -117,7 +117,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="{% if manageQuestionResponse is defined %}bold-text active{% endif %}" {% if manageQuestionResponse is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-book text-info">
-                            </span>Gestion des questions</a>
+                            </span>Questions</a>
                                 </h4>
                             </div>
                             <div id="collapseThree" class="panel-collapse collapse">
@@ -126,21 +126,21 @@
                                         <tr>
                                             <td> <span class="glyphicon glyphicon-file text-info btn-xs"></span>
                                                 <a href="{{ path('question_index') }}" class="{% if linkQuestionResponseListingOn is defined %}bold-text{% endif %}">
-                                                    Liste des questions/Réponses
+                                                    Liste
                                                 </a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajouter une question</a>
+                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajout/modification</a>
                                             </td>
                                         </tr>
                                         {% if linkquestionResponseEditOn is defined %}
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('question_edit', { 'id': question.id }) }}" class="{% if linkQuestionResponseEditOn is defined %}bold-text{% endif %}">Modifier une question</a>
+                                                <a href="{{ path('question_edit', { 'id': question.id }) }}" class="{% if linkQuestionResponseEditOn is defined %}bold-text{% endif %}">Modification</a>
                                             </td>
                                         </tr>
                                         {% endif %}
@@ -148,7 +148,7 @@
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-th text-info btn-xs"></span>
-                                                <a href="{{ path('question_view', { 'id': question.id }) }}" class="{% if linkQuestionResponseDetailOn is defined %}bold-text{% endif %}">Détail d'une question</a>
+                                                <a href="{{ path('question_view', { 'id': question.id }) }}" class="{% if linkQuestionResponseDetailOn is defined %}bold-text{% endif %}">Détail</a>
                                             </td>
                                         </tr>
                                         {% endif %}
@@ -163,7 +163,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="{% if manageCandidat is defined %}bold-text active{% endif %}" {% if manageCandidat is defined %}aria-expanded=true"{% endif %}>
                                         <span class="glyphicon glyphicon-education text-info">
-                            </span> Gestion des candidats</a>
+                            </span>Candidats</a>
                                 </h4>
                             </div>
                             <div id="collapseFour" class="panel-collapse collapse  {% if manageCandidat is defined %}in{% endif %}">
@@ -173,7 +173,7 @@
                                             <td>
                                                 <span class="glyphicon glyphicon-file text-info btn-xs"></span>
                                                 <a href="http://www.jquery2dotnet.com">
-                                                    Liste des candidats
+                                                    Liste
                                                 </a>
                                             </td>
                                         </tr>
@@ -181,7 +181,7 @@
                                             <td>
                                                 <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
                                                 <a href="#" class="{% if linkCandidatAddOn is defined %}bold-text{% endif %}">
-                                                    Ajouter un candidat
+                                                    Ajout
                                                 </a>
                                             </td>
                                         </tr>
@@ -195,7 +195,7 @@
                                 <h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="{% if manageTopic is defined %}bold-text{% endif %}"  {% if manageTopic is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-cog text-info">
-                            </span> Gestion des themes</a>
+                            </span>Thèmes</a>
                                 </h4>
                             </div>
                             <div id="collapseFive" class="panel-collapse collapse {% if manageTopic is defined %}in{% endif %}">
@@ -204,13 +204,13 @@
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-file text-info btn-xs"></span>
-                                                <a href="{{ path('topic_list') }}" class="{% if linkTopicListingOn is defined %}bold-text{% endif %}">Liste des thèmes</a>
+                                                <a href="{{ path('topic_list') }}" class="{% if linkTopicListingOn is defined %}bold-text{% endif %}">Liste</a>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
-                                                <a href="{{ path('create_topic') }}"  class="{% if linkTopicAddOn is defined %}bold-text{% endif %}">Ajouter un Thème</a>
+                                                <a href="{{ path('create_topic') }}"  class="{% if linkTopicAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                             </td>
                                         </tr>
                                     </table>
