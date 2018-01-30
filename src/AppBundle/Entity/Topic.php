@@ -3,12 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Topic
  *
  * @ORM\Table(name="topic")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TopicRepository")
+ * @UniqueEntity("name")
  */
 class Topic
 {
@@ -25,6 +27,7 @@ class Topic
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=50, unique=true)
+     *
      */
     private $name;
 
@@ -32,6 +35,7 @@ class Topic
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     *
      */
     private $description;
 

@@ -120,7 +120,7 @@
                             </span>Questions</a>
                                 </h4>
                             </div>
-                            <div id="collapseThree" class="panel-collapse collapse">
+                            <div id="collapseThree" class="panel-collapse collapse {% if manageQuestionResponse is defined %}in{% endif %}">
                                 <div class="panel-body">
                                     <table class="table">
                                         <tr>
@@ -133,7 +133,7 @@
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajout/modification</a>
+                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                             </td>
                                         </tr>
                                         {% if linkquestionResponseEditOn is defined %}
