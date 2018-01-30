@@ -243,7 +243,7 @@ class ManageCandidateEvaluation
                 'userName' => $userName,
             )
         );
-        $this->mailer->sendMessage('ram.abdelaziz@gmail.com', $subject, $body, $path = null);
+        $this->mailer->sendMessage($candidate->getEmail(), $subject, $body, $path = null);
     }
 
 }
