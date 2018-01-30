@@ -1,10 +1,10 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Création des utilisateurs{% endblock %}
 
-{% block body %}
-    <h1>Création d'un utilisateur</h1>
-    <div class="well">
+{% block content %}
+    {{ parent() }}
+    <div class="well col-xs-9">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
                 <div class="form-group">

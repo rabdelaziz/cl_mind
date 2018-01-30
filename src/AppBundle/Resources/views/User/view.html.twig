@@ -1,30 +1,31 @@
-{% extends "::base.html.twig" %}
+{% extends "::layoutBack.html.twig" %}
 
 {% block title %}Informations de l'utilisateur{% endblock %}
 
-{% block body %}
-    <h3>Informations de l'utilisateur</h3>
-    <table>
-        <tr>
-            <td>Prénom : </td>
-            <td>{{ user.firstName }}</td>
-        </tr>
-        <tr>
-            <td>Nom :</td>
-            <td>{{ user.lastname }}</td>
-        </tr>
-        <tr>
-            <td>Indentifiant :</td>
-            <td>{{ user.username }}</td>
-        </tr>
-        <tr>
-            <td>Email :</td>
-            <td>{{ user.email }}</td>
-        </tr>
-    </table>
-    
-    <hr />
-    <a href="{{ path('user_list') }}">
-        Retour à la liste
-    </a>
+{% block content %}
+    {{ parent() }}
+    <div class="well col-xs-9">
+        <table>
+            <tr>
+                <td>Prénom : </td>
+                <td>{{ user.firstName }}</td>
+            </tr>
+            <tr>
+                <td>Nom :</td>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+                <td>Indentifiant :</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>Email :</td>
+                <td>{{ user.email }}</td>
+            </tr>
+        </table>
+        <hr />
+        <a href="{{ path('user_list') }}">
+            Retour à la liste
+        </a>
+    </div>
 {% endblock %}
