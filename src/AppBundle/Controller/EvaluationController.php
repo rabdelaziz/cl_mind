@@ -254,7 +254,7 @@ class EvaluationController extends Controller
             $em->persist($evaluation);
             $em->flush();
 
-            $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
+            $session->getFlashBag()->add('success', "l'évaluation a bien été créée.");
 
             return $this->redirectToRoute('evaluation_index');
         }
@@ -291,7 +291,7 @@ class EvaluationController extends Controller
                 $em->persist($evaluation);
                 $em->flush();
 
-                $request->getSession()->getFlashBag()->add('notice', 'Le status a bien été modifié.');
+                $request->getSession()->getFlashBag()->add('success', 'Le status a bien été modifié.');
             }
         }
 
@@ -360,7 +360,7 @@ class EvaluationController extends Controller
                 $em->persist($evaluation);
                 $em->flush();
 
-                $session->getFlashBag()->add('notice', 'Le candidat a bien été affecté au test.');
+                $session->getFlashBag()->add('success', 'Le candidat a bien été affecté au test.');
                 //TODO rendre ce cette variable dynamique en ajoutant le choix sur le form
                 if($sendEmail) {
                     $manageCandidate = $this->get('appBundle.manage.candidate.evaluation');
@@ -401,7 +401,7 @@ class EvaluationController extends Controller
             $em->remove($evaluation);
             $em->flush();
 
-            $session->getFlashBag()->add('notice', "l'évaluation a bien été supprimée.");
+            $session->getFlashBag()->add('success', "l'évaluation a bien été supprimée.");
         } else {
             $session->getFlashBag()->add('warning', 'Cette évaluation ne peut être supprimer.');
         }

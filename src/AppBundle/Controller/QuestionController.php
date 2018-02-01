@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Form\QuestionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use function var_dump;
 
 class QuestionController extends Controller
 {
@@ -46,7 +47,7 @@ class QuestionController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
         	$em->flush();
-        	$this->get('session')->getFlashBag()->add('notice', "La question a bien été mise à jour.");
+        	$this->get('session')->getFlashBag()->add('success', "La question a bien été mise à jour.");
         	
         	return $this->redirectToRoute('question_index');
         }
@@ -55,7 +56,6 @@ class QuestionController extends Controller
             'form' => $form->createView(),
             'linkquestionResponseEditOn' => true,
             'question' => $question,
-            'manageQuestionResponse' =>true
         ));
     }
 
@@ -76,8 +76,7 @@ class QuestionController extends Controller
         
         return $this->render('AppBundle:Question:view.html.twig', array(
             'question' => $question,
-            'linkquestionResponseViewOn' => true,
-            'manageQuestionResponse' =>true,
+            'linkQuestionResponseDetailOn' => true,
         ));
     }
 
@@ -101,7 +100,7 @@ class QuestionController extends Controller
         		$em->remove($question);
         		$em->flush();
         	
-        		$session->getFlashBag()->add('notice', "la question a bien été supprimée ainsi ques les réponses associées.");
+        		$session->getFlashBag()->add('success', "la question a bien été supprimée ainsi ques les réponses associées.");
         	} else {
         		$session->getFlashBag()->add('warning', 'Cette question ne peut être supprimée. Mais vous pourrez la désactiver.');
         	}
@@ -121,25 +120,26 @@ class QuestionController extends Controller
         $form = $this->createForm(QuestionType::class, $question);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
 
-            $question = $form->getData();
+        if ($form->isSubmitted()) {
+            if($form->isValid()) {
+                $question = $form->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($question);
-            $em->flush();
-            
-            $this->get('session')->getFlashBag()->add('notice', "la question a bien été créée.");
-            
-            return $this->redirectToRoute('question_index');
-        } else {
-            $this->get('session')->getFlashBag()->add('warning', "Le formulaire n'est pas valide!");
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($question);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add('success', "la question a bien été créée.");
+
+                return $this->redirectToRoute('question_index');
+            } else {
+                $this->get('session')->getFlashBag()->add('warning', "Le formulaire n'est pas valide!");
+            }
         }
 
         return $this->render('AppBundle:Question:add.html.twig', array(
             'form' => $form->createView(),
             'linkquestionResponseAddOn' => true,
-            'manageQuestionResponse' =>true,
         ));
 
     }

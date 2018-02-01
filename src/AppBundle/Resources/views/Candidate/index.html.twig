@@ -1,10 +1,9 @@
-{% extends "::base.html.twig" %}
-
+{% extends "::layoutBack.html.twig" %}
 {% block title %}Liste des candidats{% endblock %}
 
-{% block body %}
-<h1>Liste des candidats</h1>
-
+{% block content %}
+    {{ parent() }}
+  <div class=" col-xs-9">
     <table id="candidate_list" class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -22,7 +21,7 @@
             {% for candidate in candidatesList %}
             <tr>
                 <td>
-                    <a href="{{ path('user_view', { 'id': candidate.id }) }}">
+                    <a href="{{ path('candidate_view', { 'id': candidate.id }) }}">
                         {{ candidate.firstName }}
                     </a>
                 </td>        
@@ -44,6 +43,7 @@
         </tbody>
         {% endif %}
     </table>
+  </div>
 
 {% endblock %}
 

@@ -32,7 +32,7 @@ class TopicController extends Controller
             $em->persist($topic);
             $em->flush();
 
-            $session->getFlashBag()->add('notice', "Vos modification ont été bien enregistrés");
+            $session->getFlashBag()->add('success', "Le thème a bien été créé");
 
             return $this->redirectToRoute('topic_list');
         }
@@ -76,14 +76,14 @@ class TopicController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
 
             $em->flush();
-            $this->get('session')->getFlashBag()->add('notice', "Le thème a bien été mise à jour.");
+            $this->get('session')->getFlashBag()->add('success', "Le thème a bien été mis à jour.");
 
             return $this->redirectToRoute('topic_list');
         }
 
         return $this->render('AppBundle:Topic:edit.html.twig', array(
             'form' => $form->createView(),
-            'linkTopicAddOn' => true,
+            'linkTopicEditOn' => true,
             'topic' => $topic
         ));
     }

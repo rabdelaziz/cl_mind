@@ -1,9 +1,9 @@
-{% extends "::base.html.twig" %}
-
+{% extends "::layoutBack.html.twig" %}
 {% block title %}Informations du candidat{% endblock %}
 
-{% block body %}
-    <h3>Informations de l'utilisateur</h3>
+{% block content %}
+    {{ parent() }}
+    <div class="well col-xs-9">
     <table>
         <tr>
             <td>Prénom : </td>

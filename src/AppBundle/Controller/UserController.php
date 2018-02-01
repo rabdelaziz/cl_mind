@@ -97,8 +97,8 @@ class UserController extends Controller
 
         $userList = $em->getRepository('AppBundle:User')->findOnlyUsers();
     	return $this->render('AppBundle:User:list.html.twig', array(
-    			'userList' => $userList,
-            ''
+            'userList' => $userList,
+            'linkUserListingOn' => true
     	));
     }
     
@@ -134,13 +134,14 @@ class UserController extends Controller
     		$em->persist($user);
     		$em->flush();
     		
-    		$session->getFlashBag()->add('notice', "L'utilisateur a bien été créé.");
-    		
+    		$session->getFlashBag()->add('success', "L'utilisateur a bien été créé.");
+
     		return $this->redirectToRoute('user_list');
     	}
-        
+
     	return $this->render('AppBundle:User:add.html.twig', array(
-    		'form' => $form->createView()
+    		'form' => $form->createView(),
+            'linkUserAddOn' => true
     	));
     }
     
@@ -159,11 +160,15 @@ class UserController extends Controller
 
             $user->setUpdatedAt(new \DateTime('now'));
             $em->flush();
+            $session = $this->get('session');
+            $session->getFlashBag()->add('success', "L'utilisateur a bien été créé.");
     		return $this->redirectToRoute('user_list');
     	}
     	
     	return $this->render('AppBundle:User:edit.html.twig', array(
-    			'form' => $form->createView()
+    			'form' => $form->createView(),
+                'linkUserEditOn'=>true,
+                'user'=> $user
     	));
     }
     
@@ -178,6 +183,7 @@ class UserController extends Controller
 
     	return $this->render('AppBundle:User:view.html.twig', array(
     			'user' => $user,
+                'linkUserViewOn' =>true,
     	));
     }
 
