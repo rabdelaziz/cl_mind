@@ -21,6 +21,9 @@ class EvaluationType extends AbstractType
         $builder
 	        ->add('title', TextType::class, array(
 	            'label' => 'Titre',
+                'attr' => array(
+                    'placeholder' => 'Titre'
+                )
 	        ))
 	        ->add('status', EntityType::class, array(
                 'class' => 'AppBundle:Status',

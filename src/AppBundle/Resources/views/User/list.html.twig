@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th>#</th>
-    			<th>Nom</th>
+                <th>Nom</th>
                 <th>Prénom</th>
                 <th>Email</th>
                 <th>Identifiant</th>            
@@ -33,7 +33,7 @@
                 <td>{{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
                 <td> {{ user.username }}</td>
-                <td> {{ user.username }}</td>
+                <td> {{ user.roles[0] }}</td>
                 <td>{% if user.enabled %} Actif {% else %} Inactif {% endif %} </td>
                 <td>
                     <a href="{{ path('user_edit', { 'id': user.id }) }}" class="btn btn-link " title="Editer cet utilisateur">

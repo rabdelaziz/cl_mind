@@ -26,6 +26,10 @@
             <td>Statut :</td>
             <td>{% if 1 == question.status %}Active{% else %}Inactive{% endif %}</td>
         </tr>
+        <tr>
+            <td>Auteur :</td>
+            <td>{{ question.author.firstName }} {{ question.author.lastName }}</td>
+        </tr>
     </table>
     <br>
     <p><b>Liste des réponses:</b></p>

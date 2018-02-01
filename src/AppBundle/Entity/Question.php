@@ -72,6 +72,14 @@ class Question
      */
     private $evaluations;
     
+    /**
+	 * @var \AppBundle\Entity\User
+	 *
+	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+	 * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
+	 */
+	private $author;
+    
     public function __construct()
     {
         $this->responses = new ArrayCollection();
@@ -277,5 +285,28 @@ class Question
     {
         return $this->evaluations;
     }
-}
 
+    /**
+     * Set author.
+     *
+     * @param \AppBundle\Entity\User $author
+     *
+     * @return Question
+     */
+    public function setAuthor(\AppBundle\Entity\User $author)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author.
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+}

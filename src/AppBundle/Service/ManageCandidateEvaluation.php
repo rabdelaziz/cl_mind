@@ -15,7 +15,6 @@ use Knp\Snappy\Pdf;
 use AppBundle\Entity\Score;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Evaluation;
-use function var_dump;
 
 class ManageCandidateEvaluation
 {
@@ -68,7 +67,7 @@ class ManageCandidateEvaluation
         $normalizer->setIgnoredAttributes(array('responses')); 
 
         $serializedQuestionsList = $this->serializer->serialize($questionsList, 'json');
-
+var_dump('couycou2227');die;
         return $serializedQuestionsList;
 
 	}
@@ -243,7 +242,7 @@ class ManageCandidateEvaluation
                 'userName' => $userName,
             )
         );
-        $this->mailer->sendMessage('ram.abdelaziz@gmail.com', $subject, $body, $path = null);
+        $this->mailer->sendMessage($candidate->getEmail(), $subject, $body, $path = null);
     }
 
 }

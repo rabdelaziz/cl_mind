@@ -18,7 +18,8 @@ class ResponseType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, array(
-            		'label' => 'Enoncé'
+                'label' => 'Enoncé',
+                'attr' => array('style' => 'min-width: 300px;min-height: 100px')
             ))
             ->add('correct', CheckboxType::class, array(
             		'label' => 'Correcte',

@@ -13,6 +13,7 @@
                 <th>Thème</th>
                 <th>Durée(mn)</th>
                 <th class="no-action center">Statut</th>
+                <th class="no-action center">Auteur</th>
                 <th class="no-action center">Actions</th>
             </tr>
         </thead>
@@ -30,11 +31,12 @@
             <td>{{ question.topic.name }}</td>
             <td>{{ question.duration }}</td>
             <td><i class="glyphicon glyphicon-{% if 1 == question.status %}ok-circle text-success{% else %}ban-circle text-danger{% endif %}" ></i></td>
+            <td>{{ question.author.firstName }} {{ question.author.lastName|first|upper }}.</td>
             <td>
-                <a href="{{ path('question_edit', { 'id': question.id }) }}">
+                <a href="{{ path('question_edit', { 'id': question.id }) }}" title="Editer cette question">
                 	<i class="glyphicon glyphicon-edit"></i>
                 </a>&nbsp;&nbsp;
-                <a data-confirm="Etes-vous certain de vouloir supprimer cette question?" href="{{ path('question_delete', { 'id': question.id }) }}">
+                <a data-confirm="Etes-vous certain de vouloir supprimer cette question?" href="{{ path('question_delete', { 'id': question.id }) }}" title="Supprimer cette question">
                     <i class="glyphicon glyphicon-trash"></i>
                 </a>
             </td>

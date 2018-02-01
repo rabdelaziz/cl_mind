@@ -36,7 +36,6 @@ use AppBundle\Form\EvaluationStatusType;
 use AppBundle\Exception\QuestionException;
 
 use AppBundle\Form\ContactType;
-use AppBundle\Form\CandidateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class EvaluationController extends Controller
@@ -103,8 +102,10 @@ class EvaluationController extends Controller
         $questionNumber  = $questionTimer = 0;
         $currentEvaluation = $em->getRepository('AppBundle:Evaluation')->getCurrentEvaluation($user->getId());
         $session->set('evaluationId', $currentEvaluation->getId());
+        
         $questionsList = $currentEvaluation->getQuestions()->toArray();
         $serializedQuestionsList = $manageEvaluation->getSerializedQuestionsList($questionsList);
+        
         $score = $em->getRepository('AppBundle:Score')->findBy([
                                                                     'evaluation' => $currentEvaluation->getId(),
                                                                     'user' => $user->getId()],
@@ -142,6 +143,7 @@ class EvaluationController extends Controller
             }
 
         } else {//aucune question na été vu
+            var_dump('couycou2');die;
             $currentQuestion =  $questionsList[$questionNumber];
             $questionTimer =  $currentQuestion->getDuration();
             $manageEvaluation->saveScore($currentEvaluation->getId(), $currentQuestion->getId(), $questionNumber, $user);
@@ -421,7 +423,7 @@ class EvaluationController extends Controller
             return $this->redirectToRoute('evaluation_index');
         }
 
-        return $this->render('AppBundle:Evaluation:edit.html.twig', array(
+        return $this->render('AppBundle:Evaluation:candidate.html.twig', array(
             'form' => $form->createView(),
             'linkCandidatAddOn' => true,
             'evaluation' => $evaluation

@@ -31,11 +31,12 @@
                 </div>
 
                 <div class="form-group">
-
-                <div class="col-sm-3">
-                    {# Génération de l'input. #}
-                    {{ form_widget(form.difficulty, {'attr': {'class': 'form-control select2'}}) }}
-                </div>
+                    {{ form_label(form.difficulty, null, {'label_attr': {'class': 'col-sm-1 control-label'}}) }}
+                    {{ form_errors(form.difficulty) }}
+                    <div class="col-sm-3">
+                        {# Génération de l'input. #}
+                        {{ form_widget(form.difficulty, {'attr': {'class': 'form-control select2'}}) }}
+                    </div>
             </div>
             
             <hr/>
@@ -50,7 +51,7 @@
                         {{ form_widget(topic) }}  {{ form_label(topic) }}
                     </td>
                     <td>
-                    	<input type="text" name="question_numbers[{{ topic.vars.value }}]" value="{{ questionNumber }}">
+                    	<input type="text" name="question_numbers[{{ topic.vars.value }}]" value="{{ questionNumber }}" placeholder="Nombre de questions">
                     </td>
                     {% if loop.index % 2 == 0 %}
                         </tr>

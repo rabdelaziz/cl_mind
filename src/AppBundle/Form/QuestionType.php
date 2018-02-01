@@ -25,27 +25,32 @@ class QuestionType extends AbstractType
         
         $builder
             ->add('content', TextareaType::class, array(
-            		'label' => 'Enoncé'
+            		'label' => 'Enoncé',
+                    'attr' => array('style' => 'min-width: 400px;min-height: 150px')
             ))
             ->add('duration', ChoiceType::class, array(
-            		'label' => 'Durée (en mn)',
+            		'label' => 'Durée (en s)',
             		'choices' => array(
-            		    1 => 1,
-            		    2 => 2,
-            		    3 => 3,
-            		    4 => 4,
-            		    5 => 5,
+            		    60 => 60,
+            		    70 => 70,
+            		    80 => 80,
+            		    90 => 90,
+            		    100 => 100,
+                        110 => 110,
+            		    120 => 120,
             		)
             ))
             ->add('level', EntityType::class, array(
                 'class' => 'AppBundle:Level',
                 'choice_label' => 'name',
             	'label' => 'Niveau',
+                'placeholder' => 'Choisir le niveau'
             ))
             ->add('topic', EntityType::class, array(
                 'class' => 'AppBundle:Topic',
                 'choice_label' => 'name',
             	'label' => 'Thème',
+                'placeholder' => 'Choisir le thème'
             ))
             ->add('status', CheckboxType::class, [
                 'label' => 'Statut',
