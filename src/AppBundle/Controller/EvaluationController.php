@@ -8,18 +8,12 @@
  */
 
 namespace AppBundle\Controller;
-
-use AppBundle\AppBundle;
 use AppBundle\Entity\Repository;
-use AppBundle\Entity\Score;
-
-use AppBundle\Form\TopicType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -30,70 +24,20 @@ use AppBundle\Entity\Evaluation;
 use AppBundle\Entity\User;
 use AppBundle\Form\EvaluationType;
 use AppBundle\Entity\Difficulty;
-use AppBundle\Form\CandidateType;
 use AppBundle\Form\EvaluationStatusType;
-//use AppBundle\Form\ContactType;
-use AppBundle\Exception\QuestionException;
 
 use AppBundle\Form\ContactType;
+use AppBundle\Form\CandidateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class EvaluationController extends Controller
 {
-    /**
-     * @Route("evaluation/new_topic", name="create_topic", options={"expose"=true})
-     */
-    public function createTopicAction(Request $request)
-    {
-        $form = $this->createForm(TopicType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $session = $this->get('session');
-            /** @var \AppBundle\Entity\Topic $topic */
-            $topic = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($topic);
-            $em->flush();
-
-            $session->getFlashBag()->add('notice', "Vos modification ont été bien enregistrés");
-
-            return $this->redirectToRoute('topic_list');
-        }
-
-        return $this->render('forms/topic/create_topic.html.twig', [
-            'form' => $form->createView(),
-            'linkTopicAddOn' => true,
-        ]);
-    }
-
-    /**
-     * @Route("evaluation/topic_list", name="topic_list")
-     */
-    public function topicListAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $topicList = $em->getRepository('AppBundle:Topic')->findAll();
-
-        return $this->render('topic/topic_liste.html.twig',
-            [
-                'topicList' => $topicList,
-                'linkTopicListingOn' => true
-
-            ]
-        );
-
-    }
-
-
     /**
      * @Route("evaluation/start", name="start_evaluation")
      * @Security("has_role('ROLE_CANDIDAT')")
      */
     public function startTestAction(Request $request)
     {
-
-
         $now = new \DateTime("now");
         $manageEvaluation = $this->get('appBundle.manage.candidate.evaluation');
         $em = $this->getDoctrine()->getManager();
@@ -115,6 +59,7 @@ class EvaluationController extends Controller
                                                                            );
 
         $session->set('countQuestion', count($questionsList));
+
         //test déja commencé
         if (!empty($score)) {
             $lastScore = current($score);
@@ -223,7 +168,7 @@ class EvaluationController extends Controller
         return new Response(json_encode($return), $return['responseCode'], array('Content-Type' => 'application/json'));
     }
 
-    
+
     /**
      * @Route("user/evaluation/result", name="evaluation_result", options={"expose"=true})
      * @Security("has_role('ROLE_CANDIDAT')")
@@ -264,7 +209,7 @@ class EvaluationController extends Controller
             ->getManager()
             ->getRepository('AppBundle:Evaluation');
 
-        $evaluationList = $repository->getEvaluations();
+        $evaluationList = $repository->findAll();
 
         $evaluationService = $this->get('appbundle.evaluation');
         foreach ($evaluationList as $evaluation) {
@@ -276,15 +221,10 @@ class EvaluationController extends Controller
         return $this->render('AppBundle:Evaluation:index.html.twig', array(
             'evaluationList' => $evaluationList,
             'linkEvaluationListingOn' => true
-      
+
         ));
     }
 
-    /**
-     * 
-     * @param Request $request
-     * @return Response
-     */
     public function addAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -301,31 +241,27 @@ class EvaluationController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $session = $request->getSession();
+            $evaluation = $form->getData();
 
-            try {
-                // Liste de tous les niveaux de difficulté pour les questions
-                $levelList = $em->getRepository('AppBundle:Level')
-                    ->findAll();
-                // Générer toutes les questions pour l'évaluation
-                $evaluationService = $this->get('appbundle.evaluation');
-                $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'));
-                
-                $em->persist($evaluation);
-                $em->flush();
-                
-                $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
-                
-                return $this->redirectToRoute('evaluation_index');
-                
-            } catch (QuestionException $e) {
-                $session->getFlashBag()->add('error', $e->getMessage());
-            }  
+            // Liste de tous les niveaux de difficulté pour les questions
+            $levelList = $em->getRepository('AppBundle:Level')
+                ->findAll();
+
+            // Générer toutes les questions pour l'évaluation
+            $evaluationService = $this->get('appbundle.evaluation');
+            $evaluation = $evaluationService->generateQuestions($evaluation, $form->get('topics')->getData(), $levelList, $request->get('question_numbers'), $form->get('difficulty')->getData());
+
+            $em->persist($evaluation);
+            $em->flush();
+
+            $session->getFlashBag()->add('notice', "l'évaluation a bien été créée.");
+
+            return $this->redirectToRoute('evaluation_index');
         }
 
         return $this->render('AppBundle:Evaluation:add.html.twig', array(
-            'topicsQuestionNumber' => $request->get('question_numbers'),
+            'form' => $form->createView(),
             'linkEvaluationAddOn' => true,
-            'form' => $form->createView()
         ));
     }
 
@@ -364,10 +300,15 @@ class EvaluationController extends Controller
 
         $evaluation->themes = implode('|', $topics);
 
+
+        $nbCandidates = $em->getRepository('AppBundle:User')->getNbByEvaluationId($request->get('id'));
+
         return $this->render('AppBundle:Evaluation:view.html.twig', array(
             'evaluation' => $evaluation,
-            'linkEvaluationEditOn' => true,
-            'form' => $form->createView()
+            'nbCandidates' => $nbCandidates,
+            'form' => $form->createView(),
+            'linkEvaluationEditOn' => true
+
         ));
     }
 
@@ -388,28 +329,35 @@ class EvaluationController extends Controller
         }
 
         $candidate = new User();
+        ////$candidate->addEvaluation($evaluation);
 
         $form = $this->createForm(CandidateType::class, $candidate);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $session = $request->getSession();
+            $candidate = $form->getData();
 
             $userService = $this->get('appbundle.user');
             $userFound = $userService->findUser($candidate);
 
             if (false === $userFound) {
                 $session->getFlashBag()->add('warning', "Il existe un candidat avec le même nom et prénom ou qui utilise le même email!");
-                return $this->render('AppBundle:Evaluation:candidate.html.twig', array(
+                return $this->render('AppBundle:Evaluation:edit.html.twig', array(
                     'form' => $form->createView()
                 ));
             } elseif ($userFound instanceof User) {
                 // Si le candidat est déjà connu => on lui envoie juste le lien de cette évaluation
                 // 1 => On vérifie s'il n'as pas passé le même test
+
+
+
+
             } else { //$userFound === null
                 // Si nouveau candidat
                 $candidate = $userService->generateUserData($candidate, array('ROLE_CANDIDAT'));
                 $evaluation->addCandidate($candidate);
 
+                $em->persist($evaluation);
                 $em->flush();
 
                 $session->getFlashBag()->add('notice', 'Le candidat a bien été affecté au test.');

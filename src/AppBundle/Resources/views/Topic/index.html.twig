@@ -1,0 +1,60 @@
+{% extends '::layoutBack.html.twig' %}
+{% set title= ' ' %}
+{% block header %}
+    {{parent()}}
+{% endblock%}
+{% block content %}
+     {{parent()}}
+    <div  class="col-xs-9 ">
+        <table id="topic_list" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th  width="5px" class="no-action center">Actions</th>
+            </tr>
+            </thead>
+           <tbody>
+            {% for topic in topicList %}
+                <tr>
+                    <td>{{topic.name}}</td>
+                    <td>{{topic.description}}</td>
+                    <td><a href="{{ path('edit_topic', { 'id': topic.id }) }}">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>&nbsp;&nbsp;
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            <a href="{{ path('create_topic')}}" class="btn btn-primary">
+                Ajouter un nouveau thème
+            </a>
+            <a href="{{ path('topic_list') }}" class="btn btn-warning" role="button" >Annuler</a>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#topic_list').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/French.json"
+                },
+                //cdn.datatables.net/plug-ins/1.10.16/i18n/French.json
+                "pageLength": 10,
+                "columnDefs": [
+                    {
+
+                        "orderable": false,
+                        "searchable": false
+                    }
+                ]
+            });
+        });
+    </script>
+
+{% endblock %}
+
