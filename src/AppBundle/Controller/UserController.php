@@ -129,7 +129,10 @@ class UserController extends Controller
     			));
     		}
     		
-    		$user = $this->get('appbundle.user')->generatePassword($user);
+            $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+    		//$user = $this->get('appbundle.user')->generatePassword($user);
     		
     		$em->persist($user);
     		$em->flush();
@@ -138,7 +141,7 @@ class UserController extends Controller
     		
     		return $this->redirectToRoute('user_list');
     	}
-        
+
     	return $this->render('AppBundle:User:add.html.twig', array(
     		'form' => $form->createView()
     	));
@@ -152,7 +155,7 @@ class UserController extends Controller
     	if (null === $user) {
     		throw new NotFoundHttpException("L'utilisateur d'id $id n'existe pas.");
     	}
-
+dump($user);
     	$form = $this->createForm(UserType::class, $user);
     	$form->handleRequest($request);
     	if ($form->isSubmitted() && $form->isValid()) {
