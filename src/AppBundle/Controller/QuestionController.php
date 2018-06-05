@@ -124,7 +124,7 @@ class QuestionController extends Controller
         if ($form->isSubmitted()) {
             if($form->isValid()) {
                 $question = $form->getData();
-
+                $question->setAuthor($this->getUser());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($question);
                 $em->flush();

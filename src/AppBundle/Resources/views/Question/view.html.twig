@@ -20,16 +20,18 @@
         </tr>
         <tr>
             <td>Durée :</td>
-            <td>{{ question.duration }} mn</td>
+            <td>{{ question.duration }} secondes</td>
         </tr>
         <tr>
             <td>Statut :</td>
             <td>{% if 1 == question.status %}Active{% else %}Inactive{% endif %}</td>
         </tr>
+        {% if question.author is defined and question.author is not null %}
         <tr>
             <td>Auteur :</td>
             <td>{{ question.author.firstName }} {{ question.author.lastName }}</td>
         </tr>
+        {% endif %}
     </table>
     <br>
     <p><b>Liste des réponses:</b></p>

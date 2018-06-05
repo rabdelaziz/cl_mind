@@ -88,7 +88,7 @@ class EvaluationController extends Controller
             }
 
         } else {//aucune question na été vu
-            var_dump('couycou2');die;
+
             $currentQuestion =  $questionsList[$questionNumber];
             $questionTimer =  $currentQuestion->getDuration();
             $manageEvaluation->saveScore($currentEvaluation->getId(), $currentQuestion->getId(), $questionNumber, $user);
@@ -342,7 +342,7 @@ class EvaluationController extends Controller
 
             if (false === $userFound) {
                 $session->getFlashBag()->add('warning', "Il existe un candidat avec le même nom et prénom ou qui utilise le même email!");
-                return $this->render('AppBundle:Evaluation:edit.html.twig', array(
+                return $this->render('AppBundle:Evaluation:candidate.html.twig', array(
                     'form' => $form->createView()
                 ));
             } elseif ($userFound instanceof User) {

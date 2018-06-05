@@ -24,7 +24,8 @@ class UserController extends Controller
         $currentUser = $this->getUser();
         if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $userRole = $currentUser->getRoles();
-            if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)) {
+            if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)
+                || in_array('ROLE_REFERENT', $userRole)  || in_array('ROLE_MANAGER', $userRole)) {
                 return $this->redirect($this->generateUrl('evaluation_index'));
             } else if (in_array('ROLE_USER', $userRole)) {
                 return $this->redirect($this->generateUrl('userHomePage'));

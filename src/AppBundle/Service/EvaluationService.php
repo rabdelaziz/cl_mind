@@ -112,7 +112,7 @@ class EvaluationService
                                 ->getQuestionsByTopicIdAndLevelId($topic->getId(), $level->getId(), $levelNbQuestion);
 
                         if (count($listQuestion) < $nbQuestionValues[$levelName]) {
-                            throw new QuestionException($topic->getName() . '[' . $level->getName() . '] : Nombre de questions disponibles: ' . count($listQuestion) . '/' . $nbQuestionValues[$levelName]);
+                         //   throw new QuestionException($topic->getName() . '[' . $level->getName() . '] : Nombre de questions disponibles: ' . count($listQuestion) . '/' . $nbQuestionValues[$levelName]);
                         }
 
                         $allQuestions = array_merge($allQuestions, $listQuestion);
