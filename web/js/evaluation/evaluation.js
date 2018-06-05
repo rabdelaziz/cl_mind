@@ -8,10 +8,10 @@ $('document').ready(function(){
     
     function initProgressBar(validQuestionNumber, totalQuestionNumber)
     {
-        var progressVal = (parseInt(validQuestionNumber)/parseInt(totalQuestionNumber)) * 100
+        var progressVal =  Math.round((parseInt(validQuestionNumber) / totalQuestionNumber) * 100);
         $('#progressBarVal').attr("aria-valuenow",progressVal);
         $('#progressBarVal').attr("style","width:"+progressVal+"%");
-        $('#progressLabel').html('Avancement: '+ ((parseInt(validQuestionNumber) / totalQuestionNumber) * 100) + '%')
+        $('#progressLabel').html('Avancement: '+ Math.round((parseInt(validQuestionNumber) / totalQuestionNumber) * 100) + '%')
     }
 
     function updateQuestionAndResponseBloc(data) {
