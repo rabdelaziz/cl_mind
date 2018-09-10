@@ -30,21 +30,32 @@
     {% block fos_user_content %}
     {% endblock fos_user_content %}
     <div class="container-fluid">
+
+
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         {% block content %}
             {% if linkEvaluationListingOn is defined or linkEvaluationAddOn is defined or linkEvaluationEditOn is defined %}
                 {% set manageEvaluation = true %}
             {% endif %}
-            {% if linkUserListingOn is defined or linkUserAddOn is defined %}
+            {% if linkUserListingOn is defined or linkUserAddOn is defined or linkUserEditOn is defined or  linkUserEditOn is defined or linkUserViewOn is defined %}
                 {% set manageUser = true %}
             {% endif %}
-            {% if linkQuestionResponseListingOn is defined or linkquestionResponseAddOn is defined or linkquestionResponseEditOn is defined or linkquestionResponseViewOn is defined %}
+            {% if linkQuestionResponseListingOn is defined or linkquestionResponseAddOn is defined or linkquestionResponseEditOn is defined or linkQuestionResponseDetailOn is defined %}
                 {% set manageQuestionResponse = true %}
             {% endif %}
-            {% if linkCandidatListingOn is defined or linkCandidatAddOn is defined %}
+            {% if linkCandidatListingOn is defined or linkCandidatAddOn is defined or linkCandidatEditOn is defined or linkCandidatViewOn is defined%}
                 {% set manageCandidat = true %}
             {% endif %}
 
-            {% if linkTopicListingOn is defined or linkTopicAddOn is defined %}
+            {% if linkTopicListingOn is defined or linkTopicAddOn is defined or linkTopicEditOn is defined %}
                 {% set manageTopic = true %}
             {% endif %}
         <div class="col-xs-3">
@@ -58,7 +69,6 @@
                                         <span class="glyphicon glyphicon-list-alt text-info">
                                          </span>Evaluations
                                     </a>
-
                                 </h4>
                             </div>
                             <div id="collapseOne" class="panel-collapse collapse {% if manageEvaluation is defined %}in{% endif %}">
@@ -74,7 +84,7 @@
                                         <tr>
                                             <td>
 
-                                                <span class="glyphicon glyphicon-plus text-info btn-xs" aria-hidden="true"></span>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
                                                 <a href="{{ path('evaluation_add')}}" class="{% if linkEvaluationAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                                 {#<span class="badge">42</span>#}
                                             </td>
@@ -82,8 +92,8 @@
                                         {% if linkEvaluationEditOn is defined %}
                                         <tr>
                                             <td>
-                                                <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}" class="{% if linkEvaluationEditOn is defined %}bold-text{% endif %}">Modifier une évaluation</a>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
+                                                <a href="{{ path('evaluation_edit', { 'id': evaluation.id }) }}" class="{% if linkEvaluationEditOn is defined %}bold-text{% endif %}">Edition</a>
                                                 {#<span class="badge">42</span>#}
                                             </td>
                                         </tr>
@@ -95,19 +105,43 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="{% if manageUser is defined %}bold-text active{% endif %}">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="{% if manageUser is defined %}bold-text active{% endif %}"  {% if manageUser is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-user text-info">
                             </span>Utilisateurs</a>
                                 </h4>
                             </div>
-                            <div id="collapseTwo" class="panel-collapse collapse">
+                            <div id="collapseTwo" class="panel-collapse collapse  {% if manageUser is defined %}in{% endif %}">
                                 <div class="panel-body">
                                     <table class="table">
                                         <tr>
                                             <td>
-                                                <a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-file text-info"></span>Liste</a>
+                                                <span class="glyphicon glyphicon-file text-info btn-xs"></span>
+                                                <a href="{{ path('user_list') }}" class="{% if linkUserListingOn is defined %}bold-text{% endif %}">Liste</a>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
+                                                <a href="{{ path('user_add') }}" class="{% if linkUserAddOn is defined %}bold-text{% endif %}">Ajout</a>
+                                            </td>
+                                        </tr>
+                                        {% if linkUserEditOn is defined %}
+                                            <tr>
+                                                <td>
+                                                    <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                    <a href="{{ path('user_edit', { 'id': user.id }) }}" class="{% if linkUserEditOn is defined %}bold-text{% endif %}">Edition</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if linkUserViewOn is defined %}
+                                            <tr>
+                                                <td>
+                                                    <span class="glyphicon glyphicon-th text-info btn-xs"></span>
+                                                    <a href="{{ path('user_view', { 'id': user.id }) }}" class="{% if linkUserViewOn is defined %}bold-text{% endif %}">Détail</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+
                                     </table>
                                 </div>
                             </div>
@@ -132,19 +166,19 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('question_add')}}" class="{% if linkQuestionResponseAddOn is defined %}bold-text{% endif %}">Ajout</a>
+                                                <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
+                                                <a href="{{path('question_add')}}" class="{% if linkquestionResponseAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                             </td>
                                         </tr>
                                         {% if linkquestionResponseEditOn is defined %}
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
-                                                <a href="{{ path('question_edit', { 'id': question.id }) }}" class="{% if linkQuestionResponseEditOn is defined %}bold-text{% endif %}">Modification</a>
+                                                <a href="{{ path('question_edit', { 'id': question.id }) }}" class="{% if linkquestionResponseEditOn is defined %}bold-text{% endif %}">Edition</a>
                                             </td>
                                         </tr>
                                         {% endif %}
-                                        {% if linkquestionResponseViewOn is defined %}
+                                        {% if linkQuestionResponseDetailOn is defined %}
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-th text-info btn-xs"></span>
@@ -158,10 +192,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="{% if manageCandidat is defined %}bold-text active{% endif %}" {% if manageCandidat is defined %}aria-expanded=true"{% endif %}>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="{% if manageCandidat is defined %}bold-text active{% endif %}" {% if manageCandidat is defined %}aria-expanded="true"{% endif %}>
                                         <span class="glyphicon glyphicon-education text-info">
                             </span>Candidats</a>
                                 </h4>
@@ -172,19 +207,42 @@
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-file text-info btn-xs"></span>
-                                                <a href="http://www.jquery2dotnet.com">
+                                                <a href="{{ path('candidate_index') }}" class="{% if linkCandidatListingOn is defined %}bold-text active{% endif %}">
                                                     Liste
                                                 </a>
                                             </td>
                                         </tr>
+                                        {% if linkCandidatAddOn is defined %}
                                         <tr>
                                             <td>
                                                 <span class="glyphicon glyphicon-plus text-info btn-xs"></span>
-                                                <a href="#" class="{% if linkCandidatAddOn is defined %}bold-text{% endif %}">
+                                                <a href="#" class="{% if linkCandidatAddOn is defined %}bold-text{% endif %}" style="pointer-events: none;
+  cursor: default;">
                                                     Ajout
                                                 </a>
                                             </td>
                                         </tr>
+                                        {% endif %}
+                                        {% if linkCandidatEditOn is defined %}
+                                            <tr>
+                                                <td>
+                                                    <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                    <a href="{{ path('candidate_edit' , { 'id': candidate.id })}}" class="{% if linkCandidatEditOn is defined %}bold-text{% endif %}">
+                                                        Edition
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if linkCandidatViewOn is defined %}
+                                            <tr>
+                                                <td>
+                                                    <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                    <a href="{{ path('candidate_view' , { 'id': candidate.id })}}" class="{% if linkCandidatViewOn is defined %}bold-text{% endif %}">
+                                                        Détail
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     </table>
                                 </div>
                             </div>
@@ -213,6 +271,14 @@
                                                 <a href="{{ path('create_topic') }}"  class="{% if linkTopicAddOn is defined %}bold-text{% endif %}">Ajout</a>
                                             </td>
                                         </tr>
+                                        {% if linkTopicEditOn is defined %}
+                                            <tr>
+                                                <td>
+                                                    <span class="glyphicon glyphicon-pencil text-info btn-xs"></span>
+                                                    <a href="{{ path('edit_topic', { 'id': topic.id }) }}" class="{% if linkTopicEditOn is defined %}bold-text{% endif %}">Edition</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     </table>
                                 </div>
                             </div>

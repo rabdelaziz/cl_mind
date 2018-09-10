@@ -24,7 +24,8 @@ class UserController extends Controller
         $currentUser = $this->getUser();
         if($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             $userRole = $currentUser->getRoles();
-            if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)) {
+            if (in_array('ROLE_ADMIN', $userRole) || in_array('ROLE_SUPER_ADMIN', $userRole)
+                || in_array('ROLE_REFERENT', $userRole)  || in_array('ROLE_MANAGER', $userRole)) {
                 return $this->redirect($this->generateUrl('evaluation_index'));
             } else if (in_array('ROLE_USER', $userRole)) {
                 return $this->redirect($this->generateUrl('userHomePage'));
@@ -97,8 +98,8 @@ class UserController extends Controller
 
         $userList = $em->getRepository('AppBundle:User')->findOnlyUsers();
     	return $this->render('AppBundle:User:list.html.twig', array(
-    			'userList' => $userList,
-            ''
+            'userList' => $userList,
+            'linkUserListingOn' => true
     	));
     }
     
@@ -134,13 +135,14 @@ class UserController extends Controller
     		$em->persist($user);
     		$em->flush();
     		
-    		$session->getFlashBag()->add('notice', "L'utilisateur a bien été créé.");
-    		
+    		$session->getFlashBag()->add('success', "L'utilisateur a bien été créé.");
+
     		return $this->redirectToRoute('user_list');
     	}
-        
+
     	return $this->render('AppBundle:User:add.html.twig', array(
-    		'form' => $form->createView()
+    		'form' => $form->createView(),
+            'linkUserAddOn' => true
     	));
     }
     
@@ -159,11 +161,15 @@ class UserController extends Controller
 
             $user->setUpdatedAt(new \DateTime('now'));
             $em->flush();
+            $session = $this->get('session');
+            $session->getFlashBag()->add('success', "L'utilisateur a bien été créé.");
     		return $this->redirectToRoute('user_list');
     	}
     	
     	return $this->render('AppBundle:User:edit.html.twig', array(
-    			'form' => $form->createView()
+    			'form' => $form->createView(),
+                'linkUserEditOn'=>true,
+                'user'=> $user
     	));
     }
     
@@ -178,6 +184,7 @@ class UserController extends Controller
 
     	return $this->render('AppBundle:User:view.html.twig', array(
     			'user' => $user,
+                'linkUserViewOn' =>true,
     	));
     }
 
