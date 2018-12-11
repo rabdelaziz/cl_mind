@@ -23,6 +23,7 @@ class CandidateController extends Controller
 
         return $this->render('AppBundle:Candidate:index.html.twig', array(
             'candidatesList' => $candidatesList,
+            'linkCandidatListingOn' => true
         ));
     }
     
@@ -43,14 +44,16 @@ class CandidateController extends Controller
             $candidate->setUpdatedAt(new \DateTime('now'));
             
     		$em->flush();
-            
-            $session->getFlashBag()->add('notice', "le candidat a bien été créé.");
+
+            $session->getFlashBag()->add('success', "le candidat a bien été modifié.");
             
     		return $this->redirectToRoute('candidate_index');
     	}
     	
     	return $this->render('AppBundle:Candidate:edit.html.twig', array(
-    			'form' => $form->createView()
+    		'form' => $form->createView(),
+            'linkCandidatEditOn' => true,
+            'candidate' => $candidate
     	));
     }
     
@@ -63,8 +66,9 @@ class CandidateController extends Controller
     		throw new NotFoundHttpException("Le candidat d'id $id n'existe pas.");
     	}
 
-    	return $this->render('AppBundle:User:view.html.twig', array(
-    			'candidate' => $candidate,
+    	return $this->render('AppBundle:Candidate:view.html.twig', array(
+            'candidate' => $candidate,
+            'linkCandidatViewOn'=>true
     	));
     }
 

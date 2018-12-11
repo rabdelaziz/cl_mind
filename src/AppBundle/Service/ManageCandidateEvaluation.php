@@ -67,7 +67,7 @@ class ManageCandidateEvaluation
         $normalizer->setIgnoredAttributes(array('responses')); 
 
         $serializedQuestionsList = $this->serializer->serialize($questionsList, 'json');
-var_dump('couycou2227');die;
+
         return $serializedQuestionsList;
 
 	}

@@ -31,7 +31,10 @@
             <td>{{ question.topic.name }}</td>
             <td>{{ question.duration }}</td>
             <td><i class="glyphicon glyphicon-{% if 1 == question.status %}ok-circle text-success{% else %}ban-circle text-danger{% endif %}" ></i></td>
-            <td>{{ question.author.firstName }} {{ question.author.lastName|first|upper }}.</td>
+            <td>{% if question.author is defined and question.author is not null %}
+                {{ question.author.firstName }} {{ question.author.lastName|first|upper }}.
+                {% endif%}
+            </td>
             <td>
                 <a href="{{ path('question_edit', { 'id': question.id }) }}" title="Editer cette question">
                 	<i class="glyphicon glyphicon-edit"></i>
