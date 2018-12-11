@@ -69,8 +69,8 @@ fos_user:
     firewall_name: main
     user_class: AppBundle\Entity\User
     from_email:
-        address: you@example.com
-        sender_name: test
+        address: saliu.diallo@gmail.com
+        sender_name: Clevertest Acces
 
 # Swiftmailer Configuration
 swiftmailer:

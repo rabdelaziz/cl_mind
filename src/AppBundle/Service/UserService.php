@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 
 /*
  *
@@ -16,11 +17,19 @@ class UserService
 	 * @var EntityManager
 	 */
 	protected $em;
+    
+    /** @var RoleHierarchyInterface RoleHierarchy */
+	private $tokenGenerator;
 
-
-	public function __construct(EntityManager $entityManager)
+    /**
+     * 
+     * @param EntityManager $entityManager
+     * @param TokenGeneratorInterface $tokenGenerator
+     */
+	public function __construct(EntityManager $entityManager, TokenGeneratorInterface $tokenGenerator)
 	{
 		$this->em = $entityManager;
+        $this->tokenGenerator = $tokenGenerator;
 	}
 	
 	/**
@@ -61,16 +70,27 @@ class UserService
 		return $user;
 	}
 	
-	/**
-	 * 
-	 * @param User $user
-	 * @return \AppBundle\Entity\User
-	 */
-	public function generatePassword(User $user)
-	{
-		$user->setPlainPassword($user->getFirstName());
-		
-		return $user;
-	}
+//	/**
+//	 * 
+//	 * @param User $user
+//	 * @return \AppBundle\Entity\User
+//	 */
+//	public function generatePassword(User $user)
+//	{
+//		$user->setPlainPassword($user->getFirstName());
+//		
+//		return $user;
+//	}
+    
+    /**
+     * Permet de générer un mot de passe aléatoire
+     *
+     * @param int $caractersCount Le nb de caractères du mot de passe
+     * @return string
+     */
+    public function generatePassword($caractersCount = 8)
+    {
+        return substr($this->tokenGenerator->generateToken(), 0, $caractersCount);
+    }
 
 }

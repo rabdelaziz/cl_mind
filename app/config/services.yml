@@ -17,6 +17,7 @@ services:
         class: AppBundle\Service\UserService
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@fos_user.util.token_generator"
             
     appbundle.question:
         class: AppBundle\Service\QuestionService
@@ -42,11 +43,13 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@appbundle.object.serializer'
             - '@session'
-            - '@appBundle.meailer'
+            - '@appBundle.mailer'
             -  '@knp_snappy.pdf'
 
-    appBundle.meailer:
+    appBundle.mailer:
         class: AppBundle\Service\Mailer
         arguments:
-            - '@mailer'
-            - '@templating'
+            - "@mailer"
+            - "@service_container"
+            - "@templating"            
+            - "@request_stack"

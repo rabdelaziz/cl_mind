@@ -2,7 +2,8 @@
 
 {% block title %}Ajout d'un utilisateur{% endblock %}
 
-{% block body %}
+{% block content %}
+    {{ parent() }}
     <h1>Ajout d'un utilisateur</h1>
     <div class="well col-xs-9">
         {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}

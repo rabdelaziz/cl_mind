@@ -101,5 +101,7 @@ candidate_delete:
 sso_connexion:
     path: /sso/{data}
     defaults: { _controller: AppBundle:User:connectViaSSO, data: data}
-  
-
+             
+users_account_edit:
+    path: /profile
+    defaults: { _controller: AppBundle:Account:edit}

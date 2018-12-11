@@ -1,0 +1,85 @@
+{% extends "::layoutBack.html.twig" %}
+
+{% block title %}Création d'une candidature{% endblock %}
+
+{% block content %}
+<!-- Main content -->
+    <section class="content">
+
+        <div class="col-lg-12 col-xlg-12 col-md-12">
+            <div class="card">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs profile-tab" role="tablist">
+                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Informations personnelles</a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Changer le mot de passe</a> </li>
+                </ul>
+                            
+                <!-- Tab panes -->
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="home" role="tabpanel">
+                        <div class="card-body">
+                            {% include "AppBundle:Account:profile.html.twig" %}
+                        </div>
+                    </div>
+
+
+                    <!--second tab-->
+                    <div class="tab-pane" id="profile" role="tabpanel">
+                        <div class="card-body" id='jsPassword'>
+                            {% include "AppBundle:Account:password_change.html.twig" %}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+                            
+    </section><!-- /.content -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+       {#  var test = {{tabtest|json_encode()}};#}
+
+        $(document).ready(function() {
+
+            $("#jqChangePassword").submit(function () {
+                //event.preventDefault();
+                console.log('ggfggffgfg');
+                        
+                var url = Routing.generate('users_change_password_ajax');
+                var formSerialize = $(this).serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    data: formSerialize,
+                    url: url,
+                    dataType: 'json',
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+
+                        if (response.form !== undefined) {
+                            $("#jqChangePassword").html(response.form);
+
+                            $('#jqChangePassword')[0].reset();
+                            $('#jqChangePassword').prepend('<div class="alert alert-' + response.TYPE + '">' + response.MESSAGE + '</div>');
+                            setTimeout('$("#jqChangePassword").find("div.alert").hide("slow")', 5000);
+                        }
+
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+
+                    }
+                });
+            });         
+
+        });
+    </script>
+{% endblock %}

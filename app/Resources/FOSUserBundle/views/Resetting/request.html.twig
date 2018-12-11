@@ -1,0 +1,9 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="login-box card">
+        <div class="card-body">
+            {% include "@FOSUser/Resetting/request_content.html.twig" %}
+        </div>
+    </div>
+{% endblock fos_user_content %}

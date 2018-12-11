@@ -17,3 +17,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    name_project: 'Project Clevertest'
+    soc_project: Clevermind
+    mail_reply_project: support@clevermind.com
+    mail_contact_project: contact@clevermind.com

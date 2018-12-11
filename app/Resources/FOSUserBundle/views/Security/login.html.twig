@@ -23,6 +23,8 @@
                     {% endif %}#}
                     <input type="submit" class="btn-lg btn btn-default" id="_submit" name="_submit" value="{{ 'login.user.button.conexion'|trans }}" />
                 </div>
+                <hr/>
+                <a href="{{ path("fos_user_resetting_request") }}" id="to-recover" class="text-dark pull-left">Mot de passe oublié?</a>
             </div>
         </form>
     </div>

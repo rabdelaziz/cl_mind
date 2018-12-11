@@ -210,7 +210,7 @@ class EvaluationController extends Controller
             ->getRepository('AppBundle:Evaluation');
 
         $evaluationList = $repository->findAll();
-
+        
         $evaluationService = $this->get('appbundle.evaluation');
         foreach ($evaluationList as $evaluation) {
             // Liste des noms des thèmes utilisés dans l'évaluation

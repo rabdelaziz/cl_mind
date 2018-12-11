@@ -79,7 +79,7 @@ class UserController extends Controller
 
     /**
      *@Route("user_home_page", name="userHomePage")
-     * @Security("has_role('ROLE_CANDIDAT')")
+     * @Security("has_role('ROLE_USER')")
      */
     public function userHomePageAction()
     {
@@ -94,7 +94,20 @@ class UserController extends Controller
     {
     	
         $em = $this->getDoctrine()->getManager();
-
+        $user = $this->getUser();
+        $user = $em->getRepository('AppBundle:User')->findOneBy(array('username' => 'sdiallo'));
+        dump($user);
+        //$this->get('appBundle.mailer')->sendRegistrationMessage($user);
+        return $this->render('AppBundle:TestEmail:forgotPassword.html.twig', array(
+    			'user' => $user,
+                'url' => 'http://localhost:8888/cl_mind/web/app_dev.php/user'
+    	));
+        
+//        $to = 'saliu.diallo@gmail.com';
+//        $subject = 'Test mail'; 
+//        $body = '<html> Bonjour tout le monde.</html>';
+        //$sent = $this->get('appBundle.meailer')->test();
+        //dump('test', $sent);
         $userList = $em->getRepository('AppBundle:User')->findOnlyUsers();
     	return $this->render('AppBundle:User:list.html.twig', array(
     			'userList' => $userList,
@@ -113,10 +126,10 @@ class UserController extends Controller
     	
     	$user = new User();    	
     	$form = $this->createForm(UserType::class, $user);
-    	
+
     	$form->handleRequest($request);
     	if ($form->isSubmitted() && $form->isValid()) {
-    		
+            
     		$em = $this->getDoctrine()->getManager();
     		$session = $this->get('session');
     		
@@ -128,17 +141,25 @@ class UserController extends Controller
     					'form' => $form->createView()
     			));
     		}
-    		
-    		$user = $this->get('appbundle.user')->generatePassword($user);
-    		
+    		////$user = $this->get('appbundle.user')->generatePassword($user);
+    		//$test = $this->get('appbundle.user')->generatePassword($user);
+            $user->setPlainPassword($this->get('appbundle.user')->generatePassword());
+    		dump($user);
+            
+          //  $sent = $this->get('appBundle.mailer')->test();
     		$em->persist($user);
     		$em->flush();
     		
     		$session->getFlashBag()->add('notice', "L'utilisateur a bien été créé.");
     		
-    		return $this->redirectToRoute('user_list');
+    		////return $this->redirectToRoute('user_list');
     	}
-        
+
+//        return $this->render('AppBundle:Evaluation:add.html.twig', array(
+//            'form' => $form->createView(),
+//            'linkEvaluationAddOn' => true,
+//        ));
+
     	return $this->render('AppBundle:User:add.html.twig', array(
     		'form' => $form->createView()
     	));
